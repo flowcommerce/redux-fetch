@@ -1,0 +1,57 @@
+{
+  "name": "@flowio/react-router-redux-fetch",
+  "version": "0.0.1",
+  "description": "Universal data fetching bindings for React, React Router, and Redux",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "build": "babel ./src --out-dir ./lib",
+    "lint": "eslint --cache --fix ./src ./test",
+    "test": "mocha ./test/specs",
+    "prebuild": "npm run test",
+    "prepublish": "npm run build",
+    "pretest": "npm run lint",
+    "watch:build": "nodemon --exec 'npm run build' --watch './src' --watch './test'"
+  },
+  "keywords": [
+    "fetching",
+    "react",
+    "redux",
+    "react-router"
+  ],
+  "author": "Flow Commerce",
+  "contributors": [
+    "Christian Muñoz <christian.munoz@flow.io>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "babel-register": "^6.9.0",
+    "hoist-non-react-statics": "^1.2.0",
+    "invariant": "^2.2.1",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "redux": "^3.0.0"
+  },
+  "devDependencies": {
+    "@flowio/babel-preset-flowio": "^1.0.2",
+    "@flowio/eslint-config-flowio": "^2.0.0",
+    "babel-cli": "6.10.1",
+    "babel-eslint": "^6.1.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "enzyme": "2.3.0",
+    "eslint": "^2.13.1",
+    "eslint-plugin-import": "^1.9.2",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.2",
+    "jsdom": "^9.2.1",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "react-addons-test-utils": "^15.1.0",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  }
+}

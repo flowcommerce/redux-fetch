@@ -1,0 +1,8 @@
+{
+  "parser": "babel-eslint",
+  "extends": "@flowio/flowio",
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
