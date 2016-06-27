@@ -4,3 +4,4 @@ node_modules
 .eslintcache
 lib
 twitter.json
+coverage
