@@ -1,13 +1,7 @@
-import * as actions from '../../../src/actions';
 import { Component } from 'react';
+import createMockStore from '../../utilities/create-mock-store';
+import * as actions from '../../../src/actions';
 import fetchRouteData from '../../../src/utilities/fetch-route-data';
-
-function createStore(initialState) {
-  return {
-    dispatch: sinon.stub(),
-    getState: sinon.stub().returns(initialState),
-  };
-}
 
 function createComponent(getInitialAsyncState) {
   return class WrappedComponent extends Component {
@@ -34,7 +28,7 @@ describe('fetchRouteData(store, components)', () => {
   beforeEach(() => {
     initialState = { hello: 'goodbye' };
     getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    store = createStore(initialState);
+    store = createMockStore(initialState);
     const components = [createComponent(), createComponent(getInitialAsyncState)];
     fetchRouteData(store, components);
   });
