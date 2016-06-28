@@ -6,7 +6,11 @@ import fetchData from '../utilities/fetch-data';
 import getDisplayName from '../utilities/get-display-name';
 import Spinner from './spinner';
 
-const selectFetchingState = state => state.fetching;
+// Global settings, overwrite using `fetch.setup` function.
+const fetchSettings = {
+  activityIndicator: Spinner,
+  selectFetchingState: state => state.fetching,
+};
 
 const storePropTypes = PropTypes.shape({
   subscribe: PropTypes.func.isRequired,
@@ -15,7 +19,10 @@ const storePropTypes = PropTypes.shape({
 });
 
 export default function fetch(getInitialAsyncState) {
-  return function wrapWithFetch(RouteComponent, LoadingComponent = Spinner) {
+  return function wrapWithFetch(
+    RouteComponent,
+    ActivityIndicator = fetchSettings.activityIndicator
+  ) {
     const displayName = `Fetch(${getDisplayName(RouteComponent)})`;
 
     class Fetch extends Component {
@@ -42,11 +49,10 @@ export default function fetch(getInitialAsyncState) {
           `or explicitly pass "store" as a prop to "${displayName}".`
         );
 
-        // TODO: How can we allow client to select their own attribute in the store
-        // for the fetching state? It can't be part of the HOC because it would add
-        // redundency in their code.
-        invariant(selectFetchingState(store.getState()),
+        invariant(fetchSettings.selectFetchingState(store.getState()),
           'Expected the fetching state to be available as `state.fetching`. ' +
+          'or as the custom expression you can specify as `selectFetchingState` ' +
+          'with the `fetch.setup()` interface. ' +
           'Ensure you have added the `fetchReducer` to your store\'s ' +
           'reducers via `combineReducers` or whatever method you use to isolate ' +
           'your reducers.'
@@ -58,7 +64,7 @@ export default function fetch(getInitialAsyncState) {
       };
 
       componentWillMount() {
-        const state = selectFetchingState(this.store.getState());
+        const state = fetchSettings.selectFetchingState(this.store.getState());
 
         // Guard to ensure we do not attempt to reload route state when data
         // is hydrated on the client-side from the serve-side.
@@ -75,8 +81,8 @@ export default function fetch(getInitialAsyncState) {
       }
 
       render() {
-        if (this.state.isFetching && LoadingComponent) {
-          return <LoadingComponent {...this.props} />;
+        if (this.state.isFetching && ActivityIndicator) {
+          return <ActivityIndicator {...this.props} />;
         }
 
         return <RouteComponent {...this.props} />;
@@ -86,3 +92,7 @@ export default function fetch(getInitialAsyncState) {
     return hoistStatics(Fetch, RouteComponent);
   };
 }
+
+fetch.setup = (options) => {
+  Object.assign(fetchSettings, options);
+};

@@ -139,13 +139,25 @@ export default container => {
 
 ## API
 
-### `fetch(getInitialAsyncState)(RouteComponent[, LoadingComponent])`
+### `fetch(getInitialAsyncState)(RouteComponent[, ActivityIndicator])`
 
 **You must decorate your route components with this higher order component for fetching to work.**
 
-A higher order component (HOC) that fetches the data requirements for the application state before rendering its wrapped `RouteComponent`. By default, it renders a `LoadingComponent` provided by the library while fetching data. You may passed your own `LoadingComponent` or set it to `null` to prevent rendering anything (not recommended).
+A higher order component (HOC) that fetches the data requirements for the application state before rendering its wrapped `RouteComponent`. By default, it renders a `ActivityIndicator` provided by the library while fetching data. You may pass your own `ActivityIndicator` or set it to `null` to prevent rendering anything (not recommended).
 
 The `getInitialAsyncState` function receives the store's `dispatch` and `state` when called and should return a promise that is resolved when the store is hydrated with the data requirements to render the `RouteComponent`. The returned promise should handle all errors that occur while fetching, usually by reducing them into the application via error action types.
+
+### `fetch.setup(options)`
+
+**You must call this function before decorating your components with `fetch`.**
+
+A function that allows you to globally configure the behavior for `fetch`.
+
+The `options` argument can have the following properties:
+
+* `activityIndicator` - By default, the library provides a spinner component to render while fetching data. If you want to provide your own, use this option to define a different component to be rendered instead.
+
+* `selectFetchingState` - By default, the library expects to find the fetching state at `state.fetching`. If you want to put the fetching state elsewhere, use this option to define a selector function to access the fetching state.
 
 ### `fetchReducer()`
 
