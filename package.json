@@ -24,6 +24,10 @@
     "redux",
     "react-router"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flowcommerce/react-router-redux-fetch.git"
+  },
   "author": "Flow Commerce",
   "contributors": [
     "Christian Muñoz <christian.munoz@flow.io>"
