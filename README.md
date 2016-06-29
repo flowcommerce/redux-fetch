@@ -16,28 +16,6 @@ This assumes that you’re using [npm](http://npmjs.com/) package manager with a
 
 The most important files are listed here, but look in the example for some extra stuff.
 
-### Combine fetch reducer and add to store
-
-```js
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { fetchReducer } from '@flowio/react-router-redux-fetch';
-import reduxThunk from 'redux-thunk';
-
-// You application's reducers
-import reducers from './reducers';
-
-const combinedReducers = combineReducers({
-  ...reducers,
-  fetching: fetchReducer,
-}));
-
-const enhancer = compose(applyMiddleware(reduxThunk));
-
-export default function configureStore(initialState = {}) {
-  return createStore(combinedReducers, initialState, enhancer);
-}
-```
-
 ### Decorate route components
 
 ```js
@@ -139,44 +117,38 @@ export default container => {
 
 ## API
 
-### `fetch(getInitialAsyncState)(RouteComponent[, ActivityIndicator])`
+### `fetch(getInitialAsyncState[, options])`
 
 **You must decorate your route components with this higher order component for fetching to work.**
 
-A higher order component (HOC) that fetches the data requirements for the application state before rendering its wrapped `RouteComponent`. By default, it renders a `ActivityIndicator` provided by the library while fetching data. You may pass your own `ActivityIndicator` or set it to `null` to prevent rendering anything (not recommended).
+A higher order component (HOC) that renders a React component after fetching the data requirements for a Redux store.
 
-The `getInitialAsyncState` function receives the store's `dispatch` and `state` when called and should return a promise that is resolved when the store is hydrated with the data requirements to render the `RouteComponent`. The returned promise should handle all errors that occur while fetching, usually by reducing them into the application via error action types.
+#### Arguments
+
+* `getInitialAsyncState(dispatch, state): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
+
+* `[options]`: If specified, further customizes the behavior of the fetcher instance.
+
+  - `[forceInitialFetch = false]`: By default, the fetch component assumes the store will be rehydrated from data bootstrapped on the server response on first render and will prevent sending requests to the server until the next route change. If you instead wanted to force requests even if the store was rehydrated or you are not building an isomorphic application, you can use the `forceInitialFetch` boolean property.    
+
+  - `[renderLoading = () => <Spinner />]`: By default, an activity indicator is rendered while fetching data, which often happens when the page loads or route changes. If you want to define you own component, use this option to define a function that returns a React element to be rendered instead. You may also define a function that returns `null` to avoid rendering anything (not recommended).
+
+  - `[renderFailure = (error) => <Glitch />]`: By default, an error message is rendered when an uncaught error occurs while fetching data. Typically you would handle fetch errors by updating the Redux store state, but you may choose to leverage this option to separate the concerns. If you want to define your own component, use this option to return a React element to be rendered instead. The function will receive the uncaught error as an argument. You may also define a function that returns `null` to avoid rendering anything (not recommended).
 
 ### `fetch.setup(options)`
 
-**You must call this function before decorating your components with `fetch`.**
+A function that allows you configure the behavior of future fetchers.
 
-A function that allows you to globally configure the behavior for `fetch`.
+For details on the `options` available for `fetch.setup()`, see [`fetch()`](#fetchgetinitialasyncstateoptions).
 
-The `options` argument can have the following properties:
+All subsequent `fetch` calls will use the new settings, unless overridden by the individual calls.
 
-* `activityIndicator` - By default, the library provides a spinner component to render while fetching data. If you want to provide your own, use this option to define a different component to be rendered instead.
+It's recommended that you call this function before decorating your components.
 
-* `selectFetchingState` - By default, the library expects to find the fetching state at `state.fetching`. If you want to put the fetching state elsewhere, use this option to define a selector function to access the fetching state.
-
-### `fetchReducer()`
-
-**You must add this reducer to your store for fetching to work.**
-
-A reducer function that stores fetching updates. If you use `combineReducers`, it should be nested under the `fetching` key.
 
 ### `fetchRouteData(store, components)`
 
 An utility that is usually used on the server-side to fetch the data requirements before rendering matched route components.
-
-### `@@fetch/VALIDATE`
-
-An action type that is dispatched from `fetchRouteData` to indicate the initial store state will be
-hydrated using data sent down from the server-side. It's internally used to prevent route components from fetching the route data again on first render.
-
-### `@@fetch/INVALIDATE`
-
-An action type that is dispatched from `fetch` to indicate the initial store state has been hydrated using data sent down from the server-side. It's internally used to indicate that subsequent mounts of route components should fetch data from the server-side before rendering.
 
 ## Related projects
 
