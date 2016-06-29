@@ -4,8 +4,6 @@
 
 ## Installation
 
-This package requires **React 0.14 or later**.
-
 ```
 npm install --save @flowio/react-router-redux-fetch
 ```
@@ -14,7 +12,7 @@ This assumes that you’re using [npm](http://npmjs.com/) package manager with a
 
 ## Usage
 
-The most important files are listed here, but look in the example for some extra stuff.
+The most important files are listed here, but look in the `./examples` directory for some additional information.
 
 ### Decorate route components
 
@@ -22,7 +20,8 @@ The most important files are listed here, but look in the example for some extra
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetch } from '@flowio/react-router-redux-fetch';
-import { getSomething, getSomethingElse } from 'actions/things';
+// Your application's actions
+import { getSomething, getSomethingElse } from './actions';
 
 function mapStateToProps() { /* ... */ }
 
@@ -50,17 +49,23 @@ class MyRouteHandler extends Component {
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { RouterContext, createMemoryHistory, match } from 'react-router';
+import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
-// Module defined above to create store with combined `fetchReducer`
-import configureStore from './utilities/configureStore';
-
-// You application's routes
+import reduxThunk from 'redux-thunk';
+// Your application's reducers
+import reducers from './reducers';
+// Your application's routes
 import routes from './routes';
+
+// Set up Redux to handle asynchronous actions with Redux Thunk.
+// You will need some strategy to handle asynchronous actions since you should
+// be using them to update your store state after fetching data.
+const enhancer = compose(applyMiddleware(reduxThunk));
 
 // Render the app server-side for a given path:
 export default path => new Promise((resolve, reject) => {
-  const store = configureStore();
-
+  const initialState = {};
+  const store = createStore(reducers, initialState, enhancer)
   // Set up history for React Router:
   const history = createMemoryHistory(path);
 
@@ -70,18 +75,16 @@ export default path => new Promise((resolve, reject) => {
     const { components } = renderProps;
 
     // Wait for async data fetching to complete, then render:
-    fetchRouteData(store, components)
-      .then(() => {
-        const state = getState();
-        const html = renderToString(
-          <Provider store={store}>
-            <RouterContext {...renderProps} />
-          </Provider>
-        );
+    fetchRouteData(store, components).then(() => {
+      const state = getState();
+      const html = renderToString(
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      );
 
-        resolve({ html, state });
-      })
-      .catch(reject);
+      resolve({ html, state });
+    }).catch(reject);
   });
 });
 ```
@@ -92,11 +95,18 @@ export default path => new Promise((resolve, reject) => {
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
+import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
-// Module defined above to create store with combined `fetchReducer`
-import configureStore from './utilities/configureStore';
-// You application routes
+import reduxThunk from 'redux-thunk';
+// Your application's reducers
+import reducers from './reducers';
+// Your application's routes
 import routes from './routes';
+
+// Set up Redux to handle asynchronous actions with Redux Thunk.
+// You will need some strategy to handle asynchronous actions since you should
+// be using them to update your store state after fetching data.
+const enhancer = compose(applyMiddleware(reduxThunk));
 
 // Render the app client-side to a given container element:
 export default container => {
@@ -104,7 +114,8 @@ export default container => {
   // <script>
   //   window.INITIAL_STATE = <%- JSON.stringify(state) %>
   // </script>
-  const store = configureStore(window.INITIAL_STATE);
+  const initialState = window.INITIAL_STATE;
+  const store = createStore(reducers, initialState, enhancer)
 
   // Render app with Redux and router context to container element:
   render((
@@ -121,7 +132,7 @@ export default container => {
 
 **You must decorate your route components with this higher order component for fetching to work.**
 
-A higher order component (HOC) that renders a React component after fetching the data requirements for a Redux store.
+A higher order component that renders a React component after fetching the data requirements for a Redux store.
 
 #### Arguments
 
@@ -135,16 +146,35 @@ A higher order component (HOC) that renders a React component after fetching the
 
   - `[renderFailure = (error) => <Glitch />]`: By default, an error message is rendered when an uncaught error occurs while fetching data. Typically you would handle fetch errors by updating the Redux store state, but you may choose to leverage this option to separate the concerns. If you want to define your own component, use this option to return a React element to be rendered instead. The function will receive the uncaught error as an argument. You may also define a function that returns `null` to avoid rendering anything (not recommended).
 
+#### Returns
+
+A React component class that renders your component according to the specified options.
+
+##### Static Properties
+
+All the original static properties of the component are hoisted.
+
+##### Static Methods
+
+* `getInitialAsyncState`: The function passed to `fetch()` to resolve data requirements for your component.
+
+All the original static methods of the component are hoisted.
+
+##### Remarks
+
+* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `fetch(getInitialAsyncState, options)(MyComponent)`.
+
+* It does not modify the passed React component. It returns a new, connected component, that you should use instead.
+
+* The static `getInitialAsyncState` function is used by `fetchRouteData()` to resolve the data requirements for the matched route components.
+
 ### `fetch.setup(options)`
 
-A function that allows you configure the behavior of future fetchers.
-
-For details on the `options` available for `fetch.setup()`, see [`fetch()`](#fetchgetinitialasyncstateoptions).
+A function that allows you configure the behavior of future fetchers. For details on the `options` available for `fetch.setup()`, see `fetch()` above.
 
 All subsequent `fetch` calls will use the new settings, unless overridden by the individual calls.
 
 It's recommended that you call this function before decorating your components.
-
 
 ### `fetchRouteData(store, components)`
 
