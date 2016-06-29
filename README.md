@@ -52,6 +52,7 @@ import { RouterContext, createMemoryHistory, match } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
+import { fetchRouteData } from '@flowio/react-router-redux-fetch';
 // Your application's reducers
 import reducers from './reducers';
 // Your application's routes
