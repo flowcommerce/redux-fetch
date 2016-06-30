@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0
+
+### Changed
+
+* Settings configured with `fetch.setup()` apply to all unmounted/uninitialized fetcher components returned by `fetch()`.
+
 ## 0.2.0
 
 ### Added
