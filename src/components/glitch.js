@@ -4,7 +4,7 @@ const Glitch = () => (
   <div>
     <p><strong>Uh oh, there was a problem.</strong></p>
     <p>There might be something not-quite-right with the content
-    you're trying to view. Sorry, machines make mistakes too</p>
+    you're trying to view. Sorry, machines make mistakes too.</p>
     <p>You might be able to get to it later.</p>
   </div>
 );
