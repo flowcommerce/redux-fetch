@@ -109,24 +109,34 @@ describe('fetch(getInitialAsyncState, options)', () => {
 describe('fetch.setup(options)', () => {
   it('should overwrite default loading component', () => {
     const ActivityIndicator = () => <div className="loading" />;
-    fetch.setup({ renderLoading: () => <ActivityIndicator /> });
     const getInitialAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getInitialAsyncState, {
       forceInitialFetch: true,
     })(Component);
+
+    // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
+    // overwritten after component class is defined. However, not after the component is mounted.
+    fetch.setup({ renderLoading: () => <ActivityIndicator /> });
+
     const { wrapper } = mountWithStore(<WrappedComponent />);
+
     expect(wrapper.find(Spinner)).to.have.length(0);
     expect(wrapper.find(ActivityIndicator)).to.have.length(1);
   });
 
   it('should overwrite default failure component', (done) => {
     const Boom = () => <div className="boom" />;
-    fetch.setup({ renderFailure: () => <Boom /> });
     const getInitialAsyncState = sinon.stub().returns(Promise.reject());
     const WrappedComponent = fetch(getInitialAsyncState, {
       forceInitialFetch: true,
     })(Component);
+
+    // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
+    // overwritten after component class is defined. However, not after the component is mounted.
+    fetch.setup({ renderFailure: () => <Boom /> });
+
     const { wrapper } = mountWithStore(<WrappedComponent />);
+
     waitFor(
       () => wrapper.state('isFetching') === false,
       'Data fetching timed out',

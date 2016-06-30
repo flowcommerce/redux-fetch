@@ -170,11 +170,11 @@ All the original static methods of the component are hoisted.
 
 ### `fetch.setup(options)`
 
-A function that allows you configure the behavior of future fetchers. For details on the `options` available for `fetch.setup()`, see `fetch()` above.
+A function that allows you configure the behavior of fetchers globally. For details on the `options` available for `fetch.setup()`, see `fetch()` above.
 
-All subsequent `fetch` calls will use the new settings, unless overridden by the individual calls.
+#### Remarks
 
-It's recommended that you call this function before decorating your components.
+* It will modify the behavior of fetcher components that are not mounted. Therefore, if you import a fetcher component returned by `fetch()` and then call `fetch.setup()` it will still change the behavior of that component.
 
 ### `fetchRouteData(store, components)`
 

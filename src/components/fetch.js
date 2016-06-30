@@ -8,12 +8,6 @@ import getDisplayName from '../utilities/get-display-name';
 import Spinner from './spinner';
 import Glitch from './glitch';
 
-const globalSettings = {
-  forceInitialFetch: false,
-  renderFailure: (/* error */) => <Glitch />,
-  renderLoading: () => <Spinner />,
-};
-
 const storePropTypes = PropTypes.shape({
   subscribe: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -23,7 +17,6 @@ const storePropTypes = PropTypes.shape({
 export default function fetch(getInitialAsyncState, options = {}) {
   return function wrapWithFetch(WrappedComponent) {
     const displayName = `Fetch(${getDisplayName(WrappedComponent)})`;
-    const finalSettings = Object.assign({}, globalSettings, options);
 
     class Fetch extends Component {
       static displayName = displayName;
@@ -41,9 +34,10 @@ export default function fetch(getInitialAsyncState, options = {}) {
       constructor(props, context) {
         super(props, context);
 
-        const store = this.store = props.store || context.store;
+        this.store = props.store || context.store;
+        this.settings = Object.assign({}, fetch.settings, options);
 
-        invariant(store,
+        invariant(this.store,
           `Could not find "store" in either the context or props of "${displayName}". ` +
           'Either wrap the root component in a `<Provider>`, ' +
           `or explicitly pass "store" as a prop to "${displayName}".`
@@ -57,7 +51,7 @@ export default function fetch(getInitialAsyncState, options = {}) {
       };
 
       componentWillMount() {
-        if (this.store.__didInitialLoad__ || finalSettings.forceInitialFetch) {
+        if (this.store.__didInitialLoad__ || this.settings.forceInitialFetch) {
           this.setState({ isFetching: true, hasError: false, error: null });
 
           fetchData(this.store, getInitialAsyncState).then(() => {
@@ -72,11 +66,11 @@ export default function fetch(getInitialAsyncState, options = {}) {
 
       render() {
         if (this.state.isFetching) {
-          return finalSettings.renderLoading();
+          return this.settings.renderLoading();
         }
 
         if (this.state.hasError) {
-          return finalSettings.renderFailure(this.state.error);
+          return this.settings.renderFailure(this.state.error);
         }
 
         return <WrappedComponent {...this.props} />;
@@ -87,6 +81,12 @@ export default function fetch(getInitialAsyncState, options = {}) {
   };
 }
 
+fetch.settings = {
+  forceInitialFetch: false,
+  renderFailure: (/* error */) => <Glitch />,
+  renderLoading: () => <Spinner />,
+};
+
 fetch.setup = (options) => {
-  Object.assign(globalSettings, options);
+  Object.assign(fetch.settings, options);
 };
