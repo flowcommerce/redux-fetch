@@ -59,8 +59,6 @@ import reducers from './reducers';
 import routes from './routes';
 
 // Set up Redux to handle asynchronous actions with Redux Thunk.
-// You will need some strategy to handle asynchronous actions since you should
-// be using them to update your store state after fetching data.
 const enhancer = compose(applyMiddleware(reduxThunk));
 
 // Render the app server-side for a given path:
@@ -105,8 +103,6 @@ import reducers from './reducers';
 import routes from './routes';
 
 // Set up Redux to handle asynchronous actions with Redux Thunk.
-// You will need some strategy to handle asynchronous actions since you should
-// be using them to update your store state after fetching data.
 const enhancer = compose(applyMiddleware(reduxThunk));
 
 // Render the app client-side to a given container element:
