@@ -1,11 +1,11 @@
-# react-router-redux-fetch
+# redux-fetch
 
 > Universal data fetching bindings for React, React Router, and Redux.
 
 ## Installation
 
 ```
-npm install --save @flowio/react-router-redux-fetch
+npm install --save @flowio/redux-fetch
 ```
 
 This assumes that you’re using [npm](http://npmjs.com/) package manager with a module bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org/) to consume [CommonJS modules](http://webpack.github.io/docs/commonjs.html).
@@ -19,7 +19,7 @@ The most important files are listed here, but look in the `./examples` directory
 ```js
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/react-router-redux-fetch';
+import { fetch } from '@flowio/redux-fetch';
 // Your application's actions
 import { getSomething, getSomethingElse } from './actions';
 
@@ -52,7 +52,7 @@ import { RouterContext, createMemoryHistory, match } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
-import { fetchRouteData } from '@flowio/react-router-redux-fetch';
+import { fetchRouteData } from '@flowio/redux-fetch';
 // Your application's reducers
 import reducers from './reducers';
 // Your application's routes
@@ -193,4 +193,4 @@ An utility that is usually used on the server-side to fetch the data requirement
 
 ## License
 
-[MIT License](https://github.com/flowcommerce/react-router-redux-fetch/blob/master/LICENSE)
+[MIT License](https://github.com/flowcommerce/redux-fetch/blob/master/LICENSE)

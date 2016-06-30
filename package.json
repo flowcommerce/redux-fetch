@@ -1,5 +1,5 @@
 {
-  "name": "@flowio/react-router-redux-fetch",
+  "name": "@flowio/redux-fetch",
   "version": "0.3.0",
   "description": "Universal data fetching bindings for React, React Router, and Redux",
   "main": "lib/index.js",
@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flowcommerce/react-router-redux-fetch.git"
+    "url": "git+https://github.com/flowcommerce/redux-fetch.git"
   },
   "author": "Flow Commerce",
   "contributors": [

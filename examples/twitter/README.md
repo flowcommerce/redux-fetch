@@ -1,10 +1,10 @@
 ## Getting Started
 
-Before running the application make sure that you have installed all dependencies for both the `react-router-redux-fetch` library and this application.
+Before running the application make sure that you have installed all dependencies for both the `redux-fetch` library and this application.
 
 ```sh
-git clone git@github.com:flowcommerce/react-router-redux-fetch.git
-cd react-router-redux-fetch
+git clone git@github.com:flowcommerce/redux-fetch.git
+cd redux-fetch
 npm install
 cd examples/twitter
 npm install
