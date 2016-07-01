@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.0
+
+### Added
+
+* Forward props passed to wrapped components to `getInitialAsyncState`. It allows developers to access props passed from React Router to their components. Unfortunately, in universal applications, populating this parameter requires the developer to pass it to `fetchRouteData`, potentially leading to discrepancies since React Router provide slightly different properties.
+
+## 0.5.0
+
+### Changed
+
+* Move `react` and `redux` to peer dependencies
+
 ## 0.4.0
 
 ### Changed
