@@ -70,11 +70,11 @@ export default path => new Promise((resolve, reject) => {
 
   // Match routes based on history object:
   match({ routes, history }, (error, redirectLocation, renderProps) => {
-    // Get array of route handler components:
-    const { components } = renderProps;
-
     // Wait for async data fetching to complete, then render:
-    fetchRouteData(store, components).then(() => {
+    fetchRouteData(store, renderProps.components, {
+      location: renderProps.location,
+      params: renderProps.params,
+    }).then(() => {
       const state = getState();
       const html = renderToString(
         <Provider store={store}>
@@ -123,7 +123,8 @@ export default container => {
 };
 ```
 
-## API
+## API Reference
+
 
 ### `fetch(getInitialAsyncState[, options])`
 
@@ -133,7 +134,17 @@ A higher order component that renders a React component after fetching the data 
 
 #### Arguments
 
-* `getInitialAsyncState(dispatch, state): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
+* `getInitialAsyncState(dispatch, state, ownProps): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
+
+The three arguments passed to the `getInitialAsyncState` are:
+
+  - `dispatch`: The store's dispatch function. Typically, it is used to dispatch asynchronous or synchronous actions to hydrate your application state.
+
+  - `state`: The current state tree of your application. Typically, it's used to conditionally change the behavior for data fetching (e.g. avoid fetching when state is already available).
+
+  - `ownProps`: On the client-side, its value will be the props passed to your component. However, on the server-side, its value is the `params` argument passed to `fetchRouteData()`. Typically, you would use this to respond to props from React Router.
+
+  > Note: The React Router props on the server-side differ slightly from those passed to the route components when rendered on the client-side. If you follow the usage documentation, it's guaranteed that `ownProps` will have a `location` and `params` property that carry the same details in both environments. You should refer to the React Router docs for more information.
 
 * `[options]`: If specified, further customizes the behavior of the fetcher instance.
 
@@ -165,6 +176,7 @@ All the original static methods of the component are hoisted.
 
 * The static `getInitialAsyncState` function is used by `fetchRouteData()` to resolve the data requirements for the matched route components.
 
+
 ### `fetch.setup(options)`
 
 A function that allows you configure the behavior of fetchers globally. For details on the `options` available for `fetch.setup()`, see `fetch()` above.
@@ -173,9 +185,18 @@ A function that allows you configure the behavior of fetchers globally. For deta
 
 * It will modify the behavior of fetcher components that are not mounted. Therefore, if you import a fetcher component returned by `fetch()` and then call `fetch.setup()` it will still change the behavior of that component.
 
-### `fetchRouteData(store, components)`
+
+### `fetchRouteData(store, components, params)`
 
 An utility that is usually used on the server-side to fetch the data requirements before rendering matched route components.
+
+The three arguments you should pass to the `fetchRouteData` are:
+
+  - `store`: A Redux store instance that should be hydrated with the application state before rendering you route components.
+
+  - `components`: Matched route components for a specific location. `fetchRouterData` will iterate through these components, calling the `getInitialAsyncState` function assigned to them with `fetch()` to update your application state.
+
+  - `params`: Parameters passed as `ownProps` to the `getInitialAsyncState` function.
 
 ## Related projects
 

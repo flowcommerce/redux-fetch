@@ -1,3 +1,3 @@
-export default function fetchData({ dispatch, getState }, getInitialAsyncState) {
-  return getInitialAsyncState(dispatch, getState());
+export default function fetchData({ dispatch, getState }, getInitialAsyncState, params) {
+  return getInitialAsyncState(dispatch, getState(), params);
 }

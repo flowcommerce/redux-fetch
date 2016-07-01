@@ -87,14 +87,29 @@ describe('fetch(getInitialAsyncState, options)', () => {
     expect(getInitialAsyncState).to.have.been.calledOnce;
   });
 
-  it('should pass store dispatch and current state to getInitialAsyncState', () => {
+  it('should pass store\'s dispatch to `getInitialAsyncState`', () => {
     const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
     const { store } = mountWithStore(<WrappedComponent />);
     expect(getInitialAsyncState).to.have.been.calledOnce;
-    expect(getInitialAsyncState).to.have.been.calledWithExactly(store.dispatch, store.getState());
+    expect(getInitialAsyncState).to.have.been.calledWith(store.dispatch);
+  });
+
+  it('should pass the current state to `getInitialAsyncState`', () => {
+    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
+    const { store } = mountWithStore(<WrappedComponent />);
+    expect(getInitialAsyncState).to.have.been.calledOnce;
+    expect(getInitialAsyncState).to.have.been.calledWith(store.dispatch, store.getState());
+  });
+
+  it('should pass own props to `getInitialAsyncState`', () => {
+    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
+    const ownProps = { foo: 'bar' };
+    const { store: { dispatch, getState } } = mountWithStore(<WrappedComponent {...ownProps} />);
+    expect(getInitialAsyncState).to.have.been.calledOnce;
+    expect(getInitialAsyncState).to.have.been.calledWith(dispatch, getState(), ownProps);
   });
 
   it('should throw when store is not in scope', () => {

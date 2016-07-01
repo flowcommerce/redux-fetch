@@ -53,8 +53,7 @@ export default function fetch(getInitialAsyncState, options = {}) {
       componentWillMount() {
         if (this.store.__didInitialLoad__ || this.settings.forceInitialFetch) {
           this.setState({ isFetching: true, hasError: false, error: null });
-
-          fetchData(this.store, getInitialAsyncState).then(() => {
+          fetchData(this.store, getInitialAsyncState, this.props).then(() => {
             this.setState({ isFetching: false });
           }).catch((error) => {
             this.setState({ isFetching: false, hasError: true, error });
