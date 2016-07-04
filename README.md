@@ -4,6 +4,8 @@
 
 ## Installation
 
+Redux Fetch requires **React 15 or later**.
+
 ```
 npm install --save @flowio/redux-fetch
 ```
@@ -20,21 +22,21 @@ The most important files are listed here, but look in the `./examples` directory
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetch } from '@flowio/redux-fetch';
-// Your application's actions
+// Your application's asynchronous actions
 import { getSomething, getSomethingElse } from './actions';
 
 function mapStateToProps() { /* ... */ }
 
 function mapDispatchToProps() { /* ... */ }
 
-function getInitialAsyncState(dispatch/*, state */) {
+function getAsyncState(dispatch/*, state, ownProps */) {
   return Promise.all([
     dispatch(getSomething()),
     dispatch(getSomethingElse()),
   ]);  
 }
 
-@fetch(getInitialAsyncState)
+@fetch(getAsyncState)
 @connect(mapStateToProps, mapDispatchToProps)
 class MyRouteHandler extends Component {
   render() {
@@ -96,6 +98,7 @@ import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
+import { fetch } from '@flowio/redux-fetch';
 import reduxThunk from 'redux-thunk';
 // Your application's reducers
 import reducers from './reducers';
@@ -114,6 +117,18 @@ export default container => {
   const initialState = window.INITIAL_STATE;
   const store = createStore(reducers, initialState, enhancer)
 
+  // Configure all fetchers to avoid fetching on first render.
+  fetch.setup({
+    shouldFetchOnMount: () => {
+      if (window.INITIAL_STATE) {
+        delete window.INITIAL_STATE;
+        return false;
+      }
+
+      return true;
+    }
+  });  
+
   // Render app with Redux and router context to container element:
   render((
     <Provider store={store}>
@@ -126,7 +141,7 @@ export default container => {
 ## API Reference
 
 
-### `fetch(getInitialAsyncState[, options])`
+### `fetch(getAsyncState[, options])`
 
 **You must decorate your route components with this higher order component for fetching to work.**
 
@@ -134,25 +149,27 @@ A higher order component that renders a React component after fetching the data 
 
 #### Arguments
 
-* `getInitialAsyncState(dispatch, state, ownProps): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
+* `getAsyncState(dispatch, state, ownProps): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
 
-The three arguments passed to the `getInitialAsyncState` are:
+	The three arguments passed to the `getAsyncState` are:
 
-  - `dispatch`: The store's dispatch function. Typically, it is used to dispatch asynchronous or synchronous actions to hydrate your application state.
+	- `dispatch`: The store's dispatch function. Typically, it is used to dispatch actions to hydrate your application state.
 
-  - `state`: The current state tree of your application. Typically, it's used to conditionally change the behavior for data fetching (e.g. avoid fetching when state is already available).
+	- `state`: The current state tree of your application.
 
-  - `ownProps`: On the client-side, its value will be the props passed to your component. However, on the server-side, its value is the `params` argument passed to `fetchRouteData()`. Typically, you would use this to respond to props from React Router.
+	- `ownProps`: On the client-side, its value will be the props passed to your component. However, on the server-side, its value is the `params` argument passed to `fetchRouteData()`. Typically, you would use this to respond to props from React Router.
 
-  > Note: The React Router props on the server-side differ slightly from those passed to the route components when rendered on the client-side. If you follow the usage documentation, it's guaranteed that `ownProps` will have a `location` and `params` property that carry the same details in both environments. You should refer to the React Router docs for more information.
+	> Note: The React Router props on the server-side differ slightly from those passed to the route components when rendered on the client-side. If you follow the usage documentation, it's guaranteed that `ownProps` will have a `location` and `params` property with the same shape in both environments. You should refer to the React Router docs for more information.
 
 * `[options]`: If specified, further customizes the behavior of the fetcher instance.
-
-  - `[forceInitialFetch = false]`: By default, the fetch component assumes the store will be rehydrated from data bootstrapped on the server response on first render and will prevent sending requests to the server until the next route change. If you instead wanted to force requests even if the store was rehydrated or you are not building an isomorphic application, you can use the `forceInitialFetch` boolean property.    
 
   - `[renderLoading = () => <Spinner />]`: By default, an activity indicator is rendered while fetching data, which often happens when the page loads or route changes. If you want to define you own component, use this option to define a function that returns a React element to be rendered instead. You may also define a function that returns `null` to avoid rendering anything (not recommended).
 
   - `[renderFailure = (error) => <Glitch />]`: By default, an error message is rendered when an uncaught error occurs while fetching data. Typically you would handle fetch errors by updating the Redux store state, but you may choose to leverage this option to separate the concerns. If you want to define your own component, use this option to return a React element to be rendered instead. The function will receive the uncaught error as an argument. You may also define a function that returns `null` to avoid rendering anything (not recommended).
+
+  - `[shouldFetchOnMount = (state, props) => true]`: By default, the application state for your route component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
+
+  - `[shouldFetchOnUpdate = (state, prevProps, nextProps) => true]`: By default, the application state for your route component will be fetched when the component is updated. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component after updating.
 
 #### Returns
 
@@ -164,17 +181,17 @@ All the original static properties of the component are hoisted.
 
 ##### Static Methods
 
-* `getInitialAsyncState`: The function passed to `fetch()` to resolve data requirements for your component.
+* `getAsyncState`: The function passed to `fetch()` to resolve data requirements for your component.
 
 All the original static methods of the component are hoisted.
 
 ##### Remarks
 
-* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `fetch(getInitialAsyncState, options)(MyComponent)`.
+* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `fetch(getAsyncState, options)(MyComponent)`.
 
 * It does not modify the passed React component. It returns a new, connected component, that you should use instead.
 
-* The static `getInitialAsyncState` function is used by `fetchRouteData()` to resolve the data requirements for the matched route components.
+* The static `getAsyncState` function is used by `fetchRouteData()` to resolve the data requirements for the matched route components.
 
 
 ### `fetch.setup(options)`
@@ -194,9 +211,9 @@ The three arguments you should pass to the `fetchRouteData` are:
 
   - `store`: A Redux store instance that should be hydrated with the application state before rendering you route components.
 
-  - `components`: Matched route components for a specific location. `fetchRouterData` will iterate through these components, calling the `getInitialAsyncState` function assigned to them with `fetch()` to update your application state.
+  - `components`: Matched route components for a specific location. `fetchRouterData` will iterate through these components, calling the `getAsyncState` function assigned to them with `fetch()` to update your application state.
 
-  - `params`: Parameters passed as `ownProps` to the `getInitialAsyncState` function.
+  - `params`: Parameters passed as `ownProps` to the `getAsyncState` function.
 
 ## Related projects
 

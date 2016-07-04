@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import hoistStatics from 'hoist-non-react-statics';
-import fetchData from '../utilities/fetch-data';
 import getDisplayName from '../utilities/get-display-name';
 import Spinner from './spinner';
 import Glitch from './glitch';
@@ -14,7 +13,7 @@ const storePropTypes = PropTypes.shape({
   getState: PropTypes.func.isRequired,
 });
 
-export default function fetch(getInitialAsyncState, options = {}) {
+export default function fetch(getAsyncState, options = {}) {
   return function wrapWithFetch(WrappedComponent) {
     const displayName = `Fetch(${getDisplayName(WrappedComponent)})`;
 
@@ -29,7 +28,7 @@ export default function fetch(getInitialAsyncState, options = {}) {
         store: storePropTypes,
       }
 
-      static getInitialAsyncState = getInitialAsyncState;
+      static getAsyncState = getAsyncState;
 
       constructor(props, context) {
         super(props, context);
@@ -51,16 +50,32 @@ export default function fetch(getInitialAsyncState, options = {}) {
       };
 
       componentWillMount() {
-        if (this.store.__didInitialLoad__ || this.settings.forceInitialFetch) {
-          this.setState({ isFetching: true, hasError: false, error: null });
-          fetchData(this.store, getInitialAsyncState, this.props).then(() => {
-            this.setState({ isFetching: false });
-          }).catch((error) => {
-            this.setState({ isFetching: false, hasError: true, error });
-          });
-        }
+        const dispatch = this.store.dispatch;
+        const state = this.store.getState();
+        const ownProps = this.props;
 
-        this.store.__didInitialLoad__ = true;
+        if (this.settings.shouldFetchOnMount(state, ownProps)) {
+          this.fetchData(dispatch, state, ownProps);
+        }
+      }
+
+      componentWillReceiveProps(nextProps) {
+        const dispatch = this.store.dispatch;
+        const state = this.store.getState();
+        const prevProps = this.props;
+
+        if (this.settings.shouldFetchOnUpdate(prevProps, nextProps)) {
+          this.fetchData(dispatch, state, nextProps);
+        }
+      }
+
+      fetchData(dispatch, state, props) {
+        this.setState({ isFetching: true, hasError: false, error: null });
+        return getAsyncState(dispatch, state, props).then(() => {
+          this.setState({ isFetching: false });
+        }).catch((error) => {
+          this.setState({ isFetching: false, hasError: true, error });
+        });
       }
 
       render() {
@@ -81,9 +96,10 @@ export default function fetch(getInitialAsyncState, options = {}) {
 }
 
 fetch.settings = {
-  forceInitialFetch: false,
-  renderFailure: (/* error */) => <Glitch />,
+  renderFailure: () => <Glitch />,
   renderLoading: () => <Spinner />,
+  shouldFetchOnMount: () => true,
+  shouldFetchOnUpdate: () => true,
 };
 
 fetch.setup = (options) => {

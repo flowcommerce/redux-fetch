@@ -14,20 +14,18 @@ function mountWithStore(node) {
   return { store, wrapper };
 }
 
-describe('fetch(getInitialAsyncState, options)', () => {
+describe('fetch(getAsyncState, options)', () => {
   it('should render its default loading component while fetching', () => {
-    const getInitialAsyncState = sinon.stub().returns(new Promise(() => {}));
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const getAsyncState = sinon.stub().returns(new Promise(() => {}));
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     expect(wrapper.find(Spinner)).to.have.length(1);
   });
 
   it('should render a custom loading component while fetching', () => {
     const ActivityIndicator = () => <div className="loading" />;
-    const getInitialAsyncState = sinon.stub().returns(new Promise(() => {}));
-    const WrappedComponent = fetch(getInitialAsyncState, {
+    const getAsyncState = sinon.stub().returns(new Promise(() => {}));
+    const WrappedComponent = fetch(getAsyncState, {
       forceInitialFetch: true,
       renderLoading: () => <ActivityIndicator />,
     })(Component);
@@ -37,10 +35,8 @@ describe('fetch(getInitialAsyncState, options)', () => {
   });
 
   it('should render its own failure component when an unhandled error occurs', (done) => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.reject());
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const getAsyncState = sinon.stub().returns(Promise.reject());
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     waitFor(
       () => wrapper.state('isFetching') === false,
@@ -54,10 +50,8 @@ describe('fetch(getInitialAsyncState, options)', () => {
   });
 
   it('should render route component after data fetching is successful', (done) => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     waitFor(
       () => wrapper.state('isFetching') === false,
@@ -69,52 +63,76 @@ describe('fetch(getInitialAsyncState, options)', () => {
     );
   });
 
-  it('should not fetch data requirements when `{ forceInitialFetch: false }`', () => {
-    const getInitialAsyncState = sinon.stub();
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: false,
+  it('should not fetch data requirements when `shouldFetchOnMount` returns `false`', () => {
+    const getAsyncState = sinon.stub();
+    const WrappedComponent = fetch(getAsyncState, {
+      shouldFetchOnMount: () => false,
     })(Component);
     mountWithStore(<WrappedComponent />);
-    expect(getInitialAsyncState).to.not.have.been.called;
+    expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should fetch data before rendering when `{ forceInitialFetch: true }`', () => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
+  it('should fetch data before rendering when `shouldFetchOnMount` returns `true`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState, {
+      shouldFetchOnMount: () => true,
     })(Component);
     mountWithStore(<WrappedComponent />);
-    expect(getInitialAsyncState).to.have.been.calledOnce;
+    expect(getAsyncState).to.have.been.calledOnce;
   });
 
-  it('should pass store\'s dispatch to `getInitialAsyncState`', () => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
+  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState, {
+      shouldFetchOnMount: () => false,
+      shouldFetchOnUpdate: () => false,
+    })(Component);
+    const { wrapper } = mountWithStore(<WrappedComponent />);
+    expect(getAsyncState).to.not.have.been.called;
+    wrapper.setProps({ foo: 'bar' });
+    expect(getAsyncState).to.not.have.been.called;
+  });
+
+  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState, {
+      shouldFetchOnMount: () => false,
+      shouldFetchOnUpdate: () => true,
+    })(Component);
+    const { wrapper } = mountWithStore(<WrappedComponent />);
+    expect(getAsyncState).to.not.have.been.called;
+    wrapper.setProps({ foo: 'bar' });
+    expect(getAsyncState).to.have.been.calledOnce;
+  });
+
+  it('should pass store\'s dispatch to `getAsyncState`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const { store } = mountWithStore(<WrappedComponent />);
-    expect(getInitialAsyncState).to.have.been.calledOnce;
-    expect(getInitialAsyncState).to.have.been.calledWith(store.dispatch);
+    expect(getAsyncState).to.have.been.calledOnce;
+    expect(getAsyncState).to.have.been.calledWith(store.dispatch);
   });
 
-  it('should pass the current state to `getInitialAsyncState`', () => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
+  it('should pass the current state to `getAsyncState`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const { store } = mountWithStore(<WrappedComponent />);
-    expect(getInitialAsyncState).to.have.been.calledOnce;
-    expect(getInitialAsyncState).to.have.been.calledWith(store.dispatch, store.getState());
+    expect(getAsyncState).to.have.been.calledOnce;
+    expect(getAsyncState).to.have.been.calledWith(store.dispatch, store.getState());
   });
 
-  it('should pass own props to `getInitialAsyncState`', () => {
-    const getInitialAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getInitialAsyncState, { forceInitialFetch: true })(Component);
+  it('should pass own props to `getAsyncState`', () => {
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState)(Component);
     const ownProps = { foo: 'bar' };
     const { store: { dispatch, getState } } = mountWithStore(<WrappedComponent {...ownProps} />);
-    expect(getInitialAsyncState).to.have.been.calledOnce;
-    expect(getInitialAsyncState).to.have.been.calledWith(dispatch, getState(), ownProps);
+    expect(getAsyncState).to.have.been.calledOnce;
+    expect(getAsyncState).to.have.been.calledWith(dispatch, getState(), ownProps);
   });
 
   it('should throw when store is not in scope', () => {
-    const getInitialAsyncState = sinon.stub();
-    const WrappedComponent = fetch(getInitialAsyncState, {
+    const getAsyncState = sinon.stub();
+    const WrappedComponent = fetch(getAsyncState, {
       forceInitialFetch: false,
     })(Component);
     expect(mount.bind(null, <WrappedComponent />)).to.throw;
@@ -124,10 +142,8 @@ describe('fetch(getInitialAsyncState, options)', () => {
 describe('fetch.setup(options)', () => {
   it('should overwrite default loading component', () => {
     const ActivityIndicator = () => <div className="loading" />;
-    const getInitialAsyncState = sinon.stub().returns(new Promise(() => {}));
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const getAsyncState = sinon.stub().returns(new Promise(() => {}));
+    const WrappedComponent = fetch(getAsyncState)(Component);
 
     // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
     // overwritten after component class is defined. However, not after the component is mounted.
@@ -141,10 +157,8 @@ describe('fetch.setup(options)', () => {
 
   it('should overwrite default failure component', (done) => {
     const Boom = () => <div className="boom" />;
-    const getInitialAsyncState = sinon.stub().returns(Promise.reject());
-    const WrappedComponent = fetch(getInitialAsyncState, {
-      forceInitialFetch: true,
-    })(Component);
+    const getAsyncState = sinon.stub().returns(Promise.reject());
+    const WrappedComponent = fetch(getAsyncState)(Component);
 
     // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
     // overwritten after component class is defined. However, not after the component is mounted.
