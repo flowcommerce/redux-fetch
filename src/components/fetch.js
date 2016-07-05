@@ -54,7 +54,7 @@ export default function fetch(getAsyncState, options = {}) {
         const state = this.store.getState();
         const ownProps = this.props;
 
-        if (this.settings.fetchStateOnMount(state, ownProps)) {
+        if (this.settings.shouldFetchOnMount(state, ownProps)) {
           this.fetchData(dispatch, state, ownProps);
         }
       }
@@ -64,7 +64,7 @@ export default function fetch(getAsyncState, options = {}) {
         const state = this.store.getState();
         const prevProps = this.props;
 
-        if (this.settings.fetchStateOnUpdate(prevProps, nextProps)) {
+        if (this.settings.shouldFetchOnUpdate(prevProps, nextProps)) {
           this.fetchData(dispatch, state, nextProps);
         }
       }
@@ -98,8 +98,8 @@ export default function fetch(getAsyncState, options = {}) {
 fetch.settings = {
   renderFailure: () => <Glitch />,
   renderLoading: () => <Spinner />,
-  fetchStateOnMount: () => true,
-  fetchStateOnUpdate: () => true,
+  shouldFetchOnMount: () => true,
+  shouldFetchOnUpdate: () => true,
 };
 
 fetch.setup = (options) => {

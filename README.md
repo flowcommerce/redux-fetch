@@ -119,7 +119,7 @@ export default container => {
 
   // Configure all fetchers to avoid fetching on first render.
   fetch.setup({
-    fetchStateOnMount: () => {
+    shouldFetchOnMount: () => {
       if (window.INITIAL_STATE) {
         delete window.INITIAL_STATE;
         return false;
@@ -167,9 +167,9 @@ A higher order component that renders a React component after fetching the data 
 
   - `[renderFailure = (error) => <Glitch />]`: By default, an error message is rendered when an uncaught error occurs while fetching data. Typically you would handle fetch errors by updating the Redux store state, but you may choose to leverage this option to separate the concerns. If you want to define your own component, use this option to return a React element to be rendered instead. The function will receive the uncaught error as an argument. You may also define a function that returns `null` to avoid rendering anything (not recommended).
 
-  - `[fetchStateOnMount = (state, props) => true]`: By default, the application state for your route component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
+  - `[shouldFetchOnMount = (state, props) => true]`: By default, the application state for your route component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
 
-  - `[fetchStateOnUpdate = (state, prevProps, nextProps) => true]`: By default, the application state for your route component will be fetched when the component is updated. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component after updating.
+  - `[shouldFetchOnUpdate = (state, prevProps, nextProps) => true]`: By default, the application state for your route component will be fetched when the component is updated. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component after updating.
 
 #### Returns
 

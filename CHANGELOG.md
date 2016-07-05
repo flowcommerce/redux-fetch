@@ -6,11 +6,11 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
-* By default, the `fetch` higher order component will fetch data when mounted or updated, unless specified to do otherwise using `fetchStateOnMount()` or `fetchStateOnUpdate()` options.
+* By default, the `fetch` higher order component will fetch data when mounted or updated, unless specified to do otherwise using `shouldFetchOnMount()` or `shouldFetchOnUpdate()` options.
 
 ### Removed
 
-* The `forceInitialFetch` option was removed in favor of the `fetchStateOnMount()` function, which can be configured globally with `fetch.setup()`.
+* The `forceInitialFetch` option was removed in favor of the `shouldFetchOnMount()` function, which can be configured globally with `fetch.setup()`.
 
 ## 0.6.0
 

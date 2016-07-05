@@ -63,29 +63,29 @@ describe('fetch(getAsyncState, options)', () => {
     );
   });
 
-  it('should not fetch data requirements when `fetchStateOnMount` returns `false`', () => {
+  it('should not fetch data requirements when `shouldFetchOnMount` returns `false`', () => {
     const getAsyncState = sinon.stub();
     const WrappedComponent = fetch(getAsyncState, {
-      fetchStateOnMount: () => false,
+      shouldFetchOnMount: () => false,
     })(Component);
     mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should fetch data before rendering when `fetchStateOnMount` returns `true`', () => {
+  it('should fetch data before rendering when `shouldFetchOnMount` returns `true`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      fetchStateOnMount: () => true,
+      shouldFetchOnMount: () => true,
     })(Component);
     mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.have.been.calledOnce;
   });
 
-  it('should not fetch when `fetchStateOnUpdate` returns `false`', () => {
+  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      fetchStateOnMount: () => false,
-      fetchStateOnUpdate: () => false,
+      shouldFetchOnMount: () => false,
+      shouldFetchOnUpdate: () => false,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
@@ -93,11 +93,11 @@ describe('fetch(getAsyncState, options)', () => {
     expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should not fetch when `fetchStateOnUpdate` returns `false`', () => {
+  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      fetchStateOnMount: () => false,
-      fetchStateOnUpdate: () => true,
+      shouldFetchOnMount: () => false,
+      shouldFetchOnUpdate: () => true,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
