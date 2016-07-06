@@ -93,7 +93,7 @@ describe('fetch(getAsyncState, options)', () => {
     expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
+  it('should fetch when `shouldFetchOnUpdate` returns `true`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
       shouldFetchOnMount: () => false,
