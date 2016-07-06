@@ -26,7 +26,6 @@ describe('fetch(getAsyncState, options)', () => {
     const ActivityIndicator = () => <div className="loading" />;
     const getAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getAsyncState, {
-      forceInitialFetch: true,
       renderLoading: () => <ActivityIndicator />,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
@@ -132,9 +131,7 @@ describe('fetch(getAsyncState, options)', () => {
 
   it('should throw when store is not in scope', () => {
     const getAsyncState = sinon.stub();
-    const WrappedComponent = fetch(getAsyncState, {
-      forceInitialFetch: false,
-    })(Component);
+    const WrappedComponent = fetch(getAsyncState)(Component);
     expect(mount.bind(null, <WrappedComponent />)).to.throw;
   });
 });
