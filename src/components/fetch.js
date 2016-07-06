@@ -69,12 +69,17 @@ export default function fetch(getAsyncState, options = {}) {
         }
       }
 
+      componentWillUnmount() {
+        this.ignoreLastFetch = true;
+      }
+
       fetchData(dispatch, state, props) {
         this.setState({ isFetching: true, hasError: false, error: null });
-        return getAsyncState(dispatch, state, props).then(() => {
-          this.setState({ isFetching: false });
+
+        getAsyncState(dispatch, state, props).then(() => {
+          if (!this.ignoreLastFetch) this.setState({ isFetching: false });
         }).catch((error) => {
-          this.setState({ isFetching: false, hasError: true, error });
+          if (!this.ignoreLastFetch) this.setState({ isFetching: false, hasError: true, error });
         });
       }
 
