@@ -104,6 +104,28 @@ describe('fetch(getAsyncState, options)', () => {
     expect(getAsyncState).to.have.been.calledOnce;
   });
 
+  it('should inject application state and own props in `shouldFetchOnMount`', () => {
+    const ownProps = { foo: 'baz' };
+    const shouldFetchOnMount = sinon.stub().returns(false);
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState, { shouldFetchOnMount })(Component);
+    const { store } = mountWithStore(<WrappedComponent {...ownProps} />);
+    const state = store.getState();
+    expect(shouldFetchOnMount).to.have.been.calledWithExactly(state, ownProps);
+  });
+
+  it('should inject application state, previous and next props in `shouldFetchOnUpdate`', () => {
+    const prevProps = { foo: 'baz' };
+    const nextProps = { foo: 'bar' };
+    const shouldFetchOnUpdate = sinon.stub().returns(false);
+    const getAsyncState = sinon.stub().returns(Promise.resolve());
+    const WrappedComponent = fetch(getAsyncState, { shouldFetchOnUpdate })(Component);
+    const { store, wrapper } = mountWithStore(<WrappedComponent {...prevProps} />);
+    const state = store.getState();
+    wrapper.setProps(nextProps);
+    expect(shouldFetchOnUpdate).to.have.been.calledWithExactly(state, prevProps, nextProps);
+  });
+
   it('should pass store\'s dispatch to `getAsyncState`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState)(Component);

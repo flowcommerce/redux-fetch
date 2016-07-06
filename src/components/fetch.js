@@ -64,7 +64,7 @@ export default function fetch(getAsyncState, options = {}) {
         const state = this.store.getState();
         const prevProps = this.props;
 
-        if (this.settings.shouldFetchOnUpdate(prevProps, nextProps)) {
+        if (this.settings.shouldFetchOnUpdate(state, prevProps, nextProps)) {
           this.fetchData(dispatch, state, nextProps);
         }
       }
