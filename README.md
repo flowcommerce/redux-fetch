@@ -77,7 +77,7 @@ export default path => new Promise((resolve, reject) => {
       location: renderProps.location,
       params: renderProps.params,
     }).then(() => {
-      const state = getState();
+      const state = store.getState();
       const html = renderToString(
         <Provider store={store}>
           <RouterContext {...renderProps} />
@@ -151,7 +151,7 @@ A higher order component that renders a React component after fetching the data 
 
 * `getAsyncState(dispatch, state, ownProps): Promise`: A function whose result must be a promise that is resolved when the store is updated with the data requirements to render the wrapped React component.
 
-	The three arguments passed to the `getAsyncState` are:
+	The three arguments passed to the `getAsyncState` function are:
 
 	- `dispatch`: The store's dispatch function. Typically, it is used to dispatch actions to hydrate your application state.
 
