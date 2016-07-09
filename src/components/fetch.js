@@ -104,7 +104,9 @@ fetch.settings = {
   renderFailure: () => <Glitch />,
   renderLoading: () => <Spinner />,
   shouldFetchOnMount: () => true,
-  shouldFetchOnUpdate: () => true,
+  // Compare `location.key` to prevent fetching data when the location is the same.
+  shouldFetchOnUpdate: (state, prevProps, nextProps) =>
+    prevProps.location.key !== nextProps.location.key,
 };
 
 fetch.setup = (options) => {
