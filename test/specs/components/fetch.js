@@ -1,11 +1,8 @@
 import React from 'react';
-import { isElementOfType } from 'react-addons-test-utils';
 import { mount } from 'enzyme';
 import createMockStore from '../../utilities/create-mock-store';
 import waitFor from '../../utilities/wait-for';
 import fetch from '../../../src/components/fetch';
-import Spinner from '../../../src/components/spinner';
-import Glitch from '../../../src/components/glitch';
 
 const Component = () => <div className="route" />;
 
@@ -16,27 +13,23 @@ function mountWithStore(node) {
 }
 
 describe('fetch(getAsyncState, options)', () => {
-  it('should render its default loading component while fetching', () => {
-    const getAsyncState = sinon.stub().returns(new Promise(() => {}));
-    const WrappedComponent = fetch(getAsyncState)(Component);
-    const { wrapper } = mountWithStore(<WrappedComponent />);
-    expect(wrapper.find(Spinner)).to.have.length(1);
-  });
-
   it('should render a custom loading component while fetching', () => {
-    const ActivityIndicator = () => <div className="loading" />;
+    const Spinner = () => <div>Loading...</div>;
     const getAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getAsyncState, {
-      renderLoading: () => <ActivityIndicator />,
+      renderLoading: () => <Spinner />,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
-    expect(wrapper.find(ActivityIndicator)).to.have.length(1);
-    expect(wrapper.find(Spinner)).to.have.length(0);
+    expect(wrapper.find(Spinner)).to.have.length(1);
+    expect(wrapper.find(Component)).to.have.length(0);
   });
 
-  it('should render its own failure component when an unhandled error occurs', (done) => {
-    const getAsyncState = sinon.stub().returns(Promise.reject());
-    const WrappedComponent = fetch(getAsyncState)(Component);
+  it('should render a custom failure component if an error is incurred', (done) => {
+    const Glitch = error => <div>{error.message}</div>;
+    const getAsyncState = sinon.stub().returns(Promise.reject({ message: 'No cake for you.' }));
+    const WrappedComponent = fetch(getAsyncState, {
+      renderFailure: (error) => <Glitch error={error} />,
+    })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     waitFor(
       () => wrapper.state('isFetching') === false,
@@ -161,16 +154,16 @@ describe('fetch(getAsyncState, options)', () => {
 
 
 describe('default fetch settings', () => {
-  context('when renderFailure() is called', () => {
-    it('should return <Glitch /> element', () => {
-      expect(isElementOfType(fetch.settings.renderFailure(), Glitch)).to.be.true;
-    });
+  it('should have renderFailure option that is undefined', () => {
+    expect(fetch.settings.renderFailure).to.be.undefined;
   });
 
-  context('when renderLoading() is called', () => {
-    it('should return <Spinner /> element', () => {
-      expect(isElementOfType(fetch.settings.renderLoading(), Spinner)).to.be.true;
-    });
+  it('should have renderLoading option that is undefined', () => {
+    expect(fetch.settings.renderLoading).to.be.undefined;
+  });
+
+  it('should have renderSuccess option that is undefined', () => {
+    expect(fetch.settings.renderSuccess).to.be.undefined;
   });
 
   context('when shouldFetchOnMount() is called', () => {
@@ -244,22 +237,21 @@ describe('default fetch settings', () => {
 
 describe('fetch.setup(options)', () => {
   it('should overwrite default loading component', () => {
-    const ActivityIndicator = () => <div className="loading" />;
+    const Spinner = () => <div>Loading...</div>;
     const getAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getAsyncState)(Component);
 
     // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
     // overwritten after component class is defined. However, not after the component is mounted.
-    fetch.setup({ renderLoading: () => <ActivityIndicator /> });
+    fetch.setup({ renderLoading: () => <Spinner /> });
 
     const { wrapper } = mountWithStore(<WrappedComponent />);
 
-    expect(wrapper.find(Spinner)).to.have.length(0);
-    expect(wrapper.find(ActivityIndicator)).to.have.length(1);
+    expect(wrapper.find(Spinner)).to.have.length(1);
   });
 
   it('should overwrite default failure component', (done) => {
-    const Boom = () => <div className="boom" />;
+    const Boom = () => <div>Booooooom!</div>;
     const getAsyncState = sinon.stub().returns(Promise.reject());
     const WrappedComponent = fetch(getAsyncState)(Component);
 
@@ -273,7 +265,6 @@ describe('fetch.setup(options)', () => {
       () => wrapper.state('isFetching') === false,
       'Data fetching timed out',
       () => {
-        expect(wrapper.find(Glitch)).to.have.length(0);
         expect(wrapper.find(Boom)).to.have.length(1);
         done();
       }

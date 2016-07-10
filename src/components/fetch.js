@@ -1,11 +1,8 @@
-/* eslint-disable no-underscore-dangle */
-
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import hoistStatics from 'hoist-non-react-statics';
+import StaticContainer from 'react-static-container';
 import getDisplayName from '../utilities/get-display-name';
-import Spinner from './spinner';
-import Glitch from './glitch';
 
 const storePropTypes = PropTypes.shape({
   subscribe: PropTypes.func.isRequired,
@@ -13,6 +10,45 @@ const storePropTypes = PropTypes.shape({
   getState: PropTypes.func.isRequired,
 });
 
+/**
+ * A higher order component that sends requests for data required to render
+ * supplied `WrappedComponent`.
+ *
+ * Render Callbacks
+ * ================
+ *
+ * Whenever the component renders, one of one of three render callback options are invoked
+ * depending on whether data is being loaded, can be resolved, or if an error is incurred.
+ *
+ *    import { connect } from 'react-redux';
+ *    import { fetch } from '@flowio/redux-fetch';
+ *    import { fetchSomeData } from '../path/to/some/actions';
+ *    import SomeComponent from '../path/to/some/component';
+ *
+ *    function getAsyncState(dispatch) {
+ *      return dispatch(fetchSomeData());
+ *    }
+ *
+ *    function mapStateToProps(state) {
+ *      return state.something;
+ *    }
+ *
+ *    export default fetch(getAsyncState, {
+ *      renderLoading: () => <View>Loading...</View>,
+ *      renderSuccess: () => <SomeComponent />,
+ *      renderFailure: (error) => <View>Error: {error.message}</View>,
+ *    })(connect(mapStateToProps)(SomeComponent));
+ *
+ * If a callback is not supplied, it has a default behavior:
+ *
+ *  - Without `renderSuccess`, `Component` will be rendered.
+ *  - Without `renderFailure`, an error will render to `null`.
+ *  - Without `renderLoading`, the existing view will continue to render. If this is the initial
+ *    mount (with no existing view), renders to `null`.
+ *
+ * In addition, supplying a `renderLoading` that returns `undefined` has the same effect as not
+ * supplying the callback. (Usually, an undefined return value is an error in React).
+ */
 export default function fetch(getAsyncState, options = {}) {
   return function wrapWithFetch(WrappedComponent) {
     const displayName = `Fetch(${getDisplayName(WrappedComponent)})`;
@@ -100,16 +136,40 @@ export default function fetch(getAsyncState, options = {}) {
         });
       }
 
-      render() {
-        if (this.state.isFetching) {
-          return this.settings.renderLoading();
-        }
-
+      renderChildren() {
         if (this.state.hasError) {
-          return this.settings.renderFailure(this.state.error);
+          if (this.settings.renderFailure) {
+            return this.settings.renderFailure(this.state.error);
+          }
+        } else if (this.state.isFetching) {
+          if (this.settings.renderLoading) {
+            return this.settings.renderLoading();
+          }
+        } else {
+          if (this.settings.renderSuccess) {
+            return this.settings.renderSuccess(this.props);
+          }
+
+          return <WrappedComponent {...this.props} />;
         }
 
-        return <WrappedComponent {...this.props} />;
+        return undefined;
+      }
+
+      render() {
+        let children = this.renderChildren();
+        let shouldUpdate = true;
+
+        if (children === undefined) {
+          children = null;
+          shouldUpdate = false;
+        }
+
+        return (
+          <StaticContainer shouldUpdate={shouldUpdate}>
+            {children}
+          </StaticContainer>
+        );
       }
     }
 
@@ -118,8 +178,9 @@ export default function fetch(getAsyncState, options = {}) {
 }
 
 fetch.settings = {
-  renderFailure: () => <Glitch />,
-  renderLoading: () => <Spinner />,
+  renderLoading: undefined,
+  renderSuccess: undefined,
+  renderFailure: undefined,
   shouldFetchOnMount: () => true,
   shouldFetchOnUpdate: (state, prevProps, nextProps) =>
     prevProps.location.pathname !== nextProps.location.pathname ||
