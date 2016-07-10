@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.8.1
+
+* Fix issue where fetchers are not called when route component is updated with different locations.
+
 ## 0.8.0
 
 ## Change
