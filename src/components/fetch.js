@@ -73,13 +73,30 @@ export default function fetch(getAsyncState, options = {}) {
         this.ignoreLastFetch = true;
       }
 
+      // Enclose `setState` in try/catch statement in promise chain to avoid swallowing errors
+      // thrown while rendering components.
+      setAsyncState(nextState) {
+        try {
+          this.setState(nextState);
+        } catch (error) {
+          console.error(
+            `Error while rendering component. Check render() method of component ${displayName}. ` +
+            `Error details: ${error}`
+          );
+        }
+      }
+
       fetchData(dispatch, state, props) {
         this.setState({ isFetching: true, hasError: false, error: null });
 
         getAsyncState(dispatch, state, props).then(() => {
-          if (!this.ignoreLastFetch) this.setState({ isFetching: false });
+          if (!this.ignoreLastFetch) {
+            this.setAsyncState({ isFetching: false });
+          }
         }).catch((error) => {
-          if (!this.ignoreLastFetch) this.setState({ isFetching: false, hasError: true, error });
+          if (!this.ignoreLastFetch) {
+            this.setAsyncState({ isFetching: false, hasError: true, error });
+          }
         });
       }
 
