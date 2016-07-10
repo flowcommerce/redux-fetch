@@ -164,13 +164,13 @@ A higher order component that attempts to fulfill the data required in order to 
 
   - `[renderLoading: Function]`: When data requirements have yet to be fulfilled, `renderLoading` is called to render the component. If this returns `undefined`, the previously rendered component (or nothing if there is no previous component) is rendered.
 
-  - `[renderSuccess: Function]`: When all data requirements are fulfilled, `renderSuccess` is called to render the component.
+  - `[renderSuccess(props): Function]`: When all data requirements are fulfilled, `renderSuccess` is called to render the component. The function will receive the `props` injected by its parent component.
 
-  - `[renderFailure: Function]`: When data requirements failed to be fulfilled, `renderFailure` is called to render the component.
+  - `[renderFailure(error): Function]`: When data requirements failed to be fulfilled, `renderFailure` is called to render the component. The function will receive the `error` received while attempting to fetch data requirements.
 
-  - `[shouldFetchOnMount: Function]`: By default, the application state for your React component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
+  - `[shouldFetchOnMount(state, ownProps): Function]`: By default, the application state for your React component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
 
-  - `[shouldFetchOnUpdate: Function]`: By default, the application state for your React component will be fetched when the component is updated only if the location differ. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component before updating.
+  - `[shouldFetchOnUpdate(state, prevProps, nextProps): Function]`: By default, the application state for your React component will be fetched when the component is updated only if the location differ. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component before updating.
 
 #### Returns
 
