@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.9.0
+
+### Added
+
+* New `renderSuccess` callback option.
+
+### Removed
+
+* Unset default render callbacks for loading and error states. Instead users will need to explicitly define them in each component wrapped with `fetch()` or globally using `fetch.setup()`.
+
 ## 0.8.1
 
 * Fix issue where fetchers are not called when route component is updated with different locations.
