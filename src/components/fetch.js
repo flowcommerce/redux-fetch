@@ -122,7 +122,7 @@ fetch.settings = {
   renderLoading: () => <Spinner />,
   shouldFetchOnMount: () => true,
   shouldFetchOnUpdate: (state, prevProps, nextProps) =>
-    prevProps.location.pathname !== nextProps.location.pathname &&
+    prevProps.location.pathname !== nextProps.location.pathname ||
     prevProps.location.search !== nextProps.location.search,
 };
 

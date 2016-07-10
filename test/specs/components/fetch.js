@@ -1,4 +1,5 @@
 import React from 'react';
+import { isElementOfType } from 'react-addons-test-utils';
 import { mount } from 'enzyme';
 import createMockStore from '../../utilities/create-mock-store';
 import waitFor from '../../utilities/wait-for';
@@ -155,6 +156,89 @@ describe('fetch(getAsyncState, options)', () => {
     const getAsyncState = sinon.stub();
     const WrappedComponent = fetch(getAsyncState)(Component);
     expect(mount.bind(null, <WrappedComponent />)).to.throw;
+  });
+});
+
+
+describe('default fetch settings', () => {
+  context('when renderFailure() is called', () => {
+    it('should return <Glitch /> element', () => {
+      expect(isElementOfType(fetch.settings.renderFailure(), Glitch)).to.be.true;
+    });
+  });
+
+  context('when renderLoading() is called', () => {
+    it('should return <Spinner /> element', () => {
+      expect(isElementOfType(fetch.settings.renderLoading(), Spinner)).to.be.true;
+    });
+  });
+
+  context('when shouldFetchOnMount() is called', () => {
+    it('should ALWAYS return true', () => {
+      expect(fetch.settings.shouldFetchOnMount()).to.be.true;
+    });
+  });
+
+  context('when shouldFetchOnUpdate() is called', () => {
+    it('should return `false` when prev/next route location are the same', () => {
+      const state = {};
+
+      const prevProps = {
+        location: {
+          pathname: '/path/to/resource',
+          search: '?q=monkeys',
+        },
+      };
+
+      const nextProps = {
+        location: {
+          pathname: '/path/to/resource',
+          search: '?q=monkeys',
+        },
+      };
+
+      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.false;
+    });
+
+    it('should return `true` when prev/next route location differ by pathname', () => {
+      const state = {};
+
+      const prevProps = {
+        location: {
+          pathname: '/path/to/resource',
+          search: '?q=monkeys',
+        },
+      };
+
+      const nextProps = {
+        location: {
+          pathname: '/path/to/other/resource',
+          search: '?q=monkeys',
+        },
+      };
+
+      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.true;
+    });
+
+    it('should return `true` when prev/next route location differ by search string', () => {
+      const state = {};
+
+      const prevProps = {
+        location: {
+          pathname: '/path/to/resource',
+          search: '?q=monkeys',
+        },
+      };
+
+      const nextProps = {
+        location: {
+          pathname: '/path/to/resource',
+          search: '?q=dolphins',
+        },
+      };
+
+      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.true;
+    });
   });
 });
 
