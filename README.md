@@ -169,7 +169,7 @@ A higher order component that renders a React component after fetching the data 
 
   - `[shouldFetchOnMount = (state, props) => true]`: By default, the application state for your route component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
 
-  - `[shouldFetchOnUpdate = (state, prevProps, nextProps) => true]`: By default, the application state for your route component will be fetched when the component is updated. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component after updating.
+  - `[shouldFetchOnUpdate = (state, prevProps, nextProps) => prevProps.location.pathname !== nextProps.location.pathname || prevProps.location.search !== nextProps.location.search]`: By default, the application state for your route component will be fetched when the component is updated only if the location differ. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component after updating.
 
 #### Returns
 
