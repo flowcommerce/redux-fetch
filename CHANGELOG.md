@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.8.0
+
+## Change
+
+* Rename options that indicate whether HOC should fetch on mount or update
+* Fix issue where `setState()` is called after components are unmounted
+* Fix issue where fetchers are called multiple times between route transitions
+* Fix issue where application state is not injected into `shouldFetchOnUpdate` option
+* Fix issue where rendering errors are swallowed in promise chain
+
 ## 0.7.0
 
 ### Added
