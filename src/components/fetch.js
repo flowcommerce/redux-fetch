@@ -52,11 +52,11 @@ export default function fetch(getAsyncState, options = {}) {
       static displayName = displayName;
 
       static contextTypes = {
-        store: storeShape.isRequired,
+        store: storeShape,
       };
 
       static propTypes = {
-        store: storeShape.isRequired,
+        store: storeShape,
       }
 
       static getAsyncState = getAsyncState;
