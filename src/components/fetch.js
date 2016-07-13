@@ -1,14 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import invariant from 'invariant';
 import hoistStatics from 'hoist-non-react-statics';
 import StaticContainer from 'react-static-container';
 import getDisplayName from '../utilities/get-display-name';
-
-const storePropTypes = PropTypes.shape({
-  subscribe: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  getState: PropTypes.func.isRequired,
-});
+import storeShape from '../utilities/store-shape';
 
 /**
  * A higher order component that sends requests for data required to render
@@ -57,11 +52,11 @@ export default function fetch(getAsyncState, options = {}) {
       static displayName = displayName;
 
       static contextTypes = {
-        store: storePropTypes,
+        store: storeShape.isRequired,
       };
 
       static propTypes = {
-        store: storePropTypes,
+        store: storeShape.isRequired,
       }
 
       static getAsyncState = getAsyncState;
