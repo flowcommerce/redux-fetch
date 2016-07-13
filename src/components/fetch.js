@@ -110,8 +110,10 @@ export default function fetch(getAsyncState, options = {}) {
         try {
           this.setState(nextState);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error(
-            `Error while rendering component. Check render() method of component ${displayName}. ` +
+            'Error while rendering component. ' +
+            `Check the render method of ${displayName}. ` +
             `Error details: ${error}`
           );
         }
