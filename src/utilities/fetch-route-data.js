@@ -1,9 +1,5 @@
-import fetchData from './fetch-data';
-
-export default function fetchRouteData(store, components, params) {
-  const promises = components
+export default function fetchRouteData({ dispatch, getState }, components, params) {
+  return Promise.all(components
     .filter(({ getAsyncState }) => getAsyncState)
-    .map(({ getAsyncState }) => fetchData(store, getAsyncState, params));
-
-  return Promise.all(promises);
+    .map(({ getAsyncState }) => getAsyncState(dispatch, getState(), params)));
 }
