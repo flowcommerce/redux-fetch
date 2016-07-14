@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.9.3
+
+* Fix an issue where calling `fetchRouteData` with an `undefined` component results in an error.
+
 ## 0.9.2
 
 * Removed `./utilities/fetch-data` module.
