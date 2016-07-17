@@ -4,6 +4,8 @@ import createMockStore from '../../utilities/create-mock-store';
 import waitFor from '../../utilities/wait-for';
 import fetch from '../../../src/components/fetch';
 
+const Spinner = () => <div>Loading...</div>;
+const Glitch = error => <div>{error.message}</div>;
 const Component = () => <div className="route" />;
 
 function mountWithStore(node) {
@@ -13,8 +15,7 @@ function mountWithStore(node) {
 }
 
 describe('fetch(getAsyncState, options)', () => {
-  it('should render a custom loading component while fetching', () => {
-    const Spinner = () => <div>Loading...</div>;
+  it('should render loading component while fetching data requirements', () => {
     const getAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getAsyncState, {
       renderLoading: () => <Spinner />,
@@ -25,7 +26,6 @@ describe('fetch(getAsyncState, options)', () => {
   });
 
   it('should render a custom failure component if an error is incurred', (done) => {
-    const Glitch = error => <div>{error.message}</div>;
     const getAsyncState = sinon.stub().returns(Promise.reject({ message: 'No cake for you.' }));
     const WrappedComponent = fetch(getAsyncState, {
       renderFailure: (error) => <Glitch error={error} />,
@@ -237,7 +237,6 @@ describe('default fetch settings', () => {
 
 describe('fetch.setup(options)', () => {
   it('should overwrite default loading component', () => {
-    const Spinner = () => <div>Loading...</div>;
     const getAsyncState = sinon.stub().returns(new Promise(() => {}));
     const WrappedComponent = fetch(getAsyncState)(Component);
 
@@ -251,13 +250,12 @@ describe('fetch.setup(options)', () => {
   });
 
   it('should overwrite default failure component', (done) => {
-    const Boom = () => <div>Booooooom!</div>;
     const getAsyncState = sinon.stub().returns(Promise.reject());
     const WrappedComponent = fetch(getAsyncState)(Component);
 
     // Purposely placed after `Component` is decorated with `fetch` to ensure settings can be
     // overwritten after component class is defined. However, not after the component is mounted.
-    fetch.setup({ renderFailure: () => <Boom /> });
+    fetch.setup({ renderFailure: error => <Glitch error={error} /> });
 
     const { wrapper } = mountWithStore(<WrappedComponent />);
 
@@ -265,7 +263,7 @@ describe('fetch.setup(options)', () => {
       () => wrapper.state('isFetching') === false,
       'Data fetching timed out',
       () => {
-        expect(wrapper.find(Boom)).to.have.length(1);
+        expect(wrapper.find(Glitch)).to.have.length(1);
         done();
       }
     );
