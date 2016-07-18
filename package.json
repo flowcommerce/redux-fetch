@@ -1,6 +1,6 @@
 {
   "name": "@flowio/redux-fetch",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Universal data fetching bindings for React, React Router, and Redux",
   "main": "lib/index.js",
   "files": [
