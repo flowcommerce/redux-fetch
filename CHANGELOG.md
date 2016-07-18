@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.9.4
+
+* Fix an issue where `setState()` was called unexpectedly while server-side rendering a wrapped component.
+
 ## 0.9.3
 
 * Fix an issue where calling `fetchRouteData` with an `undefined` component results in an error.
