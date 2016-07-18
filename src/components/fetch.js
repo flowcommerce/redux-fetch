@@ -80,7 +80,7 @@ export default function fetch(getAsyncState, options = {}) {
         isFetching: false,
       };
 
-      componentWillMount() {
+      componentDidMount() {
         const dispatch = this.store.dispatch;
         const state = this.store.getState();
         const ownProps = this.props;
