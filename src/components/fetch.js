@@ -1,54 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import invariant from 'invariant';
 import hoistStatics from 'hoist-non-react-statics';
 import StaticContainer from 'react-static-container';
-import getDisplayName from '../utilities/get-display-name';
-import storeShape from '../utilities/store-shape';
+import warning from '../utilities/warning';
+import isNode from '../utilities/isNode';
+import getDisplayName from '../utilities/getDisplayName';
+import { storeShape } from '../utilities/propTypes';
 
-/**
- * A higher order component that sends requests for data required to render
- * supplied `WrappedComponent`.
- *
- * Render Callbacks
- * ================
- *
- * Whenever the component renders, one of one of three render callback options are invoked
- * depending on whether data is being loaded, can be resolved, or if an error is incurred.
- *
- *    import { connect } from 'react-redux';
- *    import { fetch } from '@flowio/redux-fetch';
- *    import { fetchSomeData } from '../path/to/some/actions';
- *    import SomeComponent from '../path/to/some/component';
- *
- *    function getAsyncState(dispatch) {
- *      return dispatch(fetchSomeData());
- *    }
- *
- *    function mapStateToProps(state) {
- *      return state.something;
- *    }
- *
- *    export default fetch(getAsyncState, {
- *      renderLoading: () => <View>Loading...</View>,
- *      renderSuccess: () => <SomeComponent />,
- *      renderFailure: (error) => <View>Error: {error.message}</View>,
- *    })(connect(mapStateToProps)(SomeComponent));
- *
- * If a callback is not supplied, it has a default behavior:
- *
- *  - Without `renderSuccess`, `Component` will be rendered.
- *  - Without `renderFailure`, an error will render to `null`.
- *  - Without `renderLoading`, the existing view will continue to render. If this is the initial
- *    mount (with no existing view), renders to `null`.
- *
- * In addition, supplying a `renderLoading` that returns `undefined` has the same effect as not
- * supplying the callback. (Usually, an undefined return value is an error in React).
- */
+// A higher-order component that provides the ability to fulfill data requirements for components
+// before rendering based on the specified parameters.
 export default function fetch(getAsyncState, options = {}) {
-  return function wrapWithFetch(WrappedComponent) {
-    const displayName = `Fetch(${getDisplayName(WrappedComponent)})`;
+  return function createContainer(Component) {
+    const displayName = `Fetch(${getDisplayName(Component)})`;
 
-    class Fetch extends Component {
+    class FetchContainer extends React.Component {
+
       static displayName = displayName;
 
       static contextTypes = {
@@ -80,12 +46,12 @@ export default function fetch(getAsyncState, options = {}) {
         isFetching: false,
       };
 
-      componentDidMount() {
+      componentWillMount() {
         const dispatch = this.store.dispatch;
         const state = this.store.getState();
         const ownProps = this.props;
 
-        if (this.settings.shouldFetchOnMount(state, ownProps)) {
+        if (this.settings.shouldFetchBeforeMount(ownProps, state)) {
           this.fetchData(dispatch, state, ownProps);
         }
       }
@@ -95,7 +61,7 @@ export default function fetch(getAsyncState, options = {}) {
         const state = this.store.getState();
         const prevProps = this.props;
 
-        if (this.settings.shouldFetchOnUpdate(state, prevProps, nextProps)) {
+        if (this.settings.shouldFetchBeforeUpdate(prevProps, nextProps, state)) {
           this.fetchData(dispatch, state, nextProps);
         }
       }
@@ -104,14 +70,14 @@ export default function fetch(getAsyncState, options = {}) {
         this.ignoreLastFetch = true;
       }
 
-      // Enclose `setState` in try/catch statement in promise chain to avoid swallowing errors
-      // thrown while rendering components.
-      setAsyncState(nextState) {
+      setStateSafely(nextState) {
+        // Enclose `setState` in try/catch statement to avoid swallowing errors thrown while
+        // rendering components within async executions.
         try {
           this.setState(nextState);
         } catch (error) {
           // eslint-disable-next-line no-console
-          console.error(
+          warning(false,
             'Error while rendering component. ' +
             `Check the render method of ${displayName}. ` +
             `Error details: ${error}`
@@ -124,30 +90,32 @@ export default function fetch(getAsyncState, options = {}) {
 
         getAsyncState(dispatch, state, props).then(() => {
           if (!this.ignoreLastFetch) {
-            this.setAsyncState({ isFetching: false });
+            this.setStateSafely({ isFetching: false });
           }
         }).catch((error) => {
           if (!this.ignoreLastFetch) {
-            this.setAsyncState({ isFetching: false, hasError: true, error });
+            this.setStateSafely({ isFetching: false, hasError: true, error });
           }
         });
       }
 
       renderChildren() {
+        const { renderFailure, renderLoading, renderFetched } = this.settings;
+
         if (this.state.hasError) {
-          if (this.settings.renderFailure) {
-            return this.settings.renderFailure(this.state.error);
+          if (renderFailure) {
+            return renderFailure(this.state.error);
           }
         } else if (this.state.isFetching) {
-          if (this.settings.renderLoading) {
-            return this.settings.renderLoading();
+          if (renderLoading) {
+            return renderLoading();
           }
         } else {
-          if (this.settings.renderSuccess) {
-            return this.settings.renderSuccess(this.props);
+          if (renderFetched) {
+            return renderFetched(this.props);
           }
 
-          return <WrappedComponent {...this.props} />;
+          return <Component {...this.props} />;
         }
 
         return undefined;
@@ -170,7 +138,7 @@ export default function fetch(getAsyncState, options = {}) {
       }
     }
 
-    return hoistStatics(Fetch, WrappedComponent);
+    return hoistStatics(FetchContainer, Component);
   };
 }
 
@@ -178,10 +146,18 @@ fetch.settings = {
   renderLoading: undefined,
   renderSuccess: undefined,
   renderFailure: undefined,
-  shouldFetchOnMount: () => true,
-  shouldFetchOnUpdate: (state, prevProps, nextProps) =>
-    prevProps.location.pathname !== nextProps.location.pathname ||
-    prevProps.location.search !== nextProps.location.search,
+  shouldFetchBeforeMount() {
+    // Avoid fulfilling data requirements before mounting the component on the server since
+    // developers are expected to use the `fetchAsyncStateOnServer` utility to prepare the
+    // application state before rendering the matched components by React Router.
+    return !isNode();
+  },
+  shouldFetchBeforeUpdate(prevProps, nextProps) {
+    // Avoid fulfilling data requirements before updating the component unless the route locations
+    // are completely different.
+    return prevProps.location.pathname !== nextProps.location.pathname ||
+      prevProps.location.search !== nextProps.location.search;
+  },
 };
 
 fetch.setup = (options) => {

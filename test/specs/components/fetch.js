@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import createMockStore from '../../utilities/create-mock-store';
-import waitFor from '../../utilities/wait-for';
+import createMockStore from '../../utilities/createMockStore';
+import waitFor from '../../utilities/waitFor';
 import fetch from '../../../src/components/fetch';
 
 const Spinner = () => <div>Loading...</div>;
@@ -25,7 +25,7 @@ describe('fetch(getAsyncState, options)', () => {
     expect(wrapper.find(Component)).to.have.length(0);
   });
 
-  it('should render a custom failure component if an error is incurred', (done) => {
+  it('should render failure component if an error is incurred', (done) => {
     const getAsyncState = sinon.stub().returns(Promise.reject({ message: 'No cake for you.' }));
     const WrappedComponent = fetch(getAsyncState, {
       renderFailure: (error) => <Glitch error={error} />,
@@ -42,7 +42,7 @@ describe('fetch(getAsyncState, options)', () => {
     );
   });
 
-  it('should render route component after data fetching is successful', (done) => {
+  it('should render route component after data requirements are fulfilled', (done) => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState)(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
@@ -56,29 +56,29 @@ describe('fetch(getAsyncState, options)', () => {
     );
   });
 
-  it('should not fetch data requirements when `shouldFetchOnMount` returns `false`', () => {
+  it('should not fetch data requirements when `shouldFetchBeforeMount` returns `false`', () => {
     const getAsyncState = sinon.stub();
     const WrappedComponent = fetch(getAsyncState, {
-      shouldFetchOnMount: () => false,
+      shouldFetchBeforeMount: () => false,
     })(Component);
     mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should fetch data before rendering when `shouldFetchOnMount` returns `true`', () => {
+  it('should fetch data before rendering when `shouldFetchBeforeMount` returns `true`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      shouldFetchOnMount: () => true,
+      shouldFetchBeforeMount: () => true,
     })(Component);
     mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.have.been.calledOnce;
   });
 
-  it('should not fetch when `shouldFetchOnUpdate` returns `false`', () => {
+  it('should not fetch when `shouldFetchBeforeUpdate` returns `false`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      shouldFetchOnMount: () => false,
-      shouldFetchOnUpdate: () => false,
+      shouldFetchBeforeMount: () => false,
+      shouldFetchBeforeUpdate: () => false,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
@@ -86,11 +86,11 @@ describe('fetch(getAsyncState, options)', () => {
     expect(getAsyncState).to.not.have.been.called;
   });
 
-  it('should fetch when `shouldFetchOnUpdate` returns `true`', () => {
+  it('should fetch when `shouldFetchBeforeUpdate` returns `true`', () => {
     const getAsyncState = sinon.stub().returns(Promise.resolve());
     const WrappedComponent = fetch(getAsyncState, {
-      shouldFetchOnMount: () => false,
-      shouldFetchOnUpdate: () => true,
+      shouldFetchBeforeMount: () => false,
+      shouldFetchBeforeUpdate: () => true,
     })(Component);
     const { wrapper } = mountWithStore(<WrappedComponent />);
     expect(getAsyncState).to.not.have.been.called;
@@ -98,26 +98,26 @@ describe('fetch(getAsyncState, options)', () => {
     expect(getAsyncState).to.have.been.calledOnce;
   });
 
-  it('should inject application state and own props in `shouldFetchOnMount`', () => {
+  it('should inject own props and app state to `shouldFetchBeforeMount`', () => {
     const ownProps = { foo: 'baz' };
-    const shouldFetchOnMount = sinon.stub().returns(false);
+    const shouldFetchBeforeMount = sinon.stub().returns(false);
     const getAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getAsyncState, { shouldFetchOnMount })(Component);
+    const WrappedComponent = fetch(getAsyncState, { shouldFetchBeforeMount })(Component);
     const { store } = mountWithStore(<WrappedComponent {...ownProps} />);
     const state = store.getState();
-    expect(shouldFetchOnMount).to.have.been.calledWithExactly(state, ownProps);
+    expect(shouldFetchBeforeMount).to.have.been.calledWithExactly(ownProps, state);
   });
 
-  it('should inject application state, previous and next props in `shouldFetchOnUpdate`', () => {
+  it('should inject previous, next props, and app state to `shouldFetchBeforeUpdate`', () => {
     const prevProps = { foo: 'baz' };
     const nextProps = { foo: 'bar' };
-    const shouldFetchOnUpdate = sinon.stub().returns(false);
+    const shouldFetchBeforeUpdate = sinon.stub().returns(false);
     const getAsyncState = sinon.stub().returns(Promise.resolve());
-    const WrappedComponent = fetch(getAsyncState, { shouldFetchOnUpdate })(Component);
+    const WrappedComponent = fetch(getAsyncState, { shouldFetchBeforeUpdate })(Component);
     const { store, wrapper } = mountWithStore(<WrappedComponent {...prevProps} />);
     const state = store.getState();
     wrapper.setProps(nextProps);
-    expect(shouldFetchOnUpdate).to.have.been.calledWithExactly(state, prevProps, nextProps);
+    expect(shouldFetchBeforeUpdate).to.have.been.calledWithExactly(prevProps, nextProps, state);
   });
 
   it('should pass store\'s dispatch to `getAsyncState`', () => {
@@ -166,16 +166,14 @@ describe('default fetch settings', () => {
     expect(fetch.settings.renderSuccess).to.be.undefined;
   });
 
-  context('when shouldFetchOnMount() is called', () => {
+  context('when shouldFetchBeforeMount() is called', () => {
     it('should ALWAYS return true', () => {
-      expect(fetch.settings.shouldFetchOnMount()).to.be.true;
+      expect(fetch.settings.shouldFetchBeforeMount()).to.be.true;
     });
   });
 
-  context('when shouldFetchOnUpdate() is called', () => {
+  context('when shouldFetchBeforeUpdate() is called', () => {
     it('should return `false` when prev/next route location are the same', () => {
-      const state = {};
-
       const prevProps = {
         location: {
           pathname: '/path/to/resource',
@@ -190,12 +188,10 @@ describe('default fetch settings', () => {
         },
       };
 
-      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.false;
+      expect(fetch.settings.shouldFetchBeforeUpdate(prevProps, nextProps)).to.be.false;
     });
 
     it('should return `true` when prev/next route location differ by pathname', () => {
-      const state = {};
-
       const prevProps = {
         location: {
           pathname: '/path/to/resource',
@@ -210,12 +206,10 @@ describe('default fetch settings', () => {
         },
       };
 
-      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.true;
+      expect(fetch.settings.shouldFetchBeforeUpdate(prevProps, nextProps)).to.be.true;
     });
 
     it('should return `true` when prev/next route location differ by search string', () => {
-      const state = {};
-
       const prevProps = {
         location: {
           pathname: '/path/to/resource',
@@ -230,7 +224,7 @@ describe('default fetch settings', () => {
         },
       };
 
-      expect(fetch.settings.shouldFetchOnUpdate(state, prevProps, nextProps)).to.be.true;
+      expect(fetch.settings.shouldFetchBeforeUpdate(prevProps, nextProps)).to.be.true;
     });
   });
 });
