@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.10.0
+
+* Fix an issue where data requirements are not fulfilled before transitioning between components on the client side.
+
+  The issue surfaced as a result of the changes made to `0.9.4` where the fetch container was updated to perform fulfillment of data requirements on `componentDidMount` instead of `componentWillMount` to ensure the component is rendered on the server-side and prevent warnings in React when `setState` is called unexpectedly.
+
+  *We feel that this fix is hackish and will go back to the drawing board to figure out a better way to handle universal rendering with React Router and Redux.*
+
+* Some breaking changes were made to the API to help clarify the context in which things are executed:
+
+  - Renamed `shouldFetchOnMount` to `shouldFetchBeforeMount` and changed the order of the injected parameters.
+  - Renamed `shouldFetchOnUpdate` to `shouldFetchBeforeUpdate` and changed the order of the injected parameters.
+  - Renamed `renderSuccess` to `renderFetched`
+  - Renamed `fetchRouteData` to `fetchAsyncStateOnServer`
+
 ## 0.9.4
 
 * Fix an issue where `setState()` was called unexpectedly while server-side rendering a wrapped component.
