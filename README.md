@@ -218,7 +218,7 @@ The three arguments you should pass to the `fetchAsyncStateOnServer` are:
 
 ## Acknowledgments
 
-This project, while far less complex, was inspired and borrows some of [Relay's](https://facebook.github.io/relay/) concepts.
+This project, while far less complex, was inspired and borrows some concepts from [Relay](https://facebook.github.io/relay/).
 
 ## Related projects
 
