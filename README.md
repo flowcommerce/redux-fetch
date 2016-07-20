@@ -54,7 +54,7 @@ import { RouterContext, createMemoryHistory, match } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
-import { fetchRouteData } from '@flowio/redux-fetch';
+import { fetchAsyncStateOnServer } from '@flowio/redux-fetch';
 // Your application's reducers
 import reducers from './reducers';
 // Your application's routes
@@ -73,7 +73,7 @@ export default path => new Promise((resolve, reject) => {
   // Match routes based on history object:
   match({ routes, history }, (error, redirectLocation, renderProps) => {
     // Wait for async data fetching to complete, then render:
-    fetchRouteData(store, renderProps.components, {
+    fetchAsyncStateOnServer(store, renderProps.components, {
       location: renderProps.location,
       params: renderProps.params,
     }).then(() => {
@@ -119,7 +119,7 @@ export default container => {
 
   // Configure all fetchers to avoid fetching on first render.
   fetch.setup({
-    shouldFetchOnMount: () => {
+    shouldFetchBeforeMount: () => {
       if (window.INITIAL_STATE) {
         delete window.INITIAL_STATE;
         return false;
@@ -156,7 +156,7 @@ A higher order component that attempts to fulfill the data required in order to 
 
 	- `state`: The current state tree of your application.
 
-	- `ownProps`: On the client-side, its value will be the props injected to your component, usually by React Router. However, on the server-side, its value is the `params` argument injected to `fetchRouteData()`.
+	- `ownProps`: On the client-side, its value will be the props injected to your component, usually by React Router. However, on the server-side, its value is the `params` argument injected to `fetchAsyncStateOnServer()`.
 
 	> Note: The React Router props on the server-side differ slightly from those passed to the route components rendered on the client-side. You should refer to the React Router docs for more information.
 
@@ -164,13 +164,13 @@ A higher order component that attempts to fulfill the data required in order to 
 
   - `[renderLoading: Function]`: When data requirements have yet to be fulfilled, `renderLoading` is called to render the component. If this returns `undefined`, the previously rendered component (or nothing if there is no previous component) is rendered.
 
-  - `[renderSuccess(props): Function]`: When all data requirements are fulfilled, `renderSuccess` is called to render the component. The function will receive the `props` injected by its parent component.
+  - `[renderFetched(props): Function]`: When all data requirements are fulfilled, `renderFetched` is called to render the component. The function will receive the `props` injected by its parent component.
 
   - `[renderFailure(error): Function]`: When data requirements failed to be fulfilled, `renderFailure` is called to render the component. The function will receive the `error` received while attempting to fetch data requirements.
 
-  - `[shouldFetchOnMount(state, ownProps): Function]`: By default, the application state for your React component will be fetched when the component is mounted. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state` and its own `props` when called.
+  - `[shouldFetchBeforeMount(ownProps, state): Function]`: By default, the application state for your React component will be fetched before the component is mounted, except on the server where you are expected to use `fetchAsyncStateOnServer` to prepare your application state. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the component's own `props` and current application `state` when called.
 
-  - `[shouldFetchOnUpdate(state, prevProps, nextProps): Function]`: By default, the application state for your React component will be fetched when the component is updated only if the location differ. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the current application `state`, the `prevProps`, and `nextProps` passed to your component before updating.
+  - `[shouldFetchBeforeUpdate(prevProps, nextProps, state): Function]`: By default, the application state for your React component will be fetched when the component is updated only if the location differ. If you want to change this behavior, use this option to define a function that returns a boolean value indicating whether data should be fetched instead. The function will receive the `prevProps`, and `nextProps` passed to your component before updating and the current application `state`.
 
 #### Returns
 
@@ -192,7 +192,7 @@ All the original static methods of the component are hoisted.
 
 * It does not modify the passed React component. It returns a new, connected component, that you should use instead.
 
-* The static `getAsyncState` function is used by `fetchRouteData()` to resolve the data requirements for the matched route components.
+* The static `getAsyncState` function is used by `fetchAsyncStateOnServer()` to resolve the data requirements for the matched route components.
 
 * Sometimes you would handle fetch errors by updating the Redux store state, but you may choose to leverage the `renderFailure` option to separate the concerns.
 
@@ -204,17 +204,21 @@ A function that allows you to configure the behavior of fetchers globally. For d
 
 * It will modify the behavior of fetcher components that are not mounted. Therefore, if you import a fetcher component returned by `fetch()` and then call `fetch.setup()` it will still change the behavior of that component.
 
-### `fetchRouteData(store, components, params)`
+### `fetchAsyncStateOnServer(store, components, params)`
 
-An utility that is usually used on the server-side to fetch the data requirements before rendering matched route components.
+An utility that you should use on the server-side to fetch the data requirements before rendering matched route components.
 
-The three arguments you should pass to the `fetchRouteData` are:
+The three arguments you should pass to the `fetchAsyncStateOnServer` are:
 
   - `store`: A Redux store instance that should be hydrated with the application state before rendering you route components.
 
   - `components`: Matched route components for a specific location. `fetchRouterData` will iterate through these components, calling the `getAsyncState` function assigned to them with `fetch()` to update your application state.
 
   - `params`: Parameters passed as `ownProps` to the `getAsyncState` function.
+
+## Acknowledgments
+
+This project, while far less complex, was inspired and borrows some of [Relay's](https://facebook.github.io/relay/) concepts.
 
 ## Related projects
 
