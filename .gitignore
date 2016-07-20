@@ -1,5 +1,6 @@
 *.DS_Store
 *.log
+npm-debug.*
 node_modules
 .eslintcache
 lib
