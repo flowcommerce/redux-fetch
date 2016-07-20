@@ -80,7 +80,7 @@ export default function fetch(getAsyncState, options = {}) {
           warning(false,
             'Error while rendering component. ' +
             `Check the render method of ${displayName}. ` +
-            `Error details: ${error}`
+            `Error details: \n ${error.stack ? error.stack : error}`
           );
         }
       }
