@@ -3,7 +3,7 @@ import invariant from 'invariant';
 import hoistStatics from 'hoist-non-react-statics';
 import StaticContainer from 'react-static-container';
 import warning from '../utilities/warning';
-import isNode from '../utilities/isNode';
+import isBrowser from '../utilities/isBrowser';
 import getDisplayName from '../utilities/getDisplayName';
 import { storeShape } from '../utilities/propTypes';
 
@@ -150,7 +150,7 @@ fetch.settings = {
     // Avoid fulfilling data requirements before mounting the component on the server since
     // developers are expected to use the `fetchAsyncStateOnServer` utility to prepare the
     // application state before rendering the matched components by React Router.
-    return !isNode();
+    return isBrowser();
   },
   shouldFetchBeforeUpdate(prevProps, nextProps) {
     // Avoid fulfilling data requirements before updating the component unless the route locations
