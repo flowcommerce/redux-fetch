@@ -21,7 +21,7 @@ import routes from '../common/routes';
 import appConfig from './config/application.json';
 import twitterConfig from './config/twitter.json';
 import webpackConfig from '../webpack.config';
-import { fetchRouteData } from '../../../src/'; // @flowio/react-redux-fetch
+import { fetchAsyncStateOnServer } from '../../../src/'; // @flowio/react-redux-fetch
 // Adds fetch to global scope
 import 'isomorphic-fetch';
 
@@ -245,7 +245,7 @@ server.select('web').route({
           return reply.continue();
         }
 
-        return fetchRouteData(store, renderProps.components)
+        return fetchAsyncStateOnServer(store, renderProps.components)
         .then(() => {
           const initialState = JSON.stringify(store.getState());
 

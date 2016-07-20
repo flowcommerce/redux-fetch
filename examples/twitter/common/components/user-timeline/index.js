@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
 import { fetch } from '../../../../../src';
 import { fetchUserTimeline } from '../../actions/user-timeline';
 import Conversation from '../conversation';
@@ -20,7 +19,7 @@ UserTimeline.propTypes = {
   conversations: React.PropTypes.arrayOf(React.PropTypes.object),
 };
 
-function getInitialAsyncState(dispatch) {
+function getAsyncState(dispatch) {
   return dispatch(fetchUserTimeline());
 }
 
@@ -30,4 +29,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default fetch(getInitialAsyncState)(connect(mapStateToProps)(UserTimeline));
+export default fetch(getAsyncState)(connect(mapStateToProps)(UserTimeline));

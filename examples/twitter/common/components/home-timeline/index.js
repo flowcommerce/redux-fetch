@@ -28,7 +28,7 @@ HomeTimeline.propTypes = {
   conversations: React.PropTypes.arrayOf(React.PropTypes.object),
 };
 
-function getInitialAsyncState(dispatch) {
+function getAsyncState(dispatch) {
   return Promise.all([
     dispatch(fetchUser()),
     dispatch(fetchHomeTimeline()),
@@ -42,4 +42,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default fetch(getInitialAsyncState)(connect(mapStateToProps)(HomeTimeline));
+export default fetch(getAsyncState)(connect(mapStateToProps)(HomeTimeline));
