@@ -49,14 +49,14 @@ export default function fetch(getAsyncState, options = {}) {
           return <Component {...this.props} />;
         }
 
-        return undefined;
+        return void 0;
       }
 
       render() {
         let children = this.renderChildrenIfNecessary();
         let shouldUpdate = true;
 
-        if (children === undefined) {
+        if (typeof children === 'undefined') {
           children = null;
           shouldUpdate = false;
         }

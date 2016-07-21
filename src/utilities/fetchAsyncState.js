@@ -6,7 +6,7 @@
  * into RouterContext.
  * @return {Promise}
  */
-export default function fetchAggregatedAsyncState({ dispatch, getState }, renderProps) {
+export default function fetchAsyncState({ dispatch, getState }, renderProps) {
   return Promise.all(renderProps.components
     // Assign a default value to prevent errors when a component is undefined.
     .filter(({ getAsyncState } = {}) => getAsyncState)

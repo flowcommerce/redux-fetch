@@ -14,11 +14,10 @@ export default class FetchProvider extends Component {
 
   static propTypes = {
     /**
-     * @property {Function} A function that is called with the application store and injected router
-     * properties every time the router state is updated and should return a promise that is
-     * resolved after fulfilling the data requirements for all matched route components or
-     * rejected otherwise. All components created with `fetch()` will have a static `getAsyncState`
-     * function that should be called to fulfill the data requirements for that component.
+     * @property {Function} A function responsible for fulfilling the data requirements for
+     * components matched to a location. The application store and router state will be
+     * injected into the function when called and it should return a promise that is settled after
+     * fetching the required data.
      */
     aggregator: PropTypes.func,
 
