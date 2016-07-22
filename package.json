@@ -17,7 +17,8 @@
     "prepublish": "npm run build",
     "pretest": "npm run lint",
     "watch:build": "nodemon --exec 'npm run build' --watch './src' --watch './test'",
-    "watch:test": "nodemon --exec 'mocha --debug ./test/specs' --watch './src' --watch './test'"
+    "watch:test": "nodemon --exec 'mocha --debug ./test/specs' --watch './src' --watch './test'",
+    "postpublish": "greenkeeper-postpublish"
   },
   "keywords": [
     "fetching",
@@ -58,6 +59,7 @@
     "eslint-plugin-import": "^1.9.2",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
+    "greenkeeper-postpublish": "^1.0.0",
     "istanbul": "1.0.0-alpha.2",
     "jsdom": "^9.2.1",
     "mocha": "^2.5.3",
