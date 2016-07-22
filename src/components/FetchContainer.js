@@ -30,7 +30,6 @@ export default function fetch(getAsyncState, options = {}) {
           fetching,
           renderFailure,
           renderLoading,
-          renderFetched,
         } = Object.assign({}, this.context.fetch, options);
 
         if (error) {
@@ -42,10 +41,6 @@ export default function fetch(getAsyncState, options = {}) {
             return renderLoading();
           }
         } else {
-          if (renderFetched) {
-            return renderFetched(this.props);
-          }
-
           return <Component {...this.props} />;
         }
 

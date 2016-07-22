@@ -84,7 +84,6 @@ describe('FetchProvider', () => {
   it('should add render callbacks to the child context', () => {
     const routerState = createMockRouterState();
     const renderFailure = sinon.stub();
-    const renderFetched = sinon.stub();
     const renderLoading = sinon.stub();
     const store = createMockStore();
     const wrapper = mount(
@@ -92,7 +91,6 @@ describe('FetchProvider', () => {
         store={store}
         routerProps={routerState}
         renderFailure={renderFailure}
-        renderFetched={renderFetched}
         renderLoading={renderLoading}>
         <Child />
       </FetchProvider>
@@ -101,7 +99,6 @@ describe('FetchProvider', () => {
     const child = wrapper.find(Child).get(0);
 
     expect(child).to.have.deep.property('context.fetch.renderFailure', renderFailure);
-    expect(child).to.have.deep.property('context.fetch.renderFetched', renderFetched);
     expect(child).to.have.deep.property('context.fetch.renderLoading', renderLoading);
   });
 

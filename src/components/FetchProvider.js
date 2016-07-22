@@ -58,13 +58,6 @@ export default class FetchProvider extends Component {
     renderFailure: PropTypes.func,
 
     /**
-     * @property {Function} When all data requirements are fulfilled, `renderFetched` is called to
-     * render the component. You should define this property if you want to propagate the same
-     * behavior on all containers created with `fetch()` in the component hierarchy below.
-     */
-    renderFetched: PropTypes.func,
-
-    /**
      * @property {Object} An instance of the Redux store used in your application.
      */
     store: storeShape,
@@ -107,7 +100,6 @@ export default class FetchProvider extends Component {
         fetching: this.state.fetching,
         firstRender: this.firstRender,
         renderFailure: this.props.renderFailure,
-        renderFetched: this.props.renderFetched,
         renderLoading: this.props.renderLoading,
       },
     };

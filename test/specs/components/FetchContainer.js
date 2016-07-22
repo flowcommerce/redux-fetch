@@ -83,21 +83,6 @@ describe('FetchContainer', () => {
     expect(wrapper.find(Glitch)).to.have.length(1);
   });
 
-  it('should render fetched component after required data is fulfilled', () => {
-    const getAsyncState = sinon.stub();
-
-    @fetch(getAsyncState, { renderFetched: () => <Passthrough /> })
-    class Container extends Component {
-      render() {
-        return (<div />);
-      }
-    }
-
-    const wrapper = mountWithContext(<Container />);
-
-    expect(wrapper.find(Passthrough)).to.have.length(1);
-  });
-
   it('should render child component after required data is fulfilled', () => {
     const getAsyncState = sinon.stub();
 
