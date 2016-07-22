@@ -246,7 +246,7 @@ server.select('web').route({
           return reply.continue();
         }
 
-        return fetchAsyncState(store, renderProps.components)
+        return fetchAsyncState(store, renderProps)
         .then(() => {
           const initialState = JSON.stringify(store.getState());
 
