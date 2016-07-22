@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "clean": "rm -rf lib coverage",
+    "clean": "rm -rf ./lib ./coverage",
     "build": "babel ./src --out-dir ./lib",
     "coverage": "istanbul cover --report html _mocha -- ./test/specs",
     "lint": "eslint --cache --fix ./src ./test",
