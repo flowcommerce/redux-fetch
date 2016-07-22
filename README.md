@@ -1,4 +1,6 @@
-# Redux Fetch [![Build Status](https://travis-ci.org/flowcommerce/redux-fetch.svg?branch=master)](https://travis-ci.org/flowcommerce/redux-fetch)
+[![Build Status](https://travis-ci.org/flowcommerce/redux-fetch.svg?branch=master)](https://travis-ci.org/flowcommerce/redux-fetch)
+
+# Redux Fetch
 
 Redux Fetch provides universal data fetching bindings for applications built with React, React Router, and Redux.
 
