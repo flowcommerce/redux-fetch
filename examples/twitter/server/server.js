@@ -21,7 +21,8 @@ import routes from '../common/routes';
 import appConfig from './config/application.json';
 import twitterConfig from './config/twitter.json';
 import webpackConfig from '../webpack.config';
-import { fetchAsyncStateOnServer } from '../../../src/'; // @flowio/react-redux-fetch
+import { fetchAsyncState, FetchProvider } from '../../../src/'; // @flowio/react-redux-fetch
+
 // Adds fetch to global scope
 import 'isomorphic-fetch';
 
@@ -245,13 +246,15 @@ server.select('web').route({
           return reply.continue();
         }
 
-        return fetchAsyncStateOnServer(store, renderProps.components)
+        return fetchAsyncState(store, renderProps.components)
         .then(() => {
           const initialState = JSON.stringify(store.getState());
 
           const html = renderToString((
             <Provider store={store}>
-              <RouterContext {...renderProps} />
+              <FetchProvider routerProps={renderProps}>
+                <RouterContext {...renderProps} />
+              </FetchProvider>
             </Provider>
           ));
 

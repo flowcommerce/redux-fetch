@@ -16,7 +16,8 @@
     "precoverage": "npm run lint",
     "prepublish": "npm run build",
     "pretest": "npm run lint",
-    "watch:build": "nodemon --exec 'npm run build' --watch './src' --watch './test'"
+    "watch:build": "nodemon --exec 'npm run build' --watch './src' --watch './test'",
+    "watch:test": "nodemon --exec 'mocha --debug ./test/specs' --watch './src' --watch './test'"
   },
   "keywords": [
     "fetching",
@@ -41,6 +42,7 @@
   },
   "peerDependencies": {
     "react": "^15.0.0",
+    "react-router": "^2.0.0",
     "redux": "^3.0.0"
   },
   "devDependencies": {
@@ -48,6 +50,7 @@
     "@flowio/eslint-config-flowio": "^2.0.0",
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.1.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "enzyme": "^2.3.0",
@@ -62,6 +65,8 @@
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-router": "^2.6.0",
+    "redux": "^3.5.2",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0"
   }

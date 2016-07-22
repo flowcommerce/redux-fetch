@@ -1,2 +1,3 @@
-export { default as fetch } from './components/fetch';
-export { default as fetchAsyncStateOnServer } from './utilities/fetchAsyncStateOnServer';
+export fetch from './components/FetchContainer';
+export fetchAsyncState from './utilities/fetchAsyncState';
+export FetchProvider from './components/FetchProvider';

@@ -1,3 +1,4 @@
 {
-  "presets": ["@flowio/babel-preset-flowio"]
+  "presets": ["@flowio/babel-preset-flowio"],
+  "plugins": ["transform-decorators-legacy"]
 }
