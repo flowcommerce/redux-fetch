@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/flowcommerce/redux-fetch.svg?branch=master)](https://travis-ci.org/flowcommerce/redux-fetch)
+[![Build Status][travis-image]][travis-url]
+[![NPM Version][npm-image]][npm-url]
+[![Downloads][downloads-image]][downloads-url]
 
 # Redux Fetch
 
@@ -212,3 +214,10 @@ This project, while far less complex, was inspired and borrows some concepts fro
 ## License
 
 [MIT License](https://github.com/flowcommerce/redux-fetch/blob/master/LICENSE)
+
+[npm-image]: https://img.shields.io/npm/v/@flowio/redux-fetch.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@flowio/redux-fetch
+[downloads-image]: https://img.shields.io/npm/dm/redux-fetch.svg?style=flat-square
+[downloads-url]: https://www.npmjs.com/package/@flowio/redux-fetch
+[travis-image]: https://img.shields.io/travis/flowcommerce/redux-fetch/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/flowcommerce/redux-fetch
