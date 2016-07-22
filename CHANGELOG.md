@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.11.0
+
+* Complete API overhaul that simplifies the library integration by leveraging React Router 2 API
+
 ## 0.10.0
 
 * Fix an issue where data requirements are not fulfilled before transitioning between components on the client side.
