@@ -8,11 +8,12 @@
     "src"
   ],
   "scripts": {
+    "clean": "rm -rf lib coverage",
     "build": "babel ./src --out-dir ./lib",
     "coverage": "istanbul cover --report html _mocha -- ./test/specs",
     "lint": "eslint --cache --fix ./src ./test",
     "test": "mocha ./test/specs",
-    "prebuild": "npm run coverage",
+    "prebuild": "npm-run-all clean coverage",
     "precoverage": "npm run lint",
     "prepublish": "npm run build",
     "pretest": "npm run lint",
@@ -64,6 +65,7 @@
     "jsdom": "^9.2.1",
     "mocha": "^2.5.3",
     "nodemon": "^1.9.2",
+    "npm-run-all": "^2.3.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
     "react-dom": "^15.1.0",
