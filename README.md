@@ -130,7 +130,7 @@ A higher order component that attempts to fulfill the data required in order to 
 
 	- `getState`: A function that returns the current state tree of your application.
 
-	- `routerState`: Properties normally injected into `RouterContext` that represent the [current state of a router](https://github.com/reactjs/react-router/blob/master/docs/Glossary.md#routerstate).
+	- `[routerState](https://github.com/reactjs/react-router/blob/master/docs/Glossary.md#routerstate)`: Properties normally injected into `RouterContext` that represent the current state of a router.
 
 * `[options: Object]`: If specified, further customizes the behavior of the container.
 
