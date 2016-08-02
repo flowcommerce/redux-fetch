@@ -44,7 +44,7 @@ export default function fetch(getAsyncState, options = {}) {
           return <Component {...this.props} />;
         }
 
-        return void 0;
+        return undefined;
       }
 
       render() {
