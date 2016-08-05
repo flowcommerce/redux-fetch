@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.12.1
+
+* Export React Router middleware in main file
+
 ## 0.12.0
 
 * Add a React Router middleware.
