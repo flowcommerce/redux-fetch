@@ -63,7 +63,7 @@
     "greenkeeper-postpublish": "^1.0.0",
     "istanbul": "1.0.0-alpha.2",
     "jsdom": "^9.2.1",
-    "mocha": "^2.5.3",
+    "mocha": "^3.0.1",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.3.0",
     "react": "^15.1.0",
