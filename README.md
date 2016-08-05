@@ -89,8 +89,8 @@ export default (location) => {
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, RouterContext, browserHistory } from 'react-router';
-import { FetchProvider } from '@flowio/redux-fetch';
+import { applyRouterMiddleware, browserHistory, Router } from 'react-router';
+import { useFetch } from '@flowio/redux-fetch';
 import configureStore from './path/to/configure/store';
 import routes from './path/to/routes';
 
@@ -107,11 +107,7 @@ export default (container) => {
       <Router
         routes={routes}
         history={browserHistory}
-        render={(props) => (
-          <FetchProvider routerProps={props}>
-            <RouterContext {...props} />
-          </FetchProvider>
-        )} />
+        render={applyRouterMiddleware(useFetch())} />
     </Provider>,
     container
   );
@@ -185,6 +181,14 @@ A React component that provides the context needed for containers created with `
 * You should only set `forceInitialFetch` to `true` on the client-side.
 
 * Providing a render callback to `fetch()` will take precedence over render callbacks injected to `FetchProvider`.
+
+### `useFetch([options])`
+
+A React Router middleware that provides the context needed for containers created with `fetch()` in the component hierarchy below.
+
+#### Arguments
+
+* `[options: Object]`: Same options available to `FetchProvider` as props with the exception of `routerProps`.
 
 ### `fetchAsyncState(store, routerState)`
 
