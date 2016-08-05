@@ -180,7 +180,7 @@ A React component that provides the context needed for containers created with `
 
 * Providing a render callback to `fetch()` will take precedence over render callbacks injected to `FetchProvider`.
 
-### `useFetch(options)`
+### `useFetch([options])`
 
 A React Router middleware that provides the context needed for containers created with `fetch()` in the component hierarchy below.
 
