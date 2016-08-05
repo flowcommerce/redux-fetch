@@ -2,10 +2,14 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.12.0
+
+* Add a React Router middleware.
+
 ## 0.11.1
 
 * Fix an issue where modules would not be found in some environments.
-* Updated documentation with argument and return value types.
+* Update documentation with argument and return value types.
 
 ## 0.11.0
 
