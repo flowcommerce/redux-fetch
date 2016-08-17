@@ -65,7 +65,7 @@
     "jsdom": "^9.2.1",
     "mocha": "^3.0.1",
     "nodemon": "^1.9.2",
-    "npm-run-all": "^2.3.0",
+    "npm-run-all": "^3.0.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
     "react-dom": "^15.1.0",
