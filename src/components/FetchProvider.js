@@ -131,7 +131,7 @@ export default class FetchProvider extends Component {
     this.setState({ fetching: true, error: null });
     this.props.aggregator(this.store, props.routerProps).then(() => {
       this.setState({ fetching: false });
-    }).catch((error) => {
+    }, (error) => {
       this.setState({ fetching: false, error });
     });
   }
