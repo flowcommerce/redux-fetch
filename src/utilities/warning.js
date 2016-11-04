@@ -14,7 +14,10 @@ export default function warning(condition, format, ...args) {
 
     if (!condition && hasConsole) {
       let argIndex = 0;
-      console.warn(`Warning: ${format.replace(/%s/g, () => args[argIndex++])}`);
+      console.warn(`Warning: ${format.replace(/%s/g, () => {
+        argIndex += 1;
+        return args[argIndex];
+      })}`);
     }
   }
 }
