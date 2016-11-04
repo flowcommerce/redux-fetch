@@ -70,7 +70,7 @@ describe('FetchContainer', () => {
   it('should render failure component if an error is incurred', () => {
     const getAsyncState = sinon.stub();
 
-    @fetch(getAsyncState, { renderFailure: (error) => <Glitch error={error} /> })
+    @fetch(getAsyncState, { renderFailure: error => <Glitch error={error} /> })
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
