@@ -89,7 +89,7 @@ export default class FetchProvider extends Component {
     invariant(this.store,
       'Could not find "store" in either the context or props of "FetchProvider". ' +
       'Either wrap the root component in a `<Provider>`, ' +
-      'or explicitly pass "store" as a prop to "FetchProvider".'
+      'or explicitly pass "store" as a prop to "FetchProvider".',
     );
   }
 

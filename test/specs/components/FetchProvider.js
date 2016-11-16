@@ -23,7 +23,7 @@ describe('FetchProvider', () => {
     expect(mount.bind(null,
       <FetchProvider routerProps={routerState}>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     )).to.throw;
   });
 
@@ -36,7 +36,7 @@ describe('FetchProvider', () => {
     mount(
       <FetchProvider store={store} aggregator={aggregator} routerProps={routerState}>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     expect(aggregator).to.not.have.been.called;
@@ -55,7 +55,7 @@ describe('FetchProvider', () => {
         routerProps={routerState}
         forceInitialFetch>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     expect(aggregator).to.have.been.calledOnce;
@@ -74,7 +74,7 @@ describe('FetchProvider', () => {
         routerProps={routerState}
         forceInitialFetch>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     expect(aggregator).to.have.been.calledOnce;
@@ -93,7 +93,7 @@ describe('FetchProvider', () => {
         renderFailure={renderFailure}
         renderLoading={renderLoading}>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     const child = wrapper.find(Child).get(0);
@@ -114,7 +114,7 @@ describe('FetchProvider', () => {
         routerProps={routerState}
         forceInitialFetch>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     const child = wrapper.find(Child).get(0);
@@ -133,7 +133,7 @@ describe('FetchProvider', () => {
         aggregator={aggregator}
         routerProps={routerState}>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     const child = wrapper.find(Child).get(0);
@@ -153,7 +153,7 @@ describe('FetchProvider', () => {
         routerProps={routerState}
         forceInitialFetch>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     promise.then(() => {
@@ -177,7 +177,7 @@ describe('FetchProvider', () => {
         routerProps={routerState}
         forceInitialFetch>
         <Child />
-      </FetchProvider>
+      </FetchProvider>,
     );
 
     return promise.catch(() => {}).then(() => {
