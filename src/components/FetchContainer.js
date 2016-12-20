@@ -4,8 +4,14 @@ import StaticContainer from 'react-static-container';
 import getDisplayName from '../utilities/getDisplayName';
 import { fetchShape } from '../utilities/PropTypes';
 
-// A higher-order component that provides the ability to fulfill data requirements for components
-// before rendering based on the specified parameters.
+/**
+ * A higher-order component that provides the ability to fulfill data
+ * requirements for components before rendering.
+ * @param {Function} getAsyncState
+ * @param {Function} [options.renderFailure]
+ * @param {Function} [options.renderLoading]
+ * @param {Function} [options.renderSuccess]
+ */
 export default function fetch(getAsyncState, options = {}) {
   return function createContainer(Component) {
     const componentName = getDisplayName(Component);
@@ -19,9 +25,10 @@ export default function fetch(getAsyncState, options = {}) {
         fetch: fetchShape.isRequired,
       };
 
-      // Define `getAsyncState` as a static property of the component so that it can be accessed
-      // later by `fetchAsyncState` utility, which aggregates all asynchronous calls needed
-      // to fulfill the data requirements for a branch of the router before rendering.
+      // Define `getAsyncState` as a static property of the component so that
+      // it can be accessed later by `fetchAsyncState` utility, which aggregates
+      // all asynchronous calls needed to fulfill the data requirements for a
+      // branch of the router before rendering.
       static getAsyncState = getAsyncState;
 
       renderChildrenIfNecessary() {
