@@ -15,7 +15,7 @@ import { fetchShape } from '../utilities/PropTypes';
 export default function fetch(getAsyncState, options = {}) {
   return function createContainer(Component) {
     const componentName = getDisplayName(Component);
-    const containerName = `Fetch(${componentName})`;
+    const containerName = `WithFetch(${componentName})`;
 
     class FetchContainer extends React.Component {
 
