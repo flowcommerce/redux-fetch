@@ -5,11 +5,12 @@ import ActionTypes from '../constants/ActionTypes';
 
 const initialState = {
   error: null,
+  timeline: [],
 };
 
 export default handleActions({
-  [ActionTypes.FETCH_USER_SUCCESS]: (state, action) =>
-    assign({}, state, action.payload),
-  [ActionTypes.FETCH_USER_FAILURE]: (state, action) =>
+  [ActionTypes.FETCH_USER_TIMELINE_SUCCESS]: (state, action) =>
+    assign({}, state, { timeline: action.payload }),
+  [ActionTypes.FETCH_USER_TIMELINE_FAILURE]: (state, action) =>
     assign({}, state, { error: action.payload }),
 }, initialState);

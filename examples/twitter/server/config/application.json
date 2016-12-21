@@ -1,8 +1,0 @@
-{
-  "hostname": "0.0.0.0",
-  "port": "7050",
-  "jwt": {
-    "cookie": "token",
-    "secret": "eAojh/hLKfgIOlfJKMb7x5AKucOUKTTMokQx70d6MNXR/0eI1PSfZyye30i+J0wDvOmEmu2B+V8ehNaecfgvxxVtVSUrrMX1lAcq7cIdAZq+dzPm3yQ40PiG72ZIHGK5j25WxnXUJWq0n0mwWbFy6lpIqwJ3OkGR0OERXk33g9iIdhdsFYVi1+ZU0RJaVCSctvv6nWtJUaSuXvjZwL1UYvl5TgdEebe5jzqZ9mIm/z4/sdyLdA8b9VNvtkw6eG3lzF+R3O1vjAyeMEz3BZPQ/hDH8PxjZ+gDWEbuJY86YdegvgRcaDSsd+JOnNjPDApHHldQ7a8FyB74Ru/4RKczjA=="
-  }
-}

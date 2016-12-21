@@ -1,0 +1,13 @@
+import keyMirror from 'keymirror';
+
+export default keyMirror({
+  FETCH_HOME_TIMELINE_REQUEST: null,
+  FETCH_HOME_TIMELINE_SUCCESS: null,
+  FETCH_HOME_TIMELINE_FAILURE: null,
+  FETCH_USER_REQUEST: null,
+  FETCH_USER_SUCCESS: null,
+  FETCH_USER_FAILURE: null,
+  FETCH_USER_TIMELINE_REQUEST: null,
+  FETCH_USER_TIMELINE_SUCCESS: null,
+  FETCH_USER_TIMELINE_FAILURE: null,
+});

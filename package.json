@@ -11,7 +11,7 @@
     "clean": "rm -rf ./lib ./coverage",
     "build": "babel ./src --out-dir ./lib",
     "coverage": "istanbul cover --report html _mocha -- ./test/specs",
-    "lint": "eslint --cache --fix ./src ./test",
+    "lint": "eslint --cache --ext .jsx,.js .",
     "test": "mocha ./test/specs",
     "prebuild": "npm-run-all clean coverage",
     "precoverage": "npm run lint",

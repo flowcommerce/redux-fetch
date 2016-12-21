@@ -1,0 +1,4 @@
+{
+  "presets": ["@flowio/babel-preset-flowio"],
+  "plugins": ["react-hot-loader/babel"]
+}

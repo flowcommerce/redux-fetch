@@ -1,24 +1,37 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { applyRouterMiddleware, browserHistory, Router } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-import { Provider } from 'react-redux';
-import configureStore from '../common/utilities/configureStore';
-import routes from '../common/routes';
-import { useFetch } from '../../../src/utilities/useFetch';
-// Adds fetch to global scope
 import 'isomorphic-fetch';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+
+import configureStore from '../common/utilities/configureStore';
 
 const store = configureStore(window.$REDUX_STATE);
 
-const history = syncHistoryWithStore(browserHistory, store);
+const rootElement = document.querySelector('#react-root');
 
-render(
-  <Provider store={store}>
-    <Router
-      history={history}
-      routes={routes}
-      render={applyRouterMiddleware(useFetch())} />
-  </Provider>,
-  document.querySelector('#react-root')
-);
+function render() {
+  const Root = require('../common/components/Root').default;
+
+  ReactDOM.render(
+    <AppContainer>
+      <Root store={store} />
+    </AppContainer>,
+    rootElement,
+  );
+}
+
+render();
+
+// Hot Module Replacement API
+if (module.hot) {
+  module.hot.accept('../common/components/Root', () => {
+    // Workaround to support hot swapping of routes.
+    // Follow this thread to understand the reasoning behind it.
+    // https://github.com/ReactTraining/react-router/issues/2182
+    setTimeout(() => {
+      ReactDOM.unmountComponentAtNode(rootElement);
+      render();
+    });
+  });
+}
