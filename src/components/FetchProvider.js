@@ -112,12 +112,13 @@ export default class FetchProvider extends Component {
   }
 
   componentWillMount() {
+    const { aggregator, forceInitialFetch, routerProps } = this.props;
+
     // Rendering on the server-side is stateless, therefore it will always be
     // "first render" and data will not be fetched. Developers are expected to
-    // fulfill the data requirements with `fetchAsyncState` on the server
-    // instead.
-    if (!this.firstRender || this.props.forceInitialFetch) {
-      this.getAsyncState(this.props);
+    // fulfill the data requirements with `fetchAsyncState` on the server instead.
+    if (!this.firstRender || forceInitialFetch) {
+      this.getAsyncState(aggregator, routerProps);
     }
   }
 
@@ -126,17 +127,18 @@ export default class FetchProvider extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { aggregator, routerProps } = nextProps;
     const prevLocation = this.props.routerProps.location;
-    const nextLocation = nextProps.routerProps.location;
+    const nextLocation = routerProps.location;
 
     if (nextLocation !== prevLocation) {
-      this.getAsyncState(nextProps);
+      this.getAsyncState(aggregator, routerProps);
     }
   }
 
-  getAsyncState(props) {
+  getAsyncState(aggregator, routerProps) {
     this.setState({ fetching: true, error: null });
-    props.aggregator(this.store, props.routerProps).then(() => {
+    aggregator(this.store, routerProps).then(() => {
       this.setState({ fetching: false });
     }, (error) => {
       this.setState({ fetching: false, error });
