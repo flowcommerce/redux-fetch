@@ -88,6 +88,8 @@ export default class FetchProvider extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.retry = this.retry.bind(this);
+
     this.firstRender = true;
     this.store = props.store || context.store;
     this.state = { error: null, fetching: false };
@@ -107,6 +109,7 @@ export default class FetchProvider extends Component {
         firstRender: this.firstRender,
         renderFailure: this.props.renderFailure,
         renderLoading: this.props.renderLoading,
+        retry: this.retry,
       },
     };
   }
@@ -143,6 +146,11 @@ export default class FetchProvider extends Component {
     }, (error) => {
       this.setState({ fetching: false, error });
     });
+  }
+
+  retry() {
+    const { aggregator, routerProps } = this.props;
+    this.getAsyncState(aggregator, routerProps);
   }
 
   render() {

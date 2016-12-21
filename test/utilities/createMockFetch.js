@@ -4,7 +4,7 @@ const defaults = {
   firstRender: true,
   renderLoading: undefined,
   renderFailure: undefined,
-  renderFetched: undefined,
+  retry: sinon.stub(),
 };
 
 export default function createMockFetch(context = {}) {

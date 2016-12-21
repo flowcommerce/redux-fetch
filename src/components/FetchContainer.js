@@ -37,11 +37,12 @@ export default function fetch(getAsyncState, options = {}) {
           fetching,
           renderFailure,
           renderLoading,
+          retry,
         } = Object.assign({}, this.context.fetch, options);
 
         if (error) {
           if (renderFailure) {
-            return renderFailure(error);
+            return renderFailure(error, retry);
           }
         } else if (fetching) {
           if (renderLoading) {

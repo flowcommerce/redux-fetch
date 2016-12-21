@@ -102,6 +102,49 @@ describe('FetchProvider', () => {
     expect(child).to.have.deep.property('context.fetch.renderLoading', renderLoading);
   });
 
+  it('should retry request when retry method is called', () => {
+    const store = createMockStore();
+    const routerState = createMockRouterState();
+    const promise = Promise.resolve();
+    const aggregator = sinon.stub().returns(promise);
+    const wrapper = mount(
+      <FetchProvider
+        store={store}
+        aggregator={aggregator}
+        routerProps={routerState}>
+        <Child />
+      </FetchProvider>,
+    );
+
+    wrapper.instance().retry();
+
+    return expect(promise).to.be.fulfilled.then(() => {
+      expect(aggregator).to.have.been.calledOnce;
+      expect(aggregator).to.have.been.calledWithExactly(store, routerState);
+    });
+  });
+
+  it('should add a function to retry requests to the child context', () => {
+    const routerState = createMockRouterState();
+    const renderFailure = sinon.stub();
+    const renderLoading = sinon.stub();
+    const store = createMockStore();
+    const wrapper = mount(
+      <FetchProvider
+        store={store}
+        routerProps={routerState}
+        renderFailure={renderFailure}
+        renderLoading={renderLoading}>
+        <Child />
+      </FetchProvider>,
+    );
+
+    const instance = wrapper.instance();
+    const child = wrapper.find(Child).get(0);
+
+    expect(child).to.have.deep.property('context.fetch.retry', instance.retry);
+  });
+
   it('should add `{ fetching: true }` to the child context while fetching', () => {
     const store = createMockStore();
     const routerState = createMockRouterState();
@@ -156,12 +199,10 @@ describe('FetchProvider', () => {
       </FetchProvider>,
     );
 
-    promise.then(() => {
+    return expect(promise).to.be.fulfilled.then(() => {
       const child = wrapper.find(Child).get(0);
       expect(child).to.have.deep.property('context.fetch.fetching', false);
     });
-
-    return promise;
   });
 
   it('should update the child context when an error is incurred', () => {
@@ -180,7 +221,7 @@ describe('FetchProvider', () => {
       </FetchProvider>,
     );
 
-    return promise.catch(() => {}).then(() => {
+    return expect(promise).to.be.rejected.then(() => {
       const child = wrapper.find(Child).get(0);
       expect(child).to.have.deep.property('context.fetch.fetching', false);
       expect(child).to.have.deep.property('context.fetch.error', error);

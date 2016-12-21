@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { mount } from 'enzyme';
 import createMockFetch from '../../utilities/createMockFetch';
-// import waitFor from '../../utilities/waitFor';
 import fetch from '../../../src/components/FetchContainer';
 
 describe('FetchContainer', () => {
@@ -81,6 +80,24 @@ describe('FetchContainer', () => {
 
     expect(wrapper.find(Passthrough)).to.have.length(0);
     expect(wrapper.find(Glitch)).to.have.length(1);
+  });
+
+  it('should pass callback to retry request when an error is incurred', () => {
+    const error = new Error('something went wrong');
+    const getAsyncState = sinon.stub();
+    const retry = sinon.stub();
+    const renderFailure = sinon.stub();
+
+    @fetch(getAsyncState, { renderFailure })
+    class Container extends Component {
+      render() {
+        return (<Passthrough {...this.props} />);
+      }
+    }
+
+    mountWithContext(<Container />, { error, retry });
+
+    expect(renderFailure).to.have.been.calledWithExactly(error, retry);
   });
 
   it('should render child component after required data is fulfilled', () => {

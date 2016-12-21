@@ -1,15 +1,18 @@
 import { PropTypes } from 'react';
 
-export const fetchShape = PropTypes.shape({
-  error: PropTypes.any,
-  fetching: PropTypes.bool.isRequired,
-  firstRender: PropTypes.bool.isRequired,
-  renderFailure: PropTypes.func,
-  renderLoading: PropTypes.func,
+const { any, bool, func, shape } = PropTypes;
+
+export const fetchShape = shape({
+  error: any,
+  fetching: bool.isRequired,
+  firstRender: bool.isRequired,
+  renderFailure: func,
+  renderLoading: func,
+  retry: func.isRequired,
 });
 
-export const storeShape = PropTypes.shape({
-  subscribe: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  getState: PropTypes.func.isRequired,
+export const storeShape = shape({
+  subscribe: func.isRequired,
+  dispatch: func.isRequired,
+  getState: func.isRequired,
 });
