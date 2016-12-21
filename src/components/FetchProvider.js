@@ -136,7 +136,7 @@ export default class FetchProvider extends Component {
 
   getAsyncState(props) {
     this.setState({ fetching: true, error: null });
-    this.props.aggregator(this.store, props.routerProps).then(() => {
+    props.aggregator(this.store, props.routerProps).then(() => {
       this.setState({ fetching: false });
     }, (error) => {
       this.setState({ fetching: false, error });
