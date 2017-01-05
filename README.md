@@ -20,12 +20,12 @@ This assumes that you’re using [npm](http://npmjs.com/) package manager with a
 
 ### Configure components to fetch required data before rendering
 
-You must decorate your components with `fetch()` and provide a function that returns a promise that is settled after the application state is updated with the data required before rendering them.
+You must decorate your components with `withFetch()` and provide a function that returns a promise that is settled after the application state is updated with the data required before rendering them.
 
 ```js
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
+import { withFetch } from '@flowio/redux-fetch';
 import { getExamples } from './path/to/async/action/example';
 
 function getAsyncState(dispatch /* getState, routerState */) {
@@ -36,7 +36,7 @@ function mapStateToProps(state) {
   return state.examples;
 }
 
-@fetch(getAsyncState)
+@withFetch(getAsyncState)
 @connect(mapStateToProps)
 export default class Container extends Component {
   /* ... */
@@ -116,7 +116,7 @@ export default (container) => {
 
 ## API Reference
 
-### `fetch(getAsyncState[, options])`
+### `withFetch(getAsyncState[, options])`
 
 A higher order component that attempts to fulfill the data required in order to render an instance of a React component.
 
@@ -148,13 +148,13 @@ All the original static properties of the component are hoisted.
 
 ##### Static Methods
 
-* `getAsyncState`: The function passed to `fetch()` to resolve data requirements for your component.
+* `getAsyncState`: The function passed to `withFetch()` to resolve data requirements for your component.
 
 All the original static methods of the component are hoisted.
 
 #### Remarks
 
-* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `fetch(getAsyncState, options)(MyComponent)`.
+* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `withFetch(getAsyncState, options)(MyComponent)`.
 
 * It does not modify the passed React component. It returns a new component that you should use instead.
 
@@ -162,7 +162,7 @@ All the original static methods of the component are hoisted.
 
 ### `FetchProvider`
 
-A React component that provides the context needed for containers created with `fetch()` in the component hierarchy below to perform their expected behavior.
+A React component that provides the context needed for containers created with `withFetch()` in the component hierarchy below to perform their expected behavior.
 
 #### Props
 
@@ -172,19 +172,19 @@ A React component that provides the context needed for containers created with `
 
 * `routerProps: RouterState`: The React Router properties normally injected into `RouterContext` that represent the current state of the router.
 
-* `[renderLoading: Function]`: Similar to the `renderLoading` property passed to `fetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `fetch()` in the component hierarchy below.
+* `[renderLoading: Function]`: Similar to the `renderLoading` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
 
-* `[renderFailure: Function]`: Similar to the `renderFailure` property passed to `fetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `fetch()` in the component hierarchy below.
+* `[renderFailure: Function]`: Similar to the `renderFailure` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
 
 #### Remarks
 
 * You should only set `forceInitialFetch` to `true` on the client-side.
 
-* Providing a render callback to `fetch()` will take precedence over render callbacks injected to `FetchProvider`.
+* Providing a render callback to `withFetch()` will take precedence over render callbacks injected to `FetchProvider`.
 
 ### `useFetch([options])`
 
-A React Router middleware that provides the context needed for containers created with `fetch()` in the component hierarchy below.
+A React Router middleware that provides the context needed for containers created with `withFetch()` in the component hierarchy below.
 
 #### Arguments
 

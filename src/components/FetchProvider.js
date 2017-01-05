@@ -5,7 +5,7 @@ import { fetchShape, storeShape } from '../utilities/PropTypes';
 import fetchAsyncState from '../utilities/fetchAsyncState';
 
 /**
- * Provides context needed for containers created with `fetch()` in the
+ * Provides context needed for containers created with `withFetch()` in the
  * component hierarchy below to perform their expected behavior.
  */
 export default class FetchProvider extends Component {
@@ -47,7 +47,7 @@ export default class FetchProvider extends Component {
      * `undefined`, the previously rendered component (or nothing if there is
      * no previous component) is rendered. You should define this property if
      * you want to propagate the same behavior on all containers created with
-     * `fetch()` in the component hierarchy below.
+     * `withFetch()` in the component hierarchy below.
      */
     renderLoading: PropTypes.func,
 
@@ -56,7 +56,7 @@ export default class FetchProvider extends Component {
      * `renderFailure` is called to render the component. The function will
      * receive the `error` received while attempting to fetch data requirements.
      * You should define this property if you want to propagate the same
-     * behavior on all containers created with `fetch()` in the component
+     * behavior on all containers created with `withFetch()` in the component
      * hierarchy below.
      */
     renderFailure: PropTypes.func,

@@ -12,12 +12,12 @@ import { fetchShape } from '../utilities/PropTypes';
  * @param {Function} [options.renderLoading]
  * @param {Function} [options.renderSuccess]
  */
-export default function fetch(getAsyncState, options = {}) {
+export default function withFetch(getAsyncState, options = {}) {
   return function createContainer(Component) {
     const componentName = getDisplayName(Component);
     const containerName = `WithFetch(${componentName})`;
 
-    class FetchContainer extends React.Component {
+    class Fetch extends React.Component {
 
       static displayName = containerName;
 
@@ -71,6 +71,6 @@ export default function fetch(getAsyncState, options = {}) {
       }
     }
 
-    return hoistStatics(FetchContainer, Component);
+    return hoistStatics(Fetch, Component);
   };
 }

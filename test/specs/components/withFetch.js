@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { mount } from 'enzyme';
 import createMockFetch from '../../utilities/createMockFetch';
-// import waitFor from '../../utilities/waitFor';
-import fetch from '../../../src/components/FetchContainer';
+import withFetch from '../../../src/components/withFetch';
 
-describe('FetchContainer', () => {
+describe('withFetch', () => {
   class Passthrough extends Component {
     render() {
       return (<div {...this.props} />);
@@ -41,7 +40,7 @@ describe('FetchContainer', () => {
   it('should assign `getAsyncState` as a static property', () => {
     const getAsyncState = sinon.stub();
 
-    @fetch(getAsyncState)
+    @withFetch(getAsyncState)
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
@@ -54,7 +53,7 @@ describe('FetchContainer', () => {
   it('should render loading component while fetching data requirements', () => {
     const getAsyncState = sinon.stub();
 
-    @fetch(getAsyncState, { renderLoading: () => <Spinner /> })
+    @withFetch(getAsyncState, { renderLoading: () => <Spinner /> })
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
@@ -70,7 +69,7 @@ describe('FetchContainer', () => {
   it('should render failure component if an error is incurred', () => {
     const getAsyncState = sinon.stub();
 
-    @fetch(getAsyncState, { renderFailure: error => <Glitch error={error} /> })
+    @withFetch(getAsyncState, { renderFailure: error => <Glitch error={error} /> })
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
@@ -86,7 +85,7 @@ describe('FetchContainer', () => {
   it('should render child component after required data is fulfilled', () => {
     const getAsyncState = sinon.stub();
 
-    @fetch(getAsyncState)
+    @withFetch(getAsyncState)
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
