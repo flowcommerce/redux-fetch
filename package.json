@@ -10,9 +10,9 @@
   "scripts": {
     "clean": "rm -rf ./lib ./coverage",
     "build": "babel ./src --out-dir ./lib",
-    "coverage": "istanbul cover --report html _mocha -- ./test/specs",
+    "coverage": "istanbul cover --report html _mocha -- ./test/specs/**/*.{js,jsx}",
     "lint": "eslint --cache --ext .jsx,.js .",
-    "test": "mocha ./test/specs",
+    "test": "mocha ./test/specs/**/*.{js,jsx}",
     "prebuild": "npm-run-all clean coverage",
     "precoverage": "npm run lint",
     "prepublish": "npm run build",
