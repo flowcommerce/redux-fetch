@@ -62,6 +62,16 @@ export default class FetchProvider extends Component {
     renderFailure: PropTypes.func,
 
     /**
+     * @property {Function} When all data necessary to render becomes available,
+     * `Fetch` will render the supplied Component by default. However, we can
+     * change this behavior by supplying a callback to the renderSuccess
+     * property. You should define this property if you want to propagate the
+     * same behavior on all containers created with `withFetch()` in the
+     * component hierarchy below.
+     */
+    renderSuccess: PropTypes.func,
+
+    /**
      * @property {Object} An instance of the Redux store used in your
      * application.
      */
@@ -107,6 +117,7 @@ export default class FetchProvider extends Component {
         firstRender: this.firstRender,
         renderFailure: this.props.renderFailure,
         renderLoading: this.props.renderLoading,
+        renderSuccess: this.props.renderSuccess,
       },
     };
   }

@@ -138,6 +138,8 @@ A higher order component that attempts to fulfill the data required in order to 
 
   - `[renderFailure(error): Function]`: If an error occurs that prevents Redux Fetch from fetching the data required for rendering a component, nothing will be rendered by default. Error handling behavior can be configured by supplying a callback to the `renderFailure` property. The `renderFailure` callback is called with an error object.
 
+  - `[renderSuccess: Function]`: When all data necessary to render becomes available, `Fetch` will render the supplied Component by default. However, we can change this behavior by supplying a callback to the `renderSuccess` property.
+
 #### Returns
 
 A React component class that renders your component according to the specified options.
@@ -175,6 +177,8 @@ A React component that provides the context needed for containers created with `
 * `[renderLoading: Function]`: Similar to the `renderLoading` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
 
 * `[renderFailure: Function]`: Similar to the `renderFailure` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
+
+* `[renderSuccess: Function]`: Similar to the `renderSuccess` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
 
 #### Remarks
 

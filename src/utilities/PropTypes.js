@@ -6,6 +6,7 @@ export const fetchShape = PropTypes.shape({
   firstRender: PropTypes.bool.isRequired,
   renderFailure: PropTypes.func,
   renderLoading: PropTypes.func,
+  renderSuccess: PropTypes.func,
 });
 
 export const storeShape = PropTypes.shape({

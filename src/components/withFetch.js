@@ -37,6 +37,7 @@ export default function withFetch(getAsyncState, options = {}) {
           fetching,
           renderFailure,
           renderLoading,
+          renderSuccess,
         } = Object.assign({}, this.context.fetch, options);
 
         if (error) {
@@ -47,6 +48,8 @@ export default function withFetch(getAsyncState, options = {}) {
           if (renderLoading) {
             return renderLoading();
           }
+        } else if (renderSuccess) {
+          return renderSuccess();
         } else {
           return <Component {...this.props} />;
         }

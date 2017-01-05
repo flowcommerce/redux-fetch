@@ -10,6 +10,12 @@ describe('withFetch', () => {
     }
   }
 
+  class Tada extends Component {
+    render() {
+      return (<div>Tada!</div>);
+    }
+  }
+
   class Spinner extends Component {
     render() {
       return (<div>Loading...</div>);
@@ -80,6 +86,22 @@ describe('withFetch', () => {
 
     expect(wrapper.find(Passthrough)).to.have.length(0);
     expect(wrapper.find(Glitch)).to.have.length(1);
+  });
+
+  it('should render success component when specified', () => {
+    const getAsyncState = sinon.stub();
+
+    @withFetch(getAsyncState, { renderSuccess: () => (<Tada />) })
+    class Container extends Component {
+      render() {
+        return (<Passthrough {...this.props} />);
+      }
+    }
+
+    const wrapper = mountWithContext(<Container />);
+
+    expect(wrapper.find(Tada)).to.have.length(1);
+    expect(wrapper.find(Passthrough)).to.have.length(0);
   });
 
   it('should render child component after required data is fulfilled', () => {
