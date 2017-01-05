@@ -1,1 +1,4 @@
+**/coverage/**
 **/examples/**
+**/lib/**
+**/node_modules/**

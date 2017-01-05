@@ -5,6 +5,7 @@ export default {
   devtool: '#inline-source-map',
   entry: [
     'webpack-hot-middleware/client',
+    'react-hot-loader/patch',
     path.resolve(__dirname, './client/index.js'),
   ],
   output: {
@@ -33,8 +34,5 @@ export default {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.RUNTIME': JSON.stringify('browser'),
-    }),
   ],
 };

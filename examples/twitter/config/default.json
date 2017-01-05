@@ -1,0 +1,12 @@
+{
+  "hostname": "0.0.0.0",
+  "port": "7050",
+  "jwt": {
+    "cookie": "token",
+    "secret": "V8ehNaecfgvxxVtVSUrrMX1lAcq7cIdAZq",
+    "ttl": 180000
+  },
+  "twitter": {
+    "password": "hLKfgIOlfJKMb7x5AKucOUKTTMokQx70d6MNXR"
+  }
+}
