@@ -81,27 +81,6 @@ describe('FetchProvider', () => {
     expect(aggregator).to.have.been.calledWithExactly(store, routerState);
   });
 
-  it('should add render callbacks to the child context', () => {
-    const routerState = createMockRouterState();
-    const renderFailure = sinon.stub();
-    const renderLoading = sinon.stub();
-    const store = createMockStore();
-    const wrapper = mount(
-      <FetchProvider
-        store={store}
-        routerProps={routerState}
-        renderFailure={renderFailure}
-        renderLoading={renderLoading}>
-        <Child />
-      </FetchProvider>,
-    );
-
-    const child = wrapper.find(Child).get(0);
-
-    expect(child).to.have.deep.property('context.fetch.renderFailure', renderFailure);
-    expect(child).to.have.deep.property('context.fetch.renderLoading', renderLoading);
-  });
-
   it('should add `{ fetching: true }` to the child context while fetching', () => {
     const store = createMockStore();
     const routerState = createMockRouterState();

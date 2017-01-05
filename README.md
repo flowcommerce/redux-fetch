@@ -174,17 +174,9 @@ A React component that provides the context needed for containers created with `
 
 * `routerProps: RouterState`: The React Router properties normally injected into `RouterContext` that represent the current state of the router.
 
-* `[renderLoading: Function]`: Similar to the `renderLoading` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
-
-* `[renderFailure: Function]`: Similar to the `renderFailure` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
-
-* `[renderSuccess: Function]`: Similar to the `renderSuccess` property passed to `withFetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `withFetch()` in the component hierarchy below.
-
 #### Remarks
 
 * You should only set `forceInitialFetch` to `true` on the client-side.
-
-* Providing a render callback to `withFetch()` will take precedence over render callbacks injected to `FetchProvider`.
 
 ### `useFetch([options])`
 
