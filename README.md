@@ -4,6 +4,8 @@
 
 # Redux Fetch
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/flowcommerce/redux-fetch.svg)](https://greenkeeper.io/)
+
 Redux Fetch provides universal data fetching bindings for applications built with React, React Router, and Redux.
 
 ## Installation
