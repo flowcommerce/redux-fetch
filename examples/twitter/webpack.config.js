@@ -23,11 +23,18 @@ export default {
     loaders: [{
       test: /\.(js|jsx)$/,
       loader: 'babel-loader',
-      exclude: /node_modules/,
+      include: [
+        path.resolve(__dirname, './client'),
+        path.resolve(__dirname, './common'),
+      ],
     }, {
       test: /\.(css)$/,
       loader: 'style-loader!css-loader',
-      exclude: /node_modules/,
+      include: [
+        path.resolve(__dirname, './client'),
+        path.resolve(__dirname, './common'),
+        path.resolve(__dirname, './node_modules/react-spinner'),
+      ]
     }],
   },
   plugins: [
