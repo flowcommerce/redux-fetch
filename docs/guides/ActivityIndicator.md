@@ -1,7 +1,6 @@
 # Activity Indicators
 
-You can leverage render callbacks to render an activity indicator while data is
-being fetched.
+Use the render callbacks to render an activity indicator while data is being fetched.
 
 ```javascript
 import React from 'react';
@@ -33,15 +32,16 @@ view rendered while data for the next view is being fetched.
 If you prefer to keep the last view rendered, but still render some indication
 of background activity:
 
-* Listen to the history via `history.listen` in your root component to toggle
-the visibility of your activity indicator.
-
 * Listen to store changes in your component (e.g. using `connect` from
-`react-redux`) and create a specific reducer that listens to `LOCATION_CHANGE`
-from `react-router-redux` to toggle the visibility of your activity indicator.
+`react-redux`) and create a specific reducer that listens to `FETCH_REQUEST` and
+`FETCH_SUCCESS` from Redux Fetch to toggle the visibility of your activity indicator.
 
-* Exploit the render callbacks to mount/unmount a component in a separate DOM
-node (feels wrong, but it works too):
+* Listen to store changes in your component and use the selectors exported by
+Redux Fetch (i.e. `getIsReadyStatePending` and/or `getIsReadyStateLoading`) to
+toggle the visibility of your activity indicator.
+
+* Latch on to the render callbacks to mount/unmount a component in a separate
+DOM node (feels wrong, but it works too):
 
 ```javascript
 import React from 'react';

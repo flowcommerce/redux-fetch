@@ -1,4 +1,4 @@
-# Usage
+# Client-Side Rendering
 
 Apply the `useFetch` router middleware and create fetch containers for each of
 your route components:
