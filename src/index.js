@@ -1,4 +1,5 @@
-export withFetch from './components/withFetch';
-export fetchAsyncState from './utilities/fetchAsyncState';
-export FetchProvider from './components/FetchProvider';
-export useFetch from './utilities/useFetch';
+export { default as FetchRootContainer } from './FetchRootContainer';
+export { fetchRouteData } from './actions';
+export { default as reducer } from './reducer';
+export { default as useFetch } from './useFetch';
+export { default as withFetch } from './FetchContainer';

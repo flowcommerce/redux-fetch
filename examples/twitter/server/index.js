@@ -116,7 +116,7 @@ server.register({
   options: {
     config: webpackConfig,
     options: {
-      noInfo: false,
+      noInfo: true,
       publicPath: webpackConfig.output.publicPath,
     },
   },

@@ -4,7 +4,6 @@ require('babel-register');
 const chokidar = require('chokidar');
 const server = require('./server').default;
 
-
 // Do "hot-reloading" of Hapi stuff on the server
 // Throw away cached modules and re-require next time
 // Ensure there's no important state in there!

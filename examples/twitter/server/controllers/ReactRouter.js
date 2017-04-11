@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { RouterContext, createMemoryHistory, match } from 'react-router';
-import { fetchAsyncState, FetchProvider } from '@flowio/redux-fetch';
+import { fetchRouteData, FetchRootContainer } from '@flowio/redux-fetch';
 
 import Html from '../../common/components/Html';
 import InternalServerError from '../../common/components/InternalServerError';
@@ -47,9 +47,9 @@ function renderNotFound() {
 function renderToString(store, renderProps) {
   return ReactDOMServer.renderToString(
     <Provider store={store}>
-      <FetchProvider routerProps={renderProps}>
+      <FetchRootContainer routerProps={renderProps}>
         <RouterContext {...renderProps} />
-      </FetchProvider>
+      </FetchRootContainer>
     </Provider>,
   );
 }
@@ -70,7 +70,7 @@ function handleMatch(store) {
       };
     }
 
-    return fetchAsyncState(store, renderProps).then(() => {
+    return store.dispatch(fetchRouteData(renderProps)).then(() => {
       const state = store.getState();
       const markup = renderToString(store, renderProps);
       return { status: 200, markup, state };

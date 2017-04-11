@@ -15,7 +15,7 @@ export default function fetchHomeTimeline() {
 
     const fetchUrl = url.format({
       protocol: 'http',
-      host: 'localhost:7050',
+      host: 'localhost:7051',
       pathname: '/api/statuses/home_timeline.json',
     });
 

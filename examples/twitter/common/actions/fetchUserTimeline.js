@@ -15,7 +15,7 @@ export default function fetchUserTimeline() {
 
     const fetchUrl = url.format({
       protocol: 'http',
-      host: 'localhost:7050',
+      host: 'localhost:7051',
       pathname: '/api/statuses/user_timeline.json',
       query: {
         user_id: state.authorization.user_id,
