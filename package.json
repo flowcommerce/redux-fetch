@@ -13,7 +13,7 @@
     "coverage": "cross-env NODE_ENV=test nyc npm test",
     "lint": "eslint --cache --ext .jsx,.js .",
     "test": "mocha ./test/specs/**/*.{js,jsx}",
-    "prepublish": "npm-run-all clean build",
+    "prepublish": "npm-run-all clean lint coverage build",
     "watch:build": "nodemon --exec 'npm run build' --ext 'js jsx' --watch './src' --watch './test'",
     "watch:test": "nodemon --exec 'mocha --debug ./test/specs/**/*.{js,jsx}' --ext 'js jsx' --watch './src' --watch './test'",
     "postpublish": "greenkeeper-postpublish"
