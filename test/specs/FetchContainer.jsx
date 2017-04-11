@@ -38,4 +38,16 @@ describe('withFetch', () => {
     expect(child).to.have.length(1);
     expect(child.prop('id')).to.equal('foo');
   });
+
+  it('should copy non-react statics from wrapped component', () => {
+    const fetchAsyncState = sinon.stub();
+    const meta = { name: 'Container' };
+
+    @withFetch(fetchAsyncState)
+    class Container extends Component {
+      static meta = meta;
+    }
+
+    expect(Container).to.have.deep.property('meta.name', meta.name);
+  });
 });
