@@ -1,4 +1,9 @@
 {
   "presets": ["@flowio/babel-preset-flowio"],
-  "plugins": ["transform-decorators-legacy"]
+  "plugins": ["transform-decorators-legacy"],
+  "env": {
+    "test": {
+      "plugins": ["istanbul"]
+    }
+  }
 }

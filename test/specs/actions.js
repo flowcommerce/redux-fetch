@@ -46,36 +46,34 @@ describe('action creators', () => {
 
   describe('fetchRouteData', () => {
     it('should call `fetchAsyncState` of route components', () => {
-      const fetchAsyncState = sinon.stub();
+      const fetchAsyncState = sinon.stub().returns(Promise.resolve());
       const components = [createMockComponent(), createMockComponent(fetchAsyncState)];
-      const routerProps = createMockRouterState({ components });
-      const store = createMockStore();
-      const { dispatch, getState } = store;
-      fetchRouteData(store, routerProps);
-      expect(fetchAsyncState).to.have.been.calledOnce;
-      expect(fetchAsyncState).to.have.been.calledWithExactly(dispatch, getState, routerProps);
+      const routerState = createMockRouterState({ components });
+      const { dispatch } = createMockStore();
+      return expect(dispatch(fetchRouteData(routerState))).to.be.fulfilled.then(() => {
+        expect(fetchAsyncState).to.have.been.calledOnce;
+      });
     });
 
     it('should call `fetchAsyncState` of named route components', () => {
-      const fetchAsyncState = sinon.stub();
+      const fetchAsyncState = sinon.stub().returns(Promise.resolve());
       const components = [{
         sidebar: createMockComponent(),
         dashboard: createMockComponent(fetchAsyncState),
       }];
-      const routerProps = createMockRouterState({ components });
-      const store = createMockStore();
-      const { dispatch, getState } = store;
-      fetchRouteData(store, routerProps);
-      expect(fetchAsyncState).to.have.been.calledOnce;
-      expect(fetchAsyncState).to.have.been.calledWithExactly(dispatch, getState, routerProps);
+      const routerState = createMockRouterState({ components });
+      const { dispatch } = createMockStore();
+      return expect(dispatch(fetchRouteData(routerState))).to.be.fulfilled.then(() => {
+        expect(fetchAsyncState).to.have.been.calledOnce;
+      });
     });
 
     it('should not throw error when a route component is undefined', () => {
-      const fetchAsyncState = sinon.stub();
-      const store = createMockStore();
+      const fetchAsyncState = sinon.stub().returns(Promise.resolve());
       const components = [undefined, createMockComponent(fetchAsyncState)];
-      const routerProps = createMockRouterState({ components });
-      fetchRouteData(store, routerProps);
+      const routerState = createMockRouterState({ components });
+      const { dispatch } = createMockStore();
+      return expect(dispatch(fetchRouteData(routerState))).to.be.fulfilled;
     });
   });
 });

@@ -1,12 +1,9 @@
-import isEqual from 'lodash/isEqual';
-import pick from 'lodash/pick';
+export const getLocation = state => state.fetch.location;
 
-export const getLocation = state => state.fetching.location;
+export const getReadyState = state => state.fetch.readyState;
 
 export const getIsSameLocation = nextLocation => (state) => {
   const prevLocation = getLocation(state);
-  const compareProps = ['pathname', 'search', 'hash'];
-  return isEqual(pick(prevLocation, compareProps), pick(nextLocation, compareProps));
+  return prevLocation.pathname === nextLocation.pathname &&
+    prevLocation.search === nextLocation.search;
 };
-
-export const getReadyState = state => state.fetching.readyState;

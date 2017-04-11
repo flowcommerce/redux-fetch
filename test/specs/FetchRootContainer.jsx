@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { mount } from 'enzyme';
-import ActionTypes from '../../src/ActionTypes';
+import { FetchRootContainer } from '../../src/FetchRootContainer';
 import ReadyState from '../../src/ReadyState';
-import FetchRootContainer from '../../src/FetchRootContainer';
-import createMockStore from '../utilities/createMockStore';
 import createMockRouterState from '../utilities/createMockRouterState';
 
 class Child extends Component {
@@ -13,101 +11,110 @@ class Child extends Component {
 }
 
 describe('FetchRootContainer', () => {
-  it('should throw when store is not in scope', () => {
+  it('should not call onFetchRouteData when data requirements are met on mount', () => {
     const routerState = createMockRouterState();
-
-    expect(mount.bind(null,
-      <FetchRootContainer routerProps={routerState}>
-        <Child />
-      </FetchRootContainer>,
-    )).to.throw;
-  });
-
-  it('should not call fetch aggregator on initial mount when data fetching is complete', () => {
-    const store = createMockStore({ fetching: { status: ReadyState.SUCCESS } });
-    const routerState = createMockRouterState();
-    const promise = new Promise(() => {});
-    const aggregator = sinon.stub().returns(promise);
+    const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer store={store} aggregator={aggregator} routerProps={routerState}>
+      <FetchRootContainer
+        isSameLocation
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.SUCCESS}
+        routerProps={routerState}>
         <Child />
       </FetchRootContainer>,
     );
 
-    expect(aggregator).to.not.have.been.called;
+    expect(onFetchRouteData).to.not.have.been.called;
   });
 
-  it('should call fetch aggregator when forced on initial mount', () => {
-    const store = createMockStore({ fetching: { status: ReadyState.SUCCESS } });
+  it('should call onFetchRouteData when data requirements are not met', () => {
     const routerState = createMockRouterState();
-    const promise = new Promise(() => {});
-    const aggregator = sinon.stub().returns(promise);
+    const onFetchRouteData = sinon.stub();
 
     mount(
       <FetchRootContainer
-        store={store}
-        aggregator={aggregator}
+        isSameLocation
+        onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
+        readyState={ReadyState.PENDING}>
+        <Child />
+      </FetchRootContainer>,
+    );
+
+    expect(onFetchRouteData).to.have.been.calledOnce;
+  });
+
+  it('should call onFetchRouteData when forced on mount', () => {
+    const routerState = createMockRouterState();
+    const onFetchRouteData = sinon.stub();
+
+    mount(
+      <FetchRootContainer
+        isSameLocation
+        onFetchRouteData={onFetchRouteData}
+        routerProps={routerState}
+        readyState={ReadyState.SUCCESS}
         forceInitialFetch>
         <Child />
       </FetchRootContainer>,
     );
 
-    expect(aggregator).to.have.been.calledOnce;
+    expect(onFetchRouteData).to.have.been.calledOnce;
   });
 
-  it('should pass store and router state to aggregator', () => {
-    const store = createMockStore({ fetching: { status: ReadyState.PENDING } });
+  it('should provide router state to onFetchRouteData when called on mount', () => {
     const routerState = createMockRouterState();
-    const promise = new Promise(() => {});
-    const aggregator = sinon.stub().returns(promise);
+    const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer store={store} aggregator={aggregator} routerProps={routerState}>
+      <FetchRootContainer
+        isSameLocation
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.PENDING}
+        routerProps={routerState}>
         <Child />
       </FetchRootContainer>,
     );
 
-    expect(aggregator).to.have.been.calledOnce;
-    expect(aggregator).to.have.been.calledWithExactly(store, routerState);
+    expect(onFetchRouteData).to.have.been.calledOnce;
+    expect(onFetchRouteData).to.have.been.calledWithExactly(routerState);
   });
 
-  it('should dispatch FETCH_SUCCESS action after fetching successfully', () => {
-    const store = createMockStore({ fetching: { status: ReadyState.PENDING } });
+  it('should call onFetchRouteData when updated with a different location', () => {
     const routerState = createMockRouterState();
-    const promise = Promise.resolve();
-    const aggregator = sinon.stub().returns(promise);
+    const onFetchRouteData = sinon.stub();
 
-    mount(
-      <FetchRootContainer aggregator={aggregator} store={store} routerProps={routerState}>
+    const wrapper = mount(
+      <FetchRootContainer
+        isSameLocation
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.SUCCESS}
+        routerProps={routerState}>
         <Child />
       </FetchRootContainer>,
     );
 
-    return expect(promise).to.have.been.fulfilled.then(() => {
-      const [requestAction, successAction] = store.getActions();
-      expect(requestAction).to.deep.equal({ type: ActionTypes.FETCH_REQUEST });
-      expect(successAction).to.deep.equal({ type: ActionTypes.FETCH_SUCCESS });
-    });
+    wrapper.setProps({ isSameLocation: false });
+
+    expect(onFetchRouteData).to.have.been.calledOnce;
   });
 
-  it('should dispatch FETCH_FAILURE action when an error is incurred', () => {
-    const store = createMockStore({ fetching: { status: ReadyState.PENDING } });
+  it('should set FetchReadyStateRenderer to pending when locations are different', () => {
     const routerState = createMockRouterState();
-    const promise = Promise.reject();
-    const aggregator = sinon.stub().returns(promise);
+    const onFetchRouteData = sinon.stub();
 
-    mount(
-      <FetchRootContainer aggregator={aggregator} store={store} routerProps={routerState}>
+    const wrapper = mount(
+      <FetchRootContainer
+        isSameLocation={false}
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.SUCCESS}
+        routerProps={routerState}>
         <Child />
       </FetchRootContainer>,
     );
 
-    return expect(promise).to.have.been.rejected.then(() => {
-      const [requestAction, failureAction] = store.getActions();
-      expect(requestAction).to.deep.equal({ type: ActionTypes.FETCH_REQUEST });
-      expect(failureAction).to.deep.equal({ type: ActionTypes.FETCH_FAILURE });
-    });
+    const child = wrapper.find('FetchReadyStateRenderer');
+    expect(child.prop('readyState')).to.equal(ReadyState.PENDING);
   });
 });
