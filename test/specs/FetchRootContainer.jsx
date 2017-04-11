@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { mount } from 'enzyme';
-import { FetchRootContainer } from '../../src/FetchRootContainer';
+import { FetchRootComponent } from '../../src/FetchRootContainer';
 import ReadyState from '../../src/ReadyState';
 import createMockRouterState from '../utilities/createMockRouterState';
 
@@ -16,13 +16,13 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={routerState}>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     expect(onFetchRouteData).to.not.have.been.called;
@@ -33,13 +33,13 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.PENDING}>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     expect(onFetchRouteData).to.have.been.calledOnce;
@@ -50,14 +50,14 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.SUCCESS}
         forceInitialFetch>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     expect(onFetchRouteData).to.have.been.calledOnce;
@@ -68,13 +68,13 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.PENDING}
         routerProps={routerState}>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     expect(onFetchRouteData).to.have.been.calledOnce;
@@ -86,13 +86,13 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={routerState}>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     wrapper.setProps({ isSameLocation: false });
@@ -105,13 +105,13 @@ describe('FetchRootContainer', () => {
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
-      <FetchRootContainer
+      <FetchRootComponent
         isSameLocation={false}
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={routerState}>
         <Child />
-      </FetchRootContainer>,
+      </FetchRootComponent>,
     );
 
     const child = wrapper.find('FetchReadyStateRenderer');

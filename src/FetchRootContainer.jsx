@@ -81,4 +81,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FetchRootContainer);
-export { FetchRootContainer };
+export { FetchRootContainer as FetchRootComponent };
