@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchRouteData } from './actions';
-import { getIsSameLocation, getReadyState } from './selectors';
+import { getReadyState } from './selectors';
 import FetchReadyStateRenderer from './FetchReadyStateRenderer';
 import ReadyState from './ReadyState';
 
@@ -13,7 +13,6 @@ class FetchRootContainer extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     forceInitialFetch: PropTypes.bool,
-    isSameLocation: PropTypes.bool.isRequired,
     onFetchRouteData: PropTypes.func.isRequired,
     readyState: PropTypes.oneOf([
       ReadyState.FAILURE,
@@ -31,22 +30,39 @@ class FetchRootContainer extends Component {
     forceInitialFetch: false,
   };
 
+  state = {
+    isSameLocation: false,
+  };
+
   componentDidMount() {
     const { forceInitialFetch, readyState } = this.props;
+
     if (readyState === ReadyState.PENDING || forceInitialFetch) {
       this.fetchRouteData();
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const prevLocation = this.props.routerProps.location;
+    const nextLocation = nextProps.routerProps.location;
+
+    this.setState({
+      isSameLocation: prevLocation === nextLocation,
+    });
+  }
+
   componentDidUpdate() {
-    const { isSameLocation } = this.props;
+    const { isSameLocation } = this.state;
+
     if (!isSameLocation) {
       this.fetchRouteData();
     }
   }
 
   getReadyState() {
-    const { isSameLocation, readyState } = this.props;
+    const { isSameLocation } = this.state;
+    const { readyState } = this.props;
+
     return isSameLocation ? readyState : ReadyState.PENDING;
   }
 
@@ -71,9 +87,8 @@ class FetchRootContainer extends Component {
   }
 }
 
-const mapStateToProps = (state, { routerProps: { location } }) => ({
+const mapStateToProps = state => ({
   readyState: getReadyState(state),
-  isSameLocation: getIsSameLocation(location)(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

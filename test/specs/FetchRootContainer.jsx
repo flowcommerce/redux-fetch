@@ -17,7 +17,6 @@ describe('FetchRootContainer', () => {
 
     mount(
       <FetchRootComponent
-        isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={routerState}>
@@ -34,7 +33,6 @@ describe('FetchRootContainer', () => {
 
     mount(
       <FetchRootComponent
-        isSameLocation
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.PENDING}>
@@ -51,7 +49,6 @@ describe('FetchRootContainer', () => {
 
     mount(
       <FetchRootComponent
-        isSameLocation
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.SUCCESS}
@@ -69,7 +66,6 @@ describe('FetchRootContainer', () => {
 
     mount(
       <FetchRootComponent
-        isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.PENDING}
         routerProps={routerState}>
@@ -82,39 +78,42 @@ describe('FetchRootContainer', () => {
   });
 
   it('should call onFetchRouteData when updated with a different location', () => {
-    const routerState = createMockRouterState();
+    const prevRouterState = createMockRouterState({ location: { pathname: '/search/cats' } });
+    const nextRouterState = createMockRouterState({ location: { pathname: '/search/dogs' } });
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
       <FetchRootComponent
-        isSameLocation
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={routerState}>
+        routerProps={prevRouterState}>
         <Child />
       </FetchRootComponent>,
     );
 
-    wrapper.setProps({ isSameLocation: false });
+    wrapper.setProps({ routerProps: nextRouterState });
 
     expect(onFetchRouteData).to.have.been.calledOnce;
   });
 
   it('should set FetchReadyStateRenderer to pending when locations are different', () => {
-    const routerState = createMockRouterState();
+    const prevRouterState = createMockRouterState({ location: { pathname: '/search/cats' } });
+    const nextRouterState = createMockRouterState({ location: { pathname: '/search/dogs' } });
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
       <FetchRootComponent
-        isSameLocation={false}
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={routerState}>
+        routerProps={prevRouterState}>
         <Child />
       </FetchRootComponent>,
     );
 
+    wrapper.setProps({ routerProps: nextRouterState });
+
     const child = wrapper.find('FetchReadyStateRenderer');
+
     expect(child.prop('readyState')).to.equal(ReadyState.PENDING);
   });
 });
