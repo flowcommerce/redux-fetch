@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 * Use Redux to record fetch state between server and client.
 
+* Rename `fetch` to `withFetch` to avoid conflict with Fetch API.
+
 * The `FetchRootContainer` is the only component using `StaticContainer` to
   continue rendering the previous view until the data required to render the
   next view is fetched from the server.
