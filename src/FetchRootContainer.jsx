@@ -5,6 +5,7 @@ import { fetchRouteData } from './actions';
 import { getReadyState } from './selectors';
 import FetchReadyStateRenderer from './FetchReadyStateRenderer';
 import ReadyState from './ReadyState';
+import isSameLocation from './isSameLocation';
 
 class FetchRootContainer extends Component {
 
@@ -31,11 +32,12 @@ class FetchRootContainer extends Component {
   };
 
   state = {
-    isSameLocation: false,
+    readyState: this.props.readyState,
   };
 
   componentDidMount() {
-    const { forceInitialFetch, readyState } = this.props;
+    const { forceInitialFetch } = this.props;
+    const { readyState } = this.state;
 
     if (readyState === ReadyState.PENDING || forceInitialFetch) {
       this.fetchRouteData();
@@ -46,24 +48,19 @@ class FetchRootContainer extends Component {
     const prevLocation = this.props.routerProps.location;
     const nextLocation = nextProps.routerProps.location;
 
-    this.setState({
-      isSameLocation: prevLocation === nextLocation,
-    });
-  }
-
-  componentDidUpdate() {
-    const { isSameLocation } = this.state;
-
-    if (!isSameLocation) {
-      this.fetchRouteData();
+    if (isSameLocation(prevLocation, nextLocation)) {
+      this.setState({ readyState: nextProps.readyState });
+    } else {
+      this.setState({ readyState: ReadyState.PENDING });
     }
   }
 
-  getReadyState() {
-    const { isSameLocation } = this.state;
-    const { readyState } = this.props;
+  componentDidUpdate() {
+    const { readyState } = this.state;
 
-    return isSameLocation ? readyState : ReadyState.PENDING;
+    if (readyState === ReadyState.PENDING) {
+      this.fetchRouteData();
+    }
   }
 
   fetchRouteData() {
@@ -73,7 +70,7 @@ class FetchRootContainer extends Component {
 
   render() {
     const { children, renderFailure, renderSuccess, renderLoading } = this.props;
-    const readyState = this.getReadyState();
+    const { readyState } = this.state;
 
     return (
       <FetchReadyStateRenderer

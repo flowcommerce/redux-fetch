@@ -1,4 +1,5 @@
 import ActionTypes from './ActionTypes';
+import uniqueId from './uniqueId';
 
 export const fetchRouteDataFailure = payload => ({ payload, type: ActionTypes.FETCH_FAILURE });
 
@@ -15,8 +16,9 @@ export const fetchRouteDataSuccess = payload => ({ payload, type: ActionTypes.FE
  */
 export const fetchRouteData = props => (dispatch, getState) => {
   const { location, components } = props;
+  const fetchId = uniqueId();
 
-  dispatch(fetchRouteDataRequest(location));
+  dispatch(fetchRouteDataRequest({ fetchId, location }));
 
   const promises = components
   // Grab route components from React Router properties.
@@ -40,8 +42,8 @@ export const fetchRouteData = props => (dispatch, getState) => {
   .map(component => component.fetchAsyncState(dispatch, getState, props));
 
   return Promise.all(promises).then(() => {
-    dispatch(fetchRouteDataSuccess(location));
+    dispatch(fetchRouteDataSuccess({ fetchId, location }));
   }, () => {
-    dispatch(fetchRouteDataFailure(location));
+    dispatch(fetchRouteDataFailure({ fetchId, location }));
   });
 };
