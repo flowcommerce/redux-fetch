@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 // A utility function to safely escape JSON for embedding in a <script> tag
@@ -25,10 +26,10 @@ const Html = ({ language, markup, state, title }) => (
 Html.displayName = 'Html';
 
 Html.propTypes = {
-  language: React.PropTypes.string,
-  markup: React.PropTypes.string.isRequired,
-  state: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  title: React.PropTypes.string,
+  language: PropTypes.string,
+  markup: PropTypes.string.isRequired,
+  state: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  title: PropTypes.string,
 };
 
 Html.defaultProps = {
