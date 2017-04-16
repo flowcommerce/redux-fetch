@@ -1,4 +1,5 @@
-import { Children, Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import { Children, Component } from 'react';
 import { locationShape } from 'react-router';
 import invariant from 'invariant';
 import { fetchShape, storeShape } from '../utilities/PropTypes';
