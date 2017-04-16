@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import Header from './Header';
@@ -12,7 +13,7 @@ const Application = ({ children }) => (
 Application.displayName = 'Application';
 
 Application.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 };
 
 export default Application;

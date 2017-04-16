@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Alert, Col, Grid, Row } from 'react-bootstrap';
 import { compose } from 'redux';
@@ -44,9 +45,9 @@ const HomeTimeline = ({ errors, user, timeline }) => (
 HomeTimeline.displayName = 'HomeTimeline';
 
 HomeTimeline.propTypes = {
-  errors: React.PropTypes.arrayOf(errorShape),
+  errors: PropTypes.arrayOf(errorShape),
   user: userShape.isRequired,
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
 function getAsyncState(dispatch) {

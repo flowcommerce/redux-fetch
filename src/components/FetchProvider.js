@@ -5,6 +5,9 @@ import invariant from 'invariant';
 import { fetchShape, storeShape } from '../utilities/PropTypes';
 import fetchAsyncState from '../utilities/fetchAsyncState';
 
+// Avoids bringing in lodash/noop
+const noop = () => undefined;
+
 /**
  * Provides context needed for containers created with `fetch()` in the
  * component hierarchy below to perform their expected behavior.
@@ -72,6 +75,9 @@ export default class FetchProvider extends Component {
   static defaultProps = {
     aggregator: fetchAsyncState,
     forceInitialFetch: false,
+    renderLoading: noop,
+    renderFailure: noop,
+    store: undefined,
   };
 
   static contextTypes = {
