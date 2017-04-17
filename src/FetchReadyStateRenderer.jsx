@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import StaticContainer from 'react-static-container';
 import ReadyState from './ReadyState';
 

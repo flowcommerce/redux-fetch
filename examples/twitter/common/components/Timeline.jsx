@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import BemHelper from 'react-bem-helper';
 import map from 'lodash/map';
 import TimelineItem from './TimelineItem';
@@ -21,7 +22,7 @@ const Timeline = ({ timeline }) => (
 Timeline.displayName = 'Timeline';
 
 Timeline.propTypes = {
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
 export default Timeline;

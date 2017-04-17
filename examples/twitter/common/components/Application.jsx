@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spinner from 'react-spinner';
 import BemHelper from 'react-bem-helper';
 import { connect } from 'react-redux';
@@ -27,7 +28,7 @@ const Application = ({ children, loading }) => (
 Application.displayName = 'Application';
 
 Application.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 };
 
 const mapStateToProps = state => ({

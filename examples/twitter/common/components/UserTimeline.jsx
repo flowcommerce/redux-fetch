@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -20,7 +21,7 @@ const UserTimeline = ({ timeline }) => (
 );
 
 UserTimeline.propTypes = {
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
 function fetchAsyncState(dispatch) {
