@@ -15,7 +15,7 @@ export default function fetchUser() {
 
     const fetchUrl = url.format({
       protocol: 'http',
-      host: 'localhost:7050',
+      host: 'localhost:7051',
       pathname: '/api/users/show.json',
       query: {
         user_id: state.authorization.user_id,

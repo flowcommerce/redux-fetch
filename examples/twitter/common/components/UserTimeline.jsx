@@ -3,7 +3,7 @@ import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
+import { withFetch } from '@flowio/redux-fetch';
 
 import Timeline from './Timeline';
 import { timelineShape } from '../utilities/propTypes';
@@ -24,7 +24,7 @@ UserTimeline.propTypes = {
   timeline: PropTypes.arrayOf(timelineShape),
 };
 
-function getAsyncState(dispatch) {
+function fetchAsyncState(dispatch) {
   return dispatch(fetchUserTimeline());
 }
 
@@ -35,6 +35,6 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  fetch(getAsyncState),
+  withFetch(fetchAsyncState),
   connect(mapStateToProps),
 )(UserTimeline);

@@ -27,3 +27,9 @@ chai.use(chaiAsPromised);
 global.document = jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;
 global.navigator = global.window.navigator;
+
+// Stub console.error() to throw an error when called.
+// The intention is to catch prop type validation errors in React components.
+sinon.stub(console, 'error').callsFake((message) => {
+  throw new Error(message);
+});

@@ -1,7 +1,8 @@
-export default function createMockStore(initialState = {}) {
-  return {
-    dispatch: sinon.stub(),
-    getState: sinon.stub().returns(initialState),
-    subscribe: sinon.stub(),
-  };
-}
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+const middlewares = [thunk];
+
+const createMockStore = configureStore(middlewares);
+
+export default createMockStore;

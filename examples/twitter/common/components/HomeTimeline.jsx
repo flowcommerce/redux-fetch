@@ -3,7 +3,7 @@ import React from 'react';
 import { Alert, Col, Grid, Row } from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
+import { withFetch } from '@flowio/redux-fetch';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 
@@ -50,7 +50,7 @@ HomeTimeline.propTypes = {
   timeline: PropTypes.arrayOf(timelineShape),
 };
 
-function getAsyncState(dispatch) {
+function fetchAsyncState(dispatch) {
   return Promise.all([
     dispatch(fetchUser()),
     dispatch(fetchHomeTimeline()),
@@ -66,6 +66,6 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  fetch(getAsyncState),
+  withFetch(fetchAsyncState),
   connect(mapStateToProps),
 )(HomeTimeline);

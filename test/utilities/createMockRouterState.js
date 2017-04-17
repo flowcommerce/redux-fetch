@@ -1,14 +1,18 @@
+import defaultsDeep from 'lodash/defaultsDeep';
+
 const defaults = {
   location: {
     pathname: 'search/cats',
-    search: '?unlimited',
+    search: '',
+    hash: '',
     action: 'PUSH',
+    query: {},
   },
   routes: [],
   params: {},
   components: [],
 };
 
-export default function createMockRouterState(state) {
-  return Object.assign({}, defaults, state);
-}
+const createMockRouterState = state => defaultsDeep(state, defaults);
+
+export default createMockRouterState;
