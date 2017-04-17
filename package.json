@@ -1,6 +1,6 @@
 {
   "name": "@flowio/redux-fetch",
-  "version": "0.14.0-alpha.2",
+  "version": "0.15.0-alpha3",
   "description": "Universal data fetching bindings for React, React Router, and Redux",
   "main": "lib/index.js",
   "files": [
@@ -36,11 +36,12 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "babel-runtime": "^6.23.0",
+    "babel-register": "6.24.1",
     "hoist-non-react-statics": "^1.2.0",
     "react-static-container": "^1.0.1"
   },
   "peerDependencies": {
+    "prop-types": "^15.5.8",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "react-redux": "^5.0.0",
