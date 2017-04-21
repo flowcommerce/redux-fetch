@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Spinner from 'react-spinner';
 import BemHelper from 'react-bem-helper';
 import { connect } from 'react-redux';
-import { getIsReadyStatePending, getIsReadyStateLoading } from '@flowio/redux-fetch';
+import { getIsPending, getIsLoading } from '@flowio/redux-fetch';
 import Header from './Header';
 
 if (process.browser) {
@@ -32,7 +32,7 @@ Application.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  loading: getIsReadyStateLoading(state) || getIsReadyStatePending(state),
+  loading: getIsLoading(state) || getIsPending(state),
 });
 
 export default connect(mapStateToProps)(Application);

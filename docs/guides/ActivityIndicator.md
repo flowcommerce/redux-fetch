@@ -37,8 +37,8 @@ of background activity:
 `FETCH_SUCCESS` from Redux Fetch to toggle the visibility of your activity indicator.
 
 * Listen to store changes in your component and use the selectors exported by
-Redux Fetch (i.e. `getIsReadyStatePending` and/or `getIsReadyStateLoading`) to
-toggle the visibility of your activity indicator.
+Redux Fetch (i.e. `getIsPending` and/or `getIsLoading`) to toggle the visibility
+of your activity indicator.
 
 * Latch on to the render callbacks to mount/unmount a component in a separate
 DOM node (feels wrong, but it works too):
