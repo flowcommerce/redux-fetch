@@ -116,4 +116,13 @@ describe('FetchRootContainer', () => {
 
     expect(child.prop('readyState')).to.equal(ReadyState.PENDING);
   });
+
+  it('should not swallow render errors', () => {
+    const error = new Error('Bad render');
+    const render = () => mount(
+      <FetchRootComponent readyState={ReadyState.SUCCESS}>
+        {(() => { throw error; })()}
+      </FetchRootComponent>);
+    expect(render).to.throw(error);
+  });
 });
