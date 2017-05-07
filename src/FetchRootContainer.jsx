@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchRouteData } from './actions';
-import { getReadyState } from './selectors';
+import { getError, getReadyState } from './selectors';
 import FetchReadyStateRenderer from './FetchReadyStateRenderer';
 import ReadyState from './ReadyState';
 import isSameLocation from './isSameLocation';
@@ -14,6 +14,7 @@ class FetchRootContainer extends Component {
 
   static propTypes = {
     children: PropTypes.node.isRequired,
+    error: PropTypes.any,
     forceInitialFetch: PropTypes.bool,
     onFetchRouteData: PropTypes.func.isRequired,
     readyState: PropTypes.oneOf([
@@ -70,11 +71,12 @@ class FetchRootContainer extends Component {
   }
 
   render() {
-    const { children, renderFailure, renderSuccess, renderLoading } = this.props;
+    const { children, error, renderFailure, renderSuccess, renderLoading } = this.props;
     const { readyState } = this.state;
 
     return (
       <FetchReadyStateRenderer
+        error={error}
         readyState={readyState}
         renderFailure={renderFailure}
         renderLoading={renderLoading}
@@ -86,6 +88,7 @@ class FetchRootContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  error: getError(state),
   readyState: getReadyState(state),
 });
 
@@ -94,4 +97,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FetchRootContainer);
-export { FetchRootContainer as FetchRootComponent };
+export { FetchRootContainer as FetchRootComponent }; // for testing

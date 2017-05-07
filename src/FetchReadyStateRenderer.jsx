@@ -9,6 +9,7 @@ export default class FetchReadyStateRenderer extends Component {
 
   static propTypes = {
     children: PropTypes.node,
+    error: PropTypes.any,
     readyState: PropTypes.oneOf([
       ReadyState.FAILURE,
       ReadyState.LOADING,
@@ -21,7 +22,7 @@ export default class FetchReadyStateRenderer extends Component {
   };
 
   renderChildrenIfNeeded() {
-    const { children, readyState, renderFailure, renderSuccess, renderLoading } = this.props;
+    const { children, error, readyState, renderFailure, renderSuccess, renderLoading } = this.props;
 
     if (readyState === ReadyState.PENDING || readyState === ReadyState.LOADING) {
       if (renderLoading) {
@@ -29,7 +30,7 @@ export default class FetchReadyStateRenderer extends Component {
       }
     } else if (readyState === ReadyState.FAILURE) {
       if (renderFailure) {
-        return renderFailure();
+        return renderFailure(error);
       }
     } else if (readyState === ReadyState.SUCCESS) {
       if (renderSuccess) {

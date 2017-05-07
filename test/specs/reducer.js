@@ -30,7 +30,8 @@ describe('reducer', () => {
       const { location } = createMockRouterState();
       const action = deepFreeze({
         type: ActionTypes.FETCH_REQUEST,
-        payload: { fetchId, location },
+        fetchId,
+        location,
       });
       const prevState = deepFreeze({
         readyState: ReadyState.PENDING,
@@ -52,7 +53,8 @@ describe('reducer', () => {
       const { location } = createMockRouterState();
       const action = deepFreeze({
         type: ActionTypes.FETCH_SUCCESS,
-        payload: { fetchId, location },
+        fetchId,
+        location,
       });
       const prevState = deepFreeze({
         readyState: ReadyState.LOADING,
@@ -74,10 +76,8 @@ describe('reducer', () => {
       const { location: nextLocation } = createMockRouterState();
       const action = deepFreeze({
         type: ActionTypes.FETCH_SUCCESS,
-        payload: {
-          fetchId: prevFetchId,
-          location: prevLocation,
-        },
+        fetchId: prevFetchId,
+        location: prevLocation,
       });
       const prevState = deepFreeze({
         readyState: ReadyState.LOADING,
@@ -92,10 +92,13 @@ describe('reducer', () => {
   context('when FETCH_FAILURE action is dispatched', () => {
     it('should return "FAILURE" state when fetch identifiers match', () => {
       const fetchId = uniqueId();
+      const error = { message: 'Oops' };
       const { location } = createMockRouterState();
       const action = deepFreeze({
         type: ActionTypes.FETCH_FAILURE,
-        payload: { fetchId, location },
+        error,
+        fetchId,
+        location,
       });
       const prevState = deepFreeze({
         readyState: ReadyState.LOADING,
@@ -105,27 +108,30 @@ describe('reducer', () => {
       const nextState = reducer(prevState, action);
       expect(nextState).to.deep.equal({
         readyState: ReadyState.FAILURE,
+        error,
         fetchId,
         location,
       });
     });
 
     it('should return previous state when fetch identifiers do not match', () => {
+      const prevError = { message: 'Previous error' };
       const prevFetchId = uniqueId();
+      const nextError = { message: 'Next error' };
       const nextFetchId = uniqueId();
       const { location: prevLocation } = createMockRouterState();
       const { location: nextLocation } = createMockRouterState();
       const action = deepFreeze({
         type: ActionTypes.FETCH_FAILURE,
-        payload: {
-          fetchId: prevFetchId,
-          location: prevLocation,
-        },
+        error: nextError,
+        fetchId: nextFetchId,
+        location: nextLocation,
       });
       const prevState = deepFreeze({
         readyState: ReadyState.LOADING,
-        fetchId: nextFetchId,
-        location: nextLocation,
+        error: prevError,
+        fetchId: prevFetchId,
+        location: prevLocation,
       });
       const nextState = reducer(prevState, action);
       expect(nextState).to.deep.equal(prevState);

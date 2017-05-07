@@ -195,7 +195,7 @@ A React component that attempts to fulfill the data required in order to render 
 
 * `[renderLoading: Function]`: Redux Fetch renders the loading state whenever it cannot immediately fulfill data needed to render. By default, nothing is rendered while loading data for the initial render. If a previous component was fulfilled and rendered, the default behavior is to continue rendering the previous view. You can change this behavior by supplying the `renderLoading` property. A `renderLoading` callback can simulate the default behavior by returning `undefined`. Notice that this is different from a `renderLoading` callback that returns `null`, which would render nothing whenever data is loading, even if there was a previous view rendered.
 
-* `[renderFailure: Function]`: If an error occurs that prevents Redux Fetch from fetching the data required for rendering a component, nothing will be rendered by default. Error handling behavior can be configured by supplying a callback to the `renderFailure` property.
+* `[renderFailure: Function]`: If an error occurs that prevents Redux Fetch from fetching the data required for rendering a component, nothing will be rendered by default. Error handling behavior can be configured by supplying a callback to the `renderFailure` property. The `renderFailure` callback is called with the error.
 
 * `[renderSuccess: Function]`: When all data necessary to render becomes available, Redux Fetch will render the supplied Component by default (i.e. the React Router `RouterContext` component). However, you can change this behavior by supplying a callback to the `renderSuccess` property. The `renderSuccess` callback is called with the `children` to be rendered (i.e. the router context). Typically, you will not use this callback but we have exposed it in case you need to hack something together.
 
@@ -206,7 +206,6 @@ A React component that attempts to fulfill the data required in order to render 
 * Setting `forceInitialFetch` to `true` does not always guarantee that a request will be sent to the server. Internally, this component calls the `fetchAsyncState` function you provide when decorating your route components with the `withFetch` higher-order component. So, if your implementation for that function avoids sending a request under specific circumstances (e.g. data already existing in the Redux store) then you will not see a request go out to the server.
 
 * Views returned by `renderLoading`, `renderFailure`, and `renderSuccess` are rendered outside the router context.
-
 
 ### `useFetch([options])`
 

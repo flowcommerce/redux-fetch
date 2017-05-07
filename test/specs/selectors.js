@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { fetchRouteDataFailure, fetchRouteDataRequest, fetchRouteDataSuccess } from '../../src/actions';
+import { fetchFailure, fetchRequest, fetchSuccess } from '../../src/actions';
 import { getLocation, getReadyState } from '../../src/selectors';
 import ReadyState from '../../src/ReadyState';
 import createMockRouterState from '../utilities/createMockRouterState';
@@ -13,11 +13,10 @@ describe('selectors', () => {
     it('should return current location', () => {
       const fetchId = uniqueId();
       const { location } = createMockRouterState();
-      const payload = { fetchId, location };
       const reducer = combineReducers({ fetch: fetchReducer });
       const actions = [
         initialize(),
-        fetchRouteDataRequest(payload),
+        fetchRequest(fetchId, location),
       ];
       const state = actions.reduce(reducer, undefined);
       expect(getLocation(state)).to.deep.equal(location);
@@ -35,25 +34,24 @@ describe('selectors', () => {
     it('should return "LOADING" status', () => {
       const fetchId = uniqueId();
       const { location } = createMockRouterState();
-      const payload = { fetchId, location };
       const reducer = combineReducers({ fetch: fetchReducer });
       const actions = [
         initialize(),
-        fetchRouteDataRequest(payload),
+        fetchRequest(fetchId, location),
       ];
       const state = actions.reduce(reducer, undefined);
       expect(getReadyState(state)).to.equal(ReadyState.LOADING);
     });
 
     it('should return "FAILURE" status', () => {
+      const error = { message: 'Oops' };
       const fetchId = uniqueId();
       const { location } = createMockRouterState();
-      const payload = { fetchId, location };
       const reducer = combineReducers({ fetch: fetchReducer });
       const actions = [
         initialize(),
-        fetchRouteDataRequest(payload),
-        fetchRouteDataFailure(payload),
+        fetchRequest(fetchId, location),
+        fetchFailure(error, fetchId, location),
       ];
       const state = actions.reduce(reducer, undefined);
       expect(getReadyState(state)).to.equal(ReadyState.FAILURE);
@@ -62,12 +60,11 @@ describe('selectors', () => {
     it('should return "SUCCESS" status', () => {
       const fetchId = uniqueId();
       const { location } = createMockRouterState();
-      const payload = { fetchId, location };
       const reducer = combineReducers({ fetch: fetchReducer });
       const actions = [
         initialize(),
-        fetchRouteDataRequest(payload),
-        fetchRouteDataSuccess(payload),
+        fetchRequest(fetchId, location),
+        fetchSuccess(fetchId, location),
       ];
       const state = actions.reduce(reducer, undefined);
       expect(getReadyState(state)).to.equal(ReadyState.SUCCESS);

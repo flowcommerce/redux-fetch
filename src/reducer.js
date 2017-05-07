@@ -6,12 +6,12 @@ const defaultState = {
 };
 
 const isSameFetchId = (state, action) =>
-  state.fetchId === action.payload.fetchId;
+  state.fetchId === action.fetchId;
 
 const requestReducer = (state, action) => ({
   ...state,
-  fetchId: action.payload.fetchId,
-  location: action.payload.location,
+  fetchId: action.fetchId,
+  location: action.location,
   readyState: ReadyState.LOADING,
 });
 
@@ -19,8 +19,9 @@ const failureReducer = (state, action) => {
   if (!isSameFetchId(state, action)) return state;
   return {
     ...state,
-    fetchId: action.payload.fetchId,
-    location: action.payload.location,
+    error: action.error,
+    fetchId: action.fetchId,
+    location: action.location,
     readyState: ReadyState.FAILURE,
   };
 };
@@ -29,8 +30,8 @@ const successReducer = (state, action) => {
   if (!isSameFetchId(state, action)) return state;
   return {
     ...state,
-    fetchId: action.payload.fetchId,
-    location: action.payload.location,
+    fetchId: action.fetchId,
+    location: action.location,
     readyState: ReadyState.SUCCESS,
   };
 };

@@ -1,27 +1,32 @@
 import ActionTypes from './ActionTypes';
 import uniqueId from './uniqueId';
 
-export const fetchRouteDataFailure = payload => ({ payload, type: ActionTypes.FETCH_FAILURE });
+export const fetchFailure = (error, fetchId, location) => ({
+  type: ActionTypes.FETCH_FAILURE, error, fetchId, location,
+});
 
-export const fetchRouteDataRequest = payload => ({ payload, type: ActionTypes.FETCH_REQUEST });
+export const fetchRequest = (fetchId, location) => ({
+  type: ActionTypes.FETCH_REQUEST, fetchId, location,
+});
 
-export const fetchRouteDataSuccess = payload => ({ payload, type: ActionTypes.FETCH_SUCCESS });
+export const fetchSuccess = (fetchId, location) => ({
+  type: ActionTypes.FETCH_SUCCESS, fetchId, location,
+});
 
 /**
- * An async action creator that returns a promise that is resolved after all
- * data requirements for decorated route components are fulfilled.
- * @param {Object} props An object with non-router specific properties,
- * typically injected into `RouterContext`.
- * @return {Promise}
- */
+ * Fetch data required to render components matched to the current location.
+ * @param {RouterState} props An object representing the current state of the router.
+ * @return {Promise} A promise that is settled after data requirements for all
+ * matched route components is either complete or fails.
+*/
 export const fetchRouteData = props => (dispatch, getState) => {
   const { location, components } = props;
   const fetchId = uniqueId();
 
-  dispatch(fetchRouteDataRequest({ fetchId, location }));
+  dispatch(fetchRequest(fetchId, location));
 
   const promises = components
-  // Grab route components from React Router properties.
+  // Grab route components from the current router state.
   .reduce((accumulator, component) => {
     // A component may be a plain object when named components are used.
     if (typeof component === 'object') {
@@ -42,8 +47,8 @@ export const fetchRouteData = props => (dispatch, getState) => {
   .map(component => component.fetchAsyncState(dispatch, getState, props));
 
   return Promise.all(promises).then(() => {
-    dispatch(fetchRouteDataSuccess({ fetchId, location }));
-  }, () => {
-    dispatch(fetchRouteDataFailure({ fetchId, location }));
+    dispatch(fetchSuccess(fetchId, location));
+  }).catch((error) => {
+    dispatch(fetchFailure(error, fetchId, location));
   });
 };

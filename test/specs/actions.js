@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchRouteData, fetchRouteDataFailure, fetchRouteDataRequest, fetchRouteDataSuccess } from '../../src/actions';
+import { fetchRouteData, fetchFailure, fetchRequest, fetchSuccess } from '../../src/actions';
 import ActionTypes from '../../src/ActionTypes';
 import createMockStore from '../utilities/createMockStore';
 import createMockRouterState from '../utilities/createMockRouterState';
@@ -15,38 +15,40 @@ function createMockComponent(fetchAsyncState) {
 }
 
 describe('action creators', () => {
-  context('when fetchRouteDataRequest is called', () => {
+  context('when fetchRequest is called', () => {
     it('should return a FETCH_REQUEST action object with payload', () => {
       const { location } = createMockRouterState();
       const fetchId = uniqueId();
-      const payload = { fetchId, location };
-      expect(fetchRouteDataRequest(payload)).to.deep.equal({
-        payload,
+      expect(fetchRequest(fetchId, location)).to.deep.equal({
         type: ActionTypes.FETCH_REQUEST,
+        fetchId,
+        location,
       });
     });
   });
 
-  context('when fetchRouteDataFailure is called', () => {
+  context('when fetchFailure is called', () => {
     it('should return a FETCH_FAILURE action object with payload', () => {
       const { location } = createMockRouterState();
+      const error = { message: 'Oops' };
       const fetchId = uniqueId();
-      const payload = { fetchId, location };
-      expect(fetchRouteDataFailure(payload)).to.deep.equal({
-        payload,
+      expect(fetchFailure(error, fetchId, location)).to.deep.equal({
         type: ActionTypes.FETCH_FAILURE,
+        error,
+        fetchId,
+        location,
       });
     });
   });
 
-  context('when fetchRouteDataSuccess is called', () => {
+  context('when fetchSuccess is called', () => {
     it('should return a FETCH_SUCCESS action object with payload', () => {
       const { location } = createMockRouterState();
       const fetchId = uniqueId();
-      const payload = { fetchId, location };
-      expect(fetchRouteDataSuccess(payload)).to.deep.equal({
-        payload,
+      expect(fetchSuccess(fetchId, location)).to.deep.equal({
         type: ActionTypes.FETCH_SUCCESS,
+        location,
+        fetchId,
       });
     });
   });
@@ -62,12 +64,12 @@ describe('action creators', () => {
         const [requestAction, successAction] = getActions();
 
         expect(requestAction).to.have.property('type').that.equal(ActionTypes.FETCH_REQUEST);
-        expect(requestAction).to.have.deep.property('payload.location').that.equal(routerState.location);
-        expect(requestAction).to.have.deep.property('payload.fetchId').that.is.a.string;
+        expect(requestAction).to.have.deep.property('location').that.equal(routerState.location);
+        expect(requestAction).to.have.deep.property('fetchId').that.is.a.string;
 
         expect(successAction).to.have.property('type').that.equal(ActionTypes.FETCH_SUCCESS);
-        expect(successAction).to.have.deep.property('payload.location').that.equal(routerState.location);
-        expect(successAction).to.have.deep.property('payload.fetchId').that.is.a.string;
+        expect(successAction).to.have.deep.property('location').that.equal(routerState.location);
+        expect(successAction).to.have.deep.property('fetchId').that.is.a.string;
       });
     });
 
@@ -81,12 +83,12 @@ describe('action creators', () => {
         const [requestAction, failureAction] = getActions();
 
         expect(requestAction).to.have.property('type').that.equal(ActionTypes.FETCH_REQUEST);
-        expect(requestAction).to.have.deep.property('payload.location').that.equal(routerState.location);
-        expect(requestAction).to.have.deep.property('payload.fetchId').that.is.a.string;
+        expect(requestAction).to.have.deep.property('location').that.equal(routerState.location);
+        expect(requestAction).to.have.deep.property('fetchId').that.is.a.string;
 
         expect(failureAction).to.have.property('type').that.equal(ActionTypes.FETCH_FAILURE);
-        expect(failureAction).to.have.deep.property('payload.location').that.equal(routerState.location);
-        expect(failureAction).to.have.deep.property('payload.fetchId').that.is.a.string;
+        expect(failureAction).to.have.deep.property('location').that.equal(routerState.location);
+        expect(failureAction).to.have.deep.property('fetchId').that.is.a.string;
       });
     });
 
