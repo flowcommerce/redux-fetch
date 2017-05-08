@@ -48,7 +48,7 @@ export const fetchRouteData = props => (dispatch, getState) => {
 
   return Promise.all(promises).then(() => {
     dispatch(fetchSuccess(fetchId, location));
-  }).catch((error) => {
+  }, (error) => {
     dispatch(fetchFailure(error, fetchId, location));
   });
 };
