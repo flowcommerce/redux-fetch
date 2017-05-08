@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { reducer as fetch } from '@flowio/redux-fetch';
-import { routerReducer as routing } from 'react-router-redux'
+import { routerReducer as routing } from 'react-router-redux';
 
 import authorization from './authorization';
 import homeTimeline from './homeTimeline';

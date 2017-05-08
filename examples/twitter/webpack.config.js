@@ -6,7 +6,7 @@ export default {
   entry: [
     'webpack-hot-middleware/client',
     'react-hot-loader/patch',
-    path.resolve(__dirname, './client/index.js'),
+    path.resolve(__dirname, './client/index.jsx'),
   ],
   output: {
     path: path.resolve(__dirname, './client/assets'),
@@ -20,7 +20,7 @@ export default {
     rules: [{
       test: /\.(js|jsx)$/,
       use: [
-        { loader: 'babel-loader' }
+        { loader: 'babel-loader' },
       ],
       include: [
         path.resolve(__dirname, './client'),

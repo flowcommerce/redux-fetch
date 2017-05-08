@@ -6,7 +6,7 @@ import TimelineItem from './TimelineItem';
 import { timelineShape } from '../utilities/propTypes';
 
 if (process.browser) {
-  require('./Timeline.css');
+  require('./Timeline.css'); // eslint-disable-line global-require
 }
 
 const classes = new BemHelper('Timeline');

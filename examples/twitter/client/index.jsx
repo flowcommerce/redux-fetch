@@ -11,6 +11,7 @@ const store = configureStore(window.$REDUX_STATE);
 const rootElement = document.querySelector('#react-root');
 
 function render() {
+  // eslint-disable-next-line global-require
   const Root = require('../common/components/Root').default;
 
   ReactDOM.render(

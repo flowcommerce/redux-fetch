@@ -7,8 +7,8 @@ import { getIsPending, getIsLoading } from '@flowio/redux-fetch';
 import Header from './Header';
 
 if (process.browser) {
-  require('react-spinner/react-spinner.css');
-  require('./Application.css');
+  require('react-spinner/react-spinner.css'); // eslint-disable-line global-require
+  require('./Application.css'); // eslint-disable-line global-require
 }
 
 const classes = new BemHelper('Application');
@@ -29,6 +29,7 @@ Application.displayName = 'Application';
 
 Application.propTypes = {
   children: PropTypes.node,
+  loading: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

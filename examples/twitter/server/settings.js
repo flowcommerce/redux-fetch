@@ -27,7 +27,7 @@ export default {
           console: [{
             module: 'good-squeeze',
             name: 'Squeeze',
-            args: [{ log: '*', request: '*', response: '*' }]
+            args: [{ log: '*', request: '*', response: '*' }],
           }, {
             module: 'good-console',
           }, 'stdout'],

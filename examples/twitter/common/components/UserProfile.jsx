@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { userShape } from '../utilities/propTypes';
 
 if (process.browser) {
-  require('./UserProfile.css');
+  require('./UserProfile.css'); // eslint-disable-line global-require
 }
 
 const classes = new BemHelper('UserProfile');
