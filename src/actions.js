@@ -1,4 +1,6 @@
 import ActionTypes from './ActionTypes';
+import formatError from './formatError';
+import isError from './isError';
 import uniqueId from './uniqueId';
 
 export const fetchFailure = (error, fetchId, location) => ({
@@ -49,6 +51,13 @@ export const fetchRouteData = props => (dispatch, getState) => {
   return Promise.all(promises).then(() => {
     dispatch(fetchSuccess(fetchId, location));
   }, (error) => {
-    dispatch(fetchFailure(error, fetchId, location));
+    // Ideally, developers catch and handle runtime errors that occur in async
+    // actions dispatched to fulfill data requirements, however, it's not a
+    // great developer experience when you have to debug an error that
+    // dissapears into the ether. As a result, we will reformat native errors
+    // into JSON format so that it can be stored in Redux and rethrow the error
+    // so it's printed in the browser developer tools.
+    dispatch(fetchFailure(formatError(error), fetchId, location));
+    if (isError(error)) throw error;
   });
 };
