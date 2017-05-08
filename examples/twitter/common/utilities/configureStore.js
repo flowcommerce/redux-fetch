@@ -1,13 +1,13 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { createLogger } from 'redux-logger';
 import reduxThunk from 'redux-thunk';
-import reduxLogger from 'redux-logger';
 import combinedReducers from '../reducers';
 
 const middleware = [reduxThunk];
 
 if (process.browser) {
-  middleware.push(reduxLogger({ level: 'info', collapsed: true }));
+  middleware.push(createLogger({ level: 'info', collapsed: true }));
 }
 
 export default function configureStore(initialState = {}) {
