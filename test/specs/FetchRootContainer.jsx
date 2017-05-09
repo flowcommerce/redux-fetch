@@ -27,7 +27,7 @@ describe('FetchRootContainer', () => {
     expect(onFetchRouteData).to.not.have.been.called;
   });
 
-  it('should call onFetchRouteData when data requirements are not met', () => {
+  it('should call onFetchRouteData when data requirements are not met on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
 
@@ -78,8 +78,18 @@ describe('FetchRootContainer', () => {
   });
 
   it('should call onFetchRouteData when updated with a different location', () => {
-    const prevRouterState = createMockRouterState({ location: { pathname: '/search/cats' } });
-    const nextRouterState = createMockRouterState({ location: { pathname: '/search/dogs' } });
+    const prevRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+      },
+    });
+
+    const nextRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/dogs',
+      },
+    });
+
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
@@ -94,11 +104,90 @@ describe('FetchRootContainer', () => {
     wrapper.setProps({ routerProps: nextRouterState });
 
     expect(onFetchRouteData).to.have.been.calledOnce;
+    expect(onFetchRouteData).to.have.been.calledWithExactly(nextRouterState);
   });
 
-  it('should set FetchReadyStateRenderer to pending when locations are different', () => {
-    const prevRouterState = createMockRouterState({ location: { pathname: '/search/cats' } });
-    const nextRouterState = createMockRouterState({ location: { pathname: '/search/dogs' } });
+  it('should set FetchReadyStateRenderer to pending when location pathnames differ', () => {
+    const prevRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+      },
+    });
+
+    const nextRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/dogs',
+      },
+    });
+
+    const onFetchRouteData = sinon.stub();
+
+    const wrapper = mount(
+      <FetchRootComponent
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.SUCCESS}
+        routerProps={prevRouterState}>
+        <Child />
+      </FetchRootComponent>,
+    );
+
+    wrapper.setProps({ routerProps: nextRouterState });
+
+    const child = wrapper.find('FetchReadyStateRenderer');
+
+    expect(child.prop('readyState')).to.equal(ReadyState.PENDING);
+  });
+
+  it('should set FetchReadyStateRenderer to pending when location search strings differ', () => {
+    const prevRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+        search: '?pageNumber=1',
+      },
+    });
+
+    const nextRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+        search: '?pageNumber=2',
+      },
+    });
+
+    const onFetchRouteData = sinon.stub();
+
+    const wrapper = mount(
+      <FetchRootComponent
+        onFetchRouteData={onFetchRouteData}
+        readyState={ReadyState.SUCCESS}
+        routerProps={prevRouterState}>
+        <Child />
+      </FetchRootComponent>,
+    );
+
+    wrapper.setProps({ routerProps: nextRouterState });
+
+    const child = wrapper.find('FetchReadyStateRenderer');
+
+    expect(child.prop('readyState')).to.equal(ReadyState.PENDING);
+  });
+
+  it('should set FetchReadyStateRenderer to pending when location keys differ', () => {
+    const prevRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+        search: '?pageNumber=1',
+        key: 'abc',
+      },
+    });
+
+    const nextRouterState = createMockRouterState({
+      location: {
+        pathname: '/search/cats',
+        search: '?pageNumber=1',
+        key: 'cba',
+      },
+    });
+
     const onFetchRouteData = sinon.stub();
 
     const wrapper = mount(
