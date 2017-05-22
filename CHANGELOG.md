@@ -3,9 +3,21 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## HEAD
+## 0.14.0
 
-* Upgrade dependencies
+* Use Redux to record fetch state between server and client.
+
+* Rename `fetch` to `withFetch` to avoid conflict with Fetch API.
+
+* The `FetchRootContainer` is the only component using `StaticContainer` to
+  continue rendering the previous view until the data required to render the
+  next view is fetched from the server.
+
+* The `FetchContainer` is a higher-order component whose only purpose is to
+  declare the function used to fulfill the data required to render a component
+  as a static method.
+
+* Additional documentation regarding usage in different scenarios were added.
 
 ## 0.12.2
 

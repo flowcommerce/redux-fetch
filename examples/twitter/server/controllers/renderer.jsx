@@ -1,15 +1,8 @@
-/**
- * @fileoverview
- * A module that exports a Hapi route configuration that maps a request to
- * React Router routes.
- */
-
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { RouterContext, createMemoryHistory, match } from 'react-router';
-import { fetchAsyncState, FetchProvider } from '@flowio/redux-fetch';
-
+import { fetchRouteData, FetchRootContainer } from '@flowio/redux-fetch';
 import Html from '../../common/components/Html';
 import InternalServerError from '../../common/components/InternalServerError';
 import NotFound from '../../common/components/NotFound';
@@ -47,9 +40,9 @@ function renderNotFound() {
 function renderToString(store, renderProps) {
   return ReactDOMServer.renderToString(
     <Provider store={store}>
-      <FetchProvider routerProps={renderProps}>
+      <FetchRootContainer routerProps={renderProps}>
         <RouterContext {...renderProps} />
-      </FetchProvider>
+      </FetchRootContainer>
     </Provider>,
   );
 }
@@ -70,7 +63,7 @@ function handleMatch(store) {
       };
     }
 
-    return fetchAsyncState(store, renderProps).then(() => {
+    return store.dispatch(fetchRouteData(renderProps)).then(() => {
       const state = store.getState();
       const markup = renderToString(store, renderProps);
       return { status: 200, markup, state };
@@ -86,31 +79,27 @@ function handleMatchError() {
   });
 }
 
-/* Hapi Route Configuration */
-export default {
-  auth: 'login',
-  handler: (request, reply) => {
-    const location = request.url.href;
-    const history = createMemoryHistory(location);
-    const routes = configureRoutes();
-    const store = configureStore({
-      authorization: {
-        token: request.auth.token,
-        user_id: request.auth.credentials.profile.id,
-        screen_name: request.auth.credentials.profile.username,
-      },
-    });
+export default function (request, reply) {
+  const location = request.url.href;
+  const history = createMemoryHistory(location);
+  const routes = configureRoutes();
+  const store = configureStore({
+    authorization: {
+      token: request.auth.token,
+      user_id: request.auth.credentials.profile.id,
+      screen_name: request.auth.credentials.profile.username,
+    },
+  });
 
-    return matchRoute({ history, location, routes })
-    .then(handleMatch(store))
-    .catch(handleMatchError())
-    .then(({ error, markup, state, status, redirect }) => {
-      switch (status) {
-      case 200: return reply(renderPage({ markup, state }));
-      case 302: return reply().redirect(redirect);
-      case 404: return reply(renderNotFound()).code(status);
-      default: return reply(renderInternalServerError(error)).code(status);
-      }
-    });
-  },
-};
+  return matchRoute({ history, location, routes })
+  .then(handleMatch(store))
+  .catch(handleMatchError())
+  .then(({ error, markup, state, status, redirect }) => {
+    switch (status) {
+    case 200: return reply(renderPage({ markup, state }));
+    case 302: return reply().redirect(redirect);
+    case 404: return reply(renderNotFound()).code(status);
+    default: return reply(renderInternalServerError(error)).code(status);
+    }
+  });
+}

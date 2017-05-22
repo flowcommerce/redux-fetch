@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // A utility function to safely escape JSON for embedding in a <script> tag
 function safeStringify(data = {}) {

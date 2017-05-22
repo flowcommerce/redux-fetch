@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 
-const { number, string, shape } = PropTypes;
+const { arrayOf, number, object, string, shape } = PropTypes;
 
 export const errorShape = shape({
-  code: number,
+  statusCode: number,
+  error: string,
   message: string.isRequired,
+  attributes: arrayOf(object),
 });
 
 export const userShape = shape({
