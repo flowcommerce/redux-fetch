@@ -5,9 +5,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.14.0
 
+In this release, Redux Fetch will use Redux as the source of truth so that data
+between the server and client can be shared accordingly. An overhaul of the
+implementation was required and therefore is not backwards compatible.
+
 * Use Redux to record fetch state between server and client.
 
-* Rename `fetch` to `withFetch` to avoid conflict with Fetch API.
+* Renamed `fetch` to `withFetch` to avoid conflict with native Fetch API.
 
 * The `FetchRootContainer` is the only component using `StaticContainer` to
   continue rendering the previous view until the data required to render the
