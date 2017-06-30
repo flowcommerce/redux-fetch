@@ -1,4 +1,4 @@
-import { jsdom } from 'jsdom';
+import jsdom from 'jsdom';
 import chai from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -24,9 +24,16 @@ chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
 // Setup JSDOM
-global.document = jsdom('<!doctype html><html><body></body></html>');
-global.window = document.defaultView;
-global.navigator = global.window.navigator;
+// Setup JSDOM
+const { window } = new jsdom.JSDOM('<!doctype html><html><body></body></html>');
+global.window = window;
+
+Object.keys(global.window).forEach((key) => {
+  if (!(key in global)) {
+    global[key] = global.window[key];
+  }
+});
+
 
 // Stub console.error() to throw an error when called.
 // The intention is to catch prop type validation errors in React components.
