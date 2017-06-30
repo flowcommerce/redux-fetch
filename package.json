@@ -83,6 +83,6 @@
     "redux-mock-store": "^1.2.2",
     "redux-thunk": "^2.2.0",
     "sinon": "^2.3.6",
-    "sinon-chai": "^2.9.0"
+    "sinon-chai": "^2.11.0"
   }
 }
