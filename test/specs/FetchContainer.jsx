@@ -48,6 +48,6 @@ describe('withFetch', () => {
       static meta = meta;
     }
 
-    expect(Container).to.have.deep.property('meta.name', meta.name);
+    expect(Container).to.have.nested.property('meta.name', meta.name);
   });
 });
