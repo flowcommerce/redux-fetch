@@ -6,7 +6,7 @@ import chaiAsPromised from 'chai-as-promised';
 
 // Because relying on package.json to set this environment is almost always OK, but when one user
 // just throws mocha in his terminal we don't want to punish him with data loss or any other hell.
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'test'
 
 // Expose Sinon to global scope.
 global.sinon = sinon;
@@ -23,7 +23,6 @@ global.expect = chai.expect;
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
-// Setup JSDOM
 // Setup JSDOM
 const { window } = new jsdom.JSDOM('<!doctype html><html><body></body></html>');
 global.window = window;
