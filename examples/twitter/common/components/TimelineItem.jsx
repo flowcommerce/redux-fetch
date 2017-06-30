@@ -3,7 +3,7 @@ import BemHelper from 'react-bem-helper';
 import { timelineShape } from '../utilities/propTypes';
 
 if (process.browser) {
-  require('./TimelineItem.css');
+  require('./TimelineItem.css'); // eslint-disable-line global-require
 }
 
 const classes = new BemHelper('TimelineItem');

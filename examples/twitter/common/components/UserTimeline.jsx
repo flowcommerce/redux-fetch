@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
+import { withFetch } from '@flowio/redux-fetch';
 
 import Timeline from './Timeline';
 import { timelineShape } from '../utilities/propTypes';
@@ -20,10 +21,10 @@ const UserTimeline = ({ timeline }) => (
 );
 
 UserTimeline.propTypes = {
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
-function getAsyncState(dispatch) {
+function fetchAsyncState(dispatch) {
   return dispatch(fetchUserTimeline());
 }
 
@@ -34,6 +35,6 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  fetch(getAsyncState),
+  withFetch(fetchAsyncState),
   connect(mapStateToProps),
 )(UserTimeline);

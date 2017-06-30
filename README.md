@@ -1,44 +1,77 @@
+# Redux Fetch
+
 [![Build Status][travis-image]][travis-url]
 [![NPM Version][npm-image]][npm-url]
 [![Downloads][downloads-image]][downloads-url]
-
-# Redux Fetch
-
 [![Greenkeeper badge](https://badges.greenkeeper.io/flowcommerce/redux-fetch.svg)](https://greenkeeper.io/)
 
-Redux Fetch provides universal data fetching bindings for applications built with React, React Router, and Redux.
+Redux Fetch provides universal data fetching bindings for applications built with React, React Router, and Redux. It relies on promises implemented in your application to determine whether the state to render route components matching a location is fulfilled.
 
 ## Installation
 
-Redux Fetch requires **React 15** and **React Router 2**.
+Install the correct versions of each package, which are listed by the command:
 
-```
-npm install --save @flowio/redux-fetch
+```bash
+npm info "@flowio/redux-fetch" peerDependencies
 ```
 
-This assumes that you’re using [npm](http://npmjs.com/) package manager with a module bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org/) to consume [CommonJS modules](http://webpack.github.io/docs/commonjs.html).
+Linux / OSX users can simply run:
+
+```bash
+npm info "@flowio/redux-fetch@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install --save "@flowio/redux-fetch@latest"
+```
+
+Windows users can either install all the peer dependencies manually, or use the `install-peerdeps` cli tool.
+
+```bash
+npm install -g install-peerdeps
+install-peerdeps @flowio/redux-fetch
+```
+
+This assumes that you’re using [npm][npm] package manager with a module bundler like [Webpack][webpack] or [Browserify][browserify] to consume [CommonJS modules][commonjs-modules].
 
 ## Usage
 
-### Configure components to fetch required data before rendering
+### Configure Redux store with Redux Fetch
 
-You must decorate your components with `fetch()` and provide a function that returns a promise that is settled after the application state is updated with the data required before rendering them.
+The first thing that you have to do is give the Redux Fetch reducer to Redux. You will only have to do this once, no matter how many fetch containers your application uses.
+
+```javascript
+import { createStore, combineReducers } from 'redux';
+import { reducer as fetchReducer } from '@flowio/redux-fetch';
+
+const reducer = combineReducers({
+  // ...Your other reducers here
+  fetch: fetchReducer,
+});
+
+export default function configureStore(initialState) {
+  return createStore(reducer, initialState);
+}
+```
+
+### Configure route components to fetch required data before rendering
+
+Decorate your route components with `withFetch()` and provide a function that returns a promise that is settled after the application state is updated with the data required before rendering them.
 
 ```js
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
-import { getExamples } from './path/to/async/action/example';
+import { withFetch } from '@flowio/redux-fetch';
+import { fetchThings } from './app/actions';
+import { getThings } from './app/selectors';
 
-function getAsyncState(dispatch /* getState, routerState */) {
-  return dispatch(getExamples());
+function fetchAsyncState(dispatch /* getState, routerState */) {
+  return dispatch(fetchThings());
 }
 
 function mapStateToProps(state) {
-  return state.examples;
+  return {
+    things: getThings(state),
+  };
 }
 
-@fetch(getAsyncState)
+@withFetch(fetchAsyncState)
 @connect(mapStateToProps)
 export default class Container extends Component {
   /* ... */
@@ -47,34 +80,32 @@ export default class Container extends Component {
 
 ### Configure server-side rendering
 
-On the server side you will need to match the routes to a location, fulfill data requirements, and finally render.
+On the server side you should match the routes to a location, fulfill data requirements, and finally render.
 
 ```js
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import { Provider } from 'react-redux';
-import { fetchAsyncState, FetchProvider } from '@flowio/redux-fetch';
-import configureStore from './path/to/configure/store';
-import routes from './path/to/routes';
+import { fetchRouteData, FetchRootContainer } from '@flowio/redux-fetch';
+import store from './app/store';
+import routes from './app/routes';
 
 // Render the application server-side for a given path:
 export default (location) => {
   return new Promise((resolve, reject) => {
-    const store = configureStore();
-
     // Match routes to a location
     match({ routes, location }, (matchError, redirectLocation, renderProps) => {
       // Fulfill data requirements
-      fetchAsyncState(store, renderProps).then(() => {
+      store.dispatch(fetchRouteData(renderProps)).then(() => {
         // Initial state passed to the client-side
         const state = store.getState();
 
         const html = renderToString(
           <Provider store={store}>
-            <FetchProvider routerProps={renderProps}>
+            <FetchRootContainer routerProps={renderProps}>
               <RouterContext {...renderProps} />
-            </FetchProvider>
+            </FetchRootContainer>
           </Provider>
         );
 
@@ -87,14 +118,16 @@ export default (location) => {
 
 ### Configure client-side rendering
 
+On the client-side you should use the `useFetch` router middleware and rehydrate the Redux store with the state from the server.
+
 ```js
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, browserHistory, Router } from 'react-router';
 import { useFetch } from '@flowio/redux-fetch';
-import configureStore from './path/to/configure/store';
-import routes from './path/to/routes';
+import configureStore from './app/configureStore';
+import configureRoutes from './app/configureRoutes';
 
 // Render the app client-side to a given container element:
 export default (container) => {
@@ -103,6 +136,7 @@ export default (container) => {
   //   window.__INITIAL_STATE___ = JSON.stringify(state);
   // </script>
   const store = configureStore(window.__INITIAL_STATE___);
+  const routes = configureRoutes();
 
   render(
     <Provider store={store}>
@@ -118,90 +152,81 @@ export default (container) => {
 
 ## API Reference
 
-### `fetch(getAsyncState[, options])`
+### `withFetch(fetchAsyncState)`
 
-A higher order component that attempts to fulfill the data required in order to render an instance of a React component.
+A higher-order component that lets route components encode their data requirements.
 
 #### Arguments
 
-* `getAsyncState(dispatch, getState, routerState): Promise`: A function whose result must be a promise that is resolved when the Redux store is updated with the data required to render the React component or rejected otherwise.
+* `fetchAsyncState(dispatch: Function, getState: Function, routerState: RouterState): Promise`: A function that returns a promise that is resolved when the Redux store is updated with the data required to render the decorated component or rejected otherwise.
 
-	The three arguments passed to the `getAsyncState` function are:
+	The three arguments passed to the `fetchAsyncState` function are:
 
 	- `dispatch`: A dispatcher used to broadcast payloads to change the application state.
 
 	- `getState`: A function that returns the current state tree of your application.
 
-	- [`routerState: RouterState`](https://github.com/reactjs/react-router/blob/master/docs/Glossary.md#routerstate): Properties normally injected into `RouterContext` that represent the current state of a router.
-
-* `[options: Object]`: If specified, further customizes the behavior of the container.
-
-  - `[renderLoading: Function]`: Redux Fetch renders the loading state whenever it cannot immediately fulfill data needed to render. By default, nothing is rendered while loading data for the initial render. If a previous component was fulfilled and rendered, the default behavior is to continue rendering the previous view. You can change this behavior by supplying the `renderLoading` property. A `renderLoading` callback can simulate the default behavior by returning `undefined`. Notice that this is different from a `renderLoading` callback that returns `null`, which would render nothing whenever data is loading, even if there was a previous view rendered.
-
-  - `[renderFailure(error): Function]`: If an error occurs that prevents Redux Fetch from fetching the data required for rendering a component, nothing will be rendered by default. Error handling behavior can be configured by supplying a callback to the `renderFailure` property. The `renderFailure` callback is called with an error object.
+	- `routerState`: Properties normally injected into `RouterContext` that represent the current state of a router.
 
 #### Returns
 
-A React component class that renders your component according to the specified options.
+A React component class that renders your component.
 
-##### Static Properties
+#### Static Properties
 
-All the original static properties of the component are hoisted.
+All the original static properties of your component are hoisted.
 
-##### Static Methods
+#### Static Methods
 
-* `getAsyncState`: The function passed to `fetch()` to resolve data requirements for your component.
+* `fetchAsyncState`: The function passed to `withFetch()` to resolve data requirements for your component.
 
-All the original static methods of the component are hoisted.
+All the original static methods of your component are hoisted.
 
 #### Remarks
 
-* It needs to be invoked two times. The first time with its arguments described above, and a second time, with the component: `fetch(getAsyncState, options)(MyComponent)`.
+* It needs to be invoked two times. The first time with its arguments as described above, and a second time, with the component: `withFetch(fetchAsyncState)(MyComponent)`.
 
 * It does not modify the passed React component. It returns a new component that you should use instead.
 
-* The static `getAsyncState` function is used to resolve the data required before rendering the matched route components for a location.
+* The static `fetchAsyncState` function is used to resolve the data required before rendering the matched route components for a location.
 
-### `FetchProvider`
+### `FetchRootContainer`
 
-A React component that provides the context needed for containers created with `fetch()` in the component hierarchy below to perform their expected behavior.
+A React component that attempts to fulfill the data required in order to render matched route components in the component hierarchy below.
 
 #### Props
 
-* `[aggregator: Function]`: A function responsible for fulfilling the data requirements for components matched to a location. The application store and router state will be injected into the function when called and it should return a promise that is settled after fetching the required data.
-
-* `[forceInitialFetch: Boolean]`: By default, the component assumes the store will be rehydrated from data bootstrapped on the server response on first render and will prevent sending requests to the server until the next route change. If you instead wanted to force requests even if the store was rehydrated, you can use the `forceInitialFetch` boolean property.
-
 * `routerProps: RouterState`: The React Router properties normally injected into `RouterContext` that represent the current state of the router.
 
-* `[renderLoading: Function]`: Similar to the `renderLoading` property passed to `fetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `fetch()` in the component hierarchy below.
+* `[forceInitialFetch: Boolean]`: If supplied and set to `true`, a request for data will always be made to the server regardless of whether data on the client is available to immediately fulfill the data requirements.
 
-* `[renderFailure: Function]`: Similar to the `renderFailure` property passed to `fetch()`. You should define this property if you want to propagate the same behavior on *all* containers created with `fetch()` in the component hierarchy below.
+* `[renderLoading: Function]`: Redux Fetch renders the loading state whenever it cannot immediately fulfill data needed to render. By default, nothing is rendered while loading data for the initial render. If a previous component was fulfilled and rendered, the default behavior is to continue rendering the previous view. You can change this behavior by supplying the `renderLoading` property. A `renderLoading` callback can simulate the default behavior by returning `undefined`. Notice that this is different from a `renderLoading` callback that returns `null`, which would render nothing whenever data is loading, even if there was a previous view rendered.
+
+* `[renderFailure: Function]`: If an error occurs that prevents Redux Fetch from fetching the data required for rendering a component, nothing will be rendered by default. Error handling behavior can be configured by supplying a callback to the `renderFailure` property. The `renderFailure` callback is called with the error.
+
+* `[renderSuccess: Function]`: When all data necessary to render becomes available, Redux Fetch will render the matched route components by default. However, you can change this behavior by supplying a callback to the `renderSuccess` property. The `renderSuccess` callback is called with the `children` to be rendered.
 
 #### Remarks
 
-* You should only set `forceInitialFetch` to `true` on the client-side.
+* Views returned by `renderLoading`, `renderFailure`, and `renderSuccess` are rendered outside the router context.
 
-* Providing a render callback to `fetch()` will take precedence over render callbacks injected to `FetchProvider`.
+* Typically, you will not use the `renderSuccess` callback. It's exposed in case you need to hack something together.
 
 ### `useFetch([options])`
 
-A React Router middleware that provides the context needed for containers created with `fetch()` in the component hierarchy below.
+A React Router middleware that attempts to fulfill the data required in order to render matched decorated route components in the component hierarchy below.
 
 #### Arguments
 
-* `[options: Object]`: Same options available to `FetchProvider` as props with the exception of `routerProps`.
+* `[options: Object]`: Same options available for `FetchRootContainer` as props with the exception of `routerProps` since it can be inferred.
 
-### `fetchAsyncState(store, routerState)`
+### `fetchRouteData(routerProps)`
 
-An utility that you would normally use on the server-side to fetch the data required before rendering matched route components.
+An asynchronous action creator that fetches the data required before rendering matched route components when dispatched.
 
-The three arguments you should inject into the `fetchAsyncState` are:
+The arguments you should inject into `fetchRouteData` are:
 
-  - `store`: A Redux store instance that will be hydrated with the application state before rendering you route components.
-
-  - [`routerState: RouterState`](https://github.com/reactjs/react-router/blob/master/docs/Glossary.md#routerstate): Properties normally injected into `RouterContext` that represent the current state of a router.
-
+  - `routerProps: RouterState`: Properties normally injected into `RouterContext` that represent the current state of a router.
 
 ## Acknowledgments
 
@@ -219,11 +244,16 @@ This project, while far less complex, was inspired and borrows some concepts fro
 
 ## License
 
-[MIT License](https://github.com/flowcommerce/redux-fetch/blob/master/LICENSE)
+[MIT License][mit]
 
+[browserify]: http://browserify.org/
+[commonjs-modules]: http://webpack.github.io/docs/commonjs.html
+[mit]: https://github.com/flowcommerce/redux-fetch/blob/master/LICENSE
+[npm]: http://npmjs.com/
 [npm-image]: https://img.shields.io/npm/v/@flowio/redux-fetch.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/@flowio/redux-fetch
 [downloads-image]: https://img.shields.io/npm/dm/redux-fetch.svg?style=flat-square
 [downloads-url]: https://www.npmjs.com/package/@flowio/redux-fetch
 [travis-image]: https://img.shields.io/travis/flowcommerce/redux-fetch/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/flowcommerce/redux-fetch
+[webpack]: http://webpack.github.io

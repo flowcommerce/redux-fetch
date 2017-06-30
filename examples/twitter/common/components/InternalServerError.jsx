@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Col, Grid, Jumbotron, Row } from 'react-bootstrap';
 
 const InternalServerError = ({ message, retry, ...otherProps }) => (
@@ -21,8 +22,8 @@ const InternalServerError = ({ message, retry, ...otherProps }) => (
 InternalServerError.displayName = 'InternalServerError';
 
 InternalServerError.propTypes = {
-  message: React.PropTypes.string,
-  retry: React.PropTypes.func,
+  message: PropTypes.string,
+  retry: PropTypes.func,
 };
 
 export default InternalServerError;

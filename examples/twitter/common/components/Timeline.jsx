@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import BemHelper from 'react-bem-helper';
 import map from 'lodash/map';
 import TimelineItem from './TimelineItem';
 import { timelineShape } from '../utilities/propTypes';
 
 if (process.browser) {
-  require('./Timeline.css');
+  require('./Timeline.css'); // eslint-disable-line global-require
 }
 
 const classes = new BemHelper('Timeline');
@@ -21,7 +22,7 @@ const Timeline = ({ timeline }) => (
 Timeline.displayName = 'Timeline';
 
 Timeline.propTypes = {
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
 export default Timeline;

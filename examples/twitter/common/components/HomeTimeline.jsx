@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Alert, Col, Grid, Row } from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { fetch } from '@flowio/redux-fetch';
+import { withFetch } from '@flowio/redux-fetch';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 
@@ -44,12 +45,12 @@ const HomeTimeline = ({ errors, user, timeline }) => (
 HomeTimeline.displayName = 'HomeTimeline';
 
 HomeTimeline.propTypes = {
-  errors: React.PropTypes.arrayOf(errorShape),
+  errors: PropTypes.arrayOf(errorShape),
   user: userShape.isRequired,
-  timeline: React.PropTypes.arrayOf(timelineShape),
+  timeline: PropTypes.arrayOf(timelineShape),
 };
 
-function getAsyncState(dispatch) {
+function fetchAsyncState(dispatch) {
   return Promise.all([
     dispatch(fetchUser()),
     dispatch(fetchHomeTimeline()),
@@ -65,6 +66,6 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  fetch(getAsyncState),
+  withFetch(fetchAsyncState),
   connect(mapStateToProps),
 )(HomeTimeline);

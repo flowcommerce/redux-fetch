@@ -6,7 +6,7 @@ export default {
   entry: [
     'webpack-hot-middleware/client',
     'react-hot-loader/patch',
-    path.resolve(__dirname, './client/index.js'),
+    path.resolve(__dirname, './client/index.jsx'),
   ],
   output: {
     path: path.resolve(__dirname, './client/assets'),
@@ -14,25 +14,34 @@ export default {
     filename: 'bundle.js',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
-  },
-  resolveLoader: {
-    root: path.resolve(__dirname, 'node_modules'),
+    extensions: ['.js', '.jsx', '.json'],
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.(js|jsx)$/,
-      loader: 'babel-loader',
-      exclude: /node_modules/,
+      use: [
+        { loader: 'babel-loader' },
+      ],
+      include: [
+        path.resolve(__dirname, './client'),
+        path.resolve(__dirname, './common'),
+      ],
     }, {
       test: /\.(css)$/,
-      loader: 'style-loader!css-loader',
-      exclude: /node_modules/,
+      use: [
+        { loader: 'style-loader' },
+        { loader: 'css-loader' },
+      ],
+      include: [
+        path.resolve(__dirname, './client'),
+        path.resolve(__dirname, './common'),
+        path.resolve(__dirname, './node_modules/react-spinner'),
+      ],
     }],
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
 };
