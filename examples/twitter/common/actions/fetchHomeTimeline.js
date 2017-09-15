@@ -28,14 +28,14 @@ export default function fetchHomeTimeline() {
     dispatch(fetchHomeTimelineRequest());
 
     return fetch(fetchUrl, fetchOptions)
-    .then(normalizeResponse)
-    .then(checkHttpStatus)
-    .then((response) => {
-      dispatch(fetchHomeTimelineSuccess(response.data));
-    })
-    .catch((error) => {
-      const payload = error.response ? error.response.data : error;
-      dispatch(fetchHomeTimelineFailure(payload));
-    });
+      .then(normalizeResponse)
+      .then(checkHttpStatus)
+      .then((response) => {
+        dispatch(fetchHomeTimelineSuccess(response.data));
+      })
+      .catch((error) => {
+        const payload = error.response ? error.response.data : error;
+        dispatch(fetchHomeTimelineFailure(payload));
+      });
   };
 }

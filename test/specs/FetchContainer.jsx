@@ -12,27 +12,27 @@ describe('withFetch', () => {
   it('should assign `fetchAsyncState` as a static property', () => {
     const fetchAsyncState = sinon.stub();
 
-    @withFetch(fetchAsyncState)
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
       }
     }
 
-    expect(Container).to.have.property('fetchAsyncState').that.is.equal(fetchAsyncState);
+    const DecoratedContainer = withFetch(fetchAsyncState)(Container);
+    expect(DecoratedContainer).to.have.property('fetchAsyncState').that.is.equal(fetchAsyncState);
   });
 
   it('should provide unhandled props to wrapped component', () => {
     const fetchAsyncState = sinon.stub();
 
-    @withFetch(fetchAsyncState)
     class Container extends Component {
       render() {
         return (<Passthrough {...this.props} />);
       }
     }
 
-    const wrapper = mount(<Container id="foo" />);
+    const DecoratedContainer = withFetch(fetchAsyncState)(Container);
+    const wrapper = mount(<DecoratedContainer id="foo" />);
     const child = wrapper.find(Passthrough);
 
     expect(child).to.have.length(1);
@@ -43,11 +43,12 @@ describe('withFetch', () => {
     const fetchAsyncState = sinon.stub();
     const meta = { name: 'Container' };
 
-    @withFetch(fetchAsyncState)
     class Container extends Component {
       static meta = meta;
     }
 
-    expect(Container).to.have.nested.property('meta.name', meta.name);
+    const DecoratedContainer = withFetch(fetchAsyncState)(Container);
+
+    expect(DecoratedContainer).to.have.nested.property('meta.name', meta.name);
   });
 });
