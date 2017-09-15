@@ -4,7 +4,6 @@ import StaticContainer from 'react-static-container';
 import ReadyState from './ReadyState';
 
 export default class FetchReadyStateRenderer extends Component {
-
   static displayName = 'FetchReadyStateRenderer';
 
   static propTypes = {

@@ -9,7 +9,6 @@ import ReadyState from './ReadyState';
 import isSameLocation from './isSameLocation';
 
 class FetchRootContainer extends Component {
-
   static displayName = 'FetchRootContainer';
 
   static propTypes = {
