@@ -92,14 +92,14 @@ export default function (request, reply) {
   });
 
   return matchRoute({ history, location, routes })
-  .then(handleMatch(store))
-  .catch(handleMatchError())
-  .then(({ error, markup, state, status, redirect }) => {
-    switch (status) {
-    case 200: return reply(renderPage({ markup, state }));
-    case 302: return reply().redirect(redirect);
-    case 404: return reply(renderNotFound()).code(status);
-    default: return reply(renderInternalServerError(error)).code(status);
-    }
-  });
+    .then(handleMatch(store))
+    .catch(handleMatchError())
+    .then(({ error, markup, state, status, redirect }) => {
+      switch (status) {
+      case 200: return reply(renderPage({ markup, state }));
+      case 302: return reply().redirect(redirect);
+      case 404: return reply(renderNotFound()).code(status);
+      default: return reply(renderInternalServerError(error)).code(status);
+      }
+    });
 }
