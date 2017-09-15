@@ -32,14 +32,14 @@ export default function fetchUser() {
     dispatch(fetchUserRequest());
 
     return fetch(fetchUrl, fetchOptions)
-    .then(normalizeResponse)
-    .then(checkHttpStatus)
-    .then((response) => {
-      dispatch(fetchUserSuccess(response.data));
-    })
-    .catch((error) => {
-      const payload = error.response ? error.response.data : error;
-      dispatch(fetchUserFailure(payload));
-    });
+      .then(normalizeResponse)
+      .then(checkHttpStatus)
+      .then((response) => {
+        dispatch(fetchUserSuccess(response.data));
+      })
+      .catch((error) => {
+        const payload = error.response ? error.response.data : error;
+        dispatch(fetchUserFailure(payload));
+      });
   };
 }

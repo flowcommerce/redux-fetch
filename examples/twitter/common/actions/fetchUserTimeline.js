@@ -31,14 +31,14 @@ export default function fetchUserTimeline() {
     dispatch(fetchUserTimelineRequest());
 
     return fetch(fetchUrl, fetchOptions)
-    .then(normalizeResponse)
-    .then(checkHttpStatus)
-    .then((response) => {
-      dispatch(fetchUserTimelineSuccess(response.data));
-    })
-    .catch((error) => {
-      const payload = error.response ? error.response.data : error;
-      dispatch(fetchUserTimelineFailure(payload));
-    });
+      .then(normalizeResponse)
+      .then(checkHttpStatus)
+      .then((response) => {
+        dispatch(fetchUserTimelineSuccess(response.data));
+      })
+      .catch((error) => {
+        const payload = error.response ? error.response.data : error;
+        dispatch(fetchUserTimelineFailure(payload));
+      });
   };
 }

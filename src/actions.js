@@ -29,24 +29,24 @@ export const fetchRouteData = props => (dispatch, getState) => {
 
   const promises = components
   // Grab route components from the current router state.
-  .reduce((accumulator, component) => {
+    .reduce((accumulator, component) => {
     // A component may be a plain object when named components are used.
-    if (typeof component === 'object') {
-      Object.keys(component).forEach((key) => {
-        accumulator.push(component[key]);
-      });
-    } else {
-      accumulator.push(component);
-    }
+      if (typeof component === 'object') {
+        Object.keys(component).forEach((key) => {
+          accumulator.push(component[key]);
+        });
+      } else {
+        accumulator.push(component);
+      }
 
-    return accumulator;
-  }, [])
-  // Filter falsy components
-  .filter(component => component)
-  // Filter components that haven't been decorated
-  .filter(component => component.fetchAsyncState)
-  // Fetch data requirements and store promises
-  .map(component => component.fetchAsyncState(dispatch, getState, props));
+      return accumulator;
+    }, [])
+    // Filter falsy components
+    .filter(component => component)
+    // Filter components that haven't been decorated
+    .filter(component => component.fetchAsyncState)
+    // Fetch data requirements and store promises
+    .map(component => component.fetchAsyncState(dispatch, getState, props));
 
   return Promise.all(promises).then(() => {
     dispatch(fetchSuccess(fetchId, location));
