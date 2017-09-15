@@ -9,32 +9,16 @@ import ReadyState from './ReadyState';
 import isSameLocation from './isSameLocation';
 
 class FetchRootContainer extends Component {
-  static displayName = 'FetchRootContainer';
+  constructor(props, context) {
+    super(props, context);
+    this.state = this.getInitialState();
+  }
 
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-    error: PropTypes.any,
-    forceInitialFetch: PropTypes.bool,
-    onFetchRouteData: PropTypes.func.isRequired,
-    readyState: PropTypes.oneOf([
-      ReadyState.FAILURE,
-      ReadyState.LOADING,
-      ReadyState.PENDING,
-      ReadyState.SUCCESS,
-    ]).isRequired,
-    renderFailure: PropTypes.func,
-    renderLoading: PropTypes.func,
-    renderSuccess: PropTypes.func,
-    routerProps: PropTypes.object.isRequired,
-  };
-
-  static defaultProps = {
-    forceInitialFetch: false,
-  };
-
-  state = {
-    readyState: this.props.readyState,
-  };
+  getInitialState() {
+    return {
+      readyState: this.props.readyState,
+    };
+  }
 
   componentDidMount() {
     const { forceInitialFetch } = this.props;
@@ -85,6 +69,29 @@ class FetchRootContainer extends Component {
     );
   }
 }
+
+FetchRootContainer.displayName = 'FetchRootContainer';
+
+FetchRootContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  error: PropTypes.any,
+  forceInitialFetch: PropTypes.bool,
+  onFetchRouteData: PropTypes.func.isRequired,
+  readyState: PropTypes.oneOf([
+    ReadyState.FAILURE,
+    ReadyState.LOADING,
+    ReadyState.PENDING,
+    ReadyState.SUCCESS,
+  ]).isRequired,
+  renderFailure: PropTypes.func,
+  renderLoading: PropTypes.func,
+  renderSuccess: PropTypes.func,
+  routerProps: PropTypes.object.isRequired,
+};
+
+FetchRootContainer.defaultProps = {
+  forceInitialFetch: false,
+};
 
 const mapStateToProps = state => ({
   error: getError(state),

@@ -3,23 +3,7 @@ import PropTypes from 'prop-types';
 import StaticContainer from 'react-static-container';
 import ReadyState from './ReadyState';
 
-export default class FetchReadyStateRenderer extends Component {
-  static displayName = 'FetchReadyStateRenderer';
-
-  static propTypes = {
-    children: PropTypes.node,
-    error: PropTypes.any,
-    readyState: PropTypes.oneOf([
-      ReadyState.FAILURE,
-      ReadyState.LOADING,
-      ReadyState.PENDING,
-      ReadyState.SUCCESS,
-    ]).isRequired,
-    renderFailure: PropTypes.func,
-    renderLoading: PropTypes.func,
-    renderSuccess: PropTypes.func,
-  };
-
+class FetchReadyStateRenderer extends Component {
   renderChildrenIfNeeded() {
     const { children, error, readyState, renderFailure, renderSuccess, renderLoading } = this.props;
 
@@ -58,3 +42,21 @@ export default class FetchReadyStateRenderer extends Component {
     );
   }
 }
+
+FetchReadyStateRenderer.displayName = 'FetchReadyStateRenderer';
+
+FetchReadyStateRenderer.propTypes = {
+  children: PropTypes.node,
+  error: PropTypes.any,
+  readyState: PropTypes.oneOf([
+    ReadyState.FAILURE,
+    ReadyState.LOADING,
+    ReadyState.PENDING,
+    ReadyState.SUCCESS,
+  ]).isRequired,
+  renderFailure: PropTypes.func,
+  renderLoading: PropTypes.func,
+  renderSuccess: PropTypes.func,
+};
+
+export default FetchReadyStateRenderer;
