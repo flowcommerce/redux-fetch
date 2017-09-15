@@ -12,6 +12,7 @@
     "build": "babel ./src --out-dir ./lib",
     "coverage": "cross-env NODE_ENV=test nyc npm test",
     "lint": "eslint --cache --ext .jsx,.js .",
+    "lint:fix": "npm run lint -- --fix",
     "test": "mocha ./test/specs/**/*.{js,jsx}",
     "prepublish": "npm-run-all clean lint coverage build",
     "watch:build": "nodemon --exec 'npm run build' --ext 'js jsx' --watch './src' --watch './test'",
