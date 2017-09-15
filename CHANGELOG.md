@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.14.1
+
+* Update outdated dependencies to their latest version.
+
 ## 0.14.0
 
 In this release, Redux Fetch will use Redux as the source of truth so that data
