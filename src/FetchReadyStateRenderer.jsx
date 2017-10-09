@@ -5,7 +5,9 @@ import ReadyState from './ReadyState';
 
 class FetchReadyStateRenderer extends Component {
   renderChildrenIfNeeded() {
-    const { children, error, readyState, renderFailure, renderSuccess, renderLoading } = this.props;
+    const {
+      children, error, readyState, renderFailure, renderSuccess, renderLoading,
+    } = this.props;
 
     if (readyState === ReadyState.PENDING || readyState === ReadyState.LOADING) {
       if (renderLoading) {
