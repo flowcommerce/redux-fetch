@@ -38,14 +38,13 @@ function renderNotFound() {
 }
 
 function renderToString(store, renderProps) {
-  const jsx = (
+  return ReactDOMServer.renderToString(
     <Provider store={store}>
       <FetchRootContainer routerProps={renderProps}>
         <RouterContext {...renderProps} />
       </FetchRootContainer>
-    </Provider>
+    </Provider>,
   );
-  return ReactDOMServer.renderToString(jsx);
 }
 
 function handleMatch(store) {

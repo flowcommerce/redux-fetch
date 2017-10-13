@@ -207,13 +207,11 @@ describe('FetchRootContainer', () => {
 
   it('should not swallow render errors', () => {
     const error = new Error('Bad render');
-    const render = () => {
-      mount(
-        <FetchRootComponent readyState={ReadyState.SUCCESS}>
-          {(() => { throw error; })()}
-        </FetchRootComponent>,
-      );
-    };
+    const render = () => mount(
+      <FetchRootComponent readyState={ReadyState.SUCCESS}>
+        {(() => { throw error; })()}
+      </FetchRootComponent>,
+    );
 
     expect(render).to.throw(error);
   });
