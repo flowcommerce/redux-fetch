@@ -34,7 +34,8 @@ describe('FetchReadyStateRenderer', () => {
         readyState={ReadyState.LOADING}
         renderLoading={() => <Spinner />}>
         <Passthrough />
-      </FetchReadyStateRenderer>);
+      </FetchReadyStateRenderer>,
+    );
 
     expect(wrapper.find(Passthrough)).to.have.length(0);
     expect(wrapper.find(Spinner)).to.have.length(1);
@@ -47,7 +48,8 @@ describe('FetchReadyStateRenderer', () => {
         readyState={ReadyState.FAILURE}
         renderFailure={() => <Glitch />}>
         <Passthrough />
-      </FetchReadyStateRenderer>);
+      </FetchReadyStateRenderer>,
+    );
 
     expect(wrapper.find(Passthrough)).to.have.length(0);
     expect(wrapper.find(Glitch)).to.have.length(1);
@@ -59,7 +61,8 @@ describe('FetchReadyStateRenderer', () => {
         readyState={ReadyState.SUCCESS}
         renderSuccess={() => <Tada />}>
         <Passthrough />
-      </FetchReadyStateRenderer>);
+      </FetchReadyStateRenderer>,
+    );
 
     expect(wrapper.find(Passthrough)).to.have.length(0);
     expect(wrapper.find(Tada)).to.have.length(1);
@@ -69,7 +72,8 @@ describe('FetchReadyStateRenderer', () => {
     const wrapper = mount(
       <FetchReadyStateRenderer readyState={ReadyState.SUCCESS}>
         <Passthrough />
-      </FetchReadyStateRenderer>);
+      </FetchReadyStateRenderer>,
+    );
 
     expect(wrapper.find(Passthrough)).to.have.length(1);
   });

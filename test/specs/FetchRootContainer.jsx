@@ -91,7 +91,6 @@ describe('FetchRootContainer', () => {
     });
 
     const onFetchRouteData = sinon.stub();
-
     const wrapper = mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
@@ -211,7 +210,9 @@ describe('FetchRootContainer', () => {
     const render = () => mount(
       <FetchRootComponent readyState={ReadyState.SUCCESS}>
         {(() => { throw error; })()}
-      </FetchRootComponent>);
+      </FetchRootComponent>,
+    );
+
     expect(render).to.throw(error);
   });
 });

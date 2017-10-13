@@ -6,7 +6,9 @@ function safeStringify(data = {}) {
   return JSON.stringify(data).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--');
 }
 
-const Html = ({ language, markup, state, title }) => (
+const Html = ({
+  language, markup, state, title,
+}) => (
   <html lang={language}>
     <head>
       <title>{title}</title>

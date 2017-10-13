@@ -54,7 +54,9 @@ class FetchRootContainer extends Component {
   }
 
   render() {
-    const { children, error, renderFailure, renderSuccess, renderLoading } = this.props;
+    const {
+      children, error, renderFailure, renderSuccess, renderLoading,
+    } = this.props;
     const { readyState } = this.state;
 
     return (

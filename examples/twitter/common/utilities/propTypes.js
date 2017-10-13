@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 
-const { arrayOf, number, object, string, shape } = PropTypes;
+const {
+  arrayOf, number, object, string, shape,
+} = PropTypes;
 
 export const errorShape = shape({
   statusCode: number,

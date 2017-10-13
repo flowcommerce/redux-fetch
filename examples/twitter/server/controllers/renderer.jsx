@@ -59,7 +59,7 @@ function handleMatch(store) {
     if (!renderProps) {
       return {
         status: 404,
-        message: `Path ${location} not found.`,
+        message: 'Path not found.',
       };
     }
 
@@ -94,7 +94,9 @@ export default function (request, reply) {
   return matchRoute({ history, location, routes })
     .then(handleMatch(store))
     .catch(handleMatchError())
-    .then(({ error, markup, state, status, redirect }) => {
+    .then(({
+      error, markup, state, status, redirect,
+    }) => {
       switch (status) {
       case 200: return reply(renderPage({ markup, state }));
       case 302: return reply().redirect(redirect);
