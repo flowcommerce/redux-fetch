@@ -14,6 +14,7 @@ describe('FetchRootContainer', () => {
   it('should not call onFetchRouteData when data requirements are met on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
+
     mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
