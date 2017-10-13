@@ -14,15 +14,14 @@ describe('FetchRootContainer', () => {
   it('should not call onFetchRouteData when data requirements are met on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+    mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={routerState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    mount(jsx);
 
     expect(onFetchRouteData).to.not.have.been.called;
   });
@@ -30,16 +29,15 @@ describe('FetchRootContainer', () => {
   it('should call onFetchRouteData when data requirements are not met on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.PENDING}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-
-    mount(jsx);
 
     expect(onFetchRouteData).to.have.been.calledOnce;
   });
@@ -47,16 +45,16 @@ describe('FetchRootContainer', () => {
   it('should call onFetchRouteData when forced on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.SUCCESS}
         forceInitialFetch>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    mount(jsx);
 
     expect(onFetchRouteData).to.have.been.calledOnce;
   });
@@ -64,15 +62,15 @@ describe('FetchRootContainer', () => {
   it('should provide router state to onFetchRouteData when called on mount', () => {
     const routerState = createMockRouterState();
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.PENDING}
         routerProps={routerState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    mount(jsx);
 
     expect(onFetchRouteData).to.have.been.calledOnce;
     expect(onFetchRouteData).to.have.been.calledWithExactly(routerState);
@@ -92,15 +90,14 @@ describe('FetchRootContainer', () => {
     });
 
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+    const wrapper = mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={prevRouterState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    const wrapper = mount(jsx);
 
     wrapper.setProps({ routerProps: nextRouterState });
 
@@ -122,15 +119,15 @@ describe('FetchRootContainer', () => {
     });
 
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    const wrapper = mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={prevRouterState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    const wrapper = mount(jsx);
 
     wrapper.setProps({ routerProps: nextRouterState });
 
@@ -155,16 +152,15 @@ describe('FetchRootContainer', () => {
     });
 
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    const wrapper = mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={prevRouterState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-
-    const wrapper = mount(jsx);
 
     wrapper.setProps({ routerProps: nextRouterState });
 
@@ -191,15 +187,15 @@ describe('FetchRootContainer', () => {
     });
 
     const onFetchRouteData = sinon.stub();
-    const jsx = (
+
+    const wrapper = mount(
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
         routerProps={prevRouterState}>
         <Child />
-      </FetchRootComponent>
+      </FetchRootComponent>,
     );
-    const wrapper = mount(jsx);
 
     wrapper.setProps({ routerProps: nextRouterState });
 
@@ -211,12 +207,11 @@ describe('FetchRootContainer', () => {
   it('should not swallow render errors', () => {
     const error = new Error('Bad render');
     const render = () => {
-      const jsx = (
+      mount(
         <FetchRootComponent readyState={ReadyState.SUCCESS}>
           {(() => { throw error; })()}
-        </FetchRootComponent>
+        </FetchRootComponent>,
       );
-      mount(jsx);
     };
 
     expect(render).to.throw(error);

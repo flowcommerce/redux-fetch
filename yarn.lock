@@ -11,9 +11,9 @@
     babel-preset-react "^6.24.1"
     babel-preset-stage-1 "^6.24.1"
 
-"@flowio/eslint-config-flowio@^11.0.1":
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/@flowio/eslint-config-flowio/-/eslint-config-flowio-11.0.1.tgz#4db1b3d22c30b918f04f194924be15eedda92744"
+"@flowio/eslint-config-flowio@^11.0.2":
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/@flowio/eslint-config-flowio/-/eslint-config-flowio-11.0.2.tgz#9c3f6975e95e5354dd549e0ffe8f79c592c09044"
   dependencies:
     eslint-config-airbnb "^16.0.0"
     eslint-config-airbnb-base "^12.0.2"
