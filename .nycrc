@@ -1,4 +1,7 @@
 {
+  "require": [
+    "babel-register"
+  ],
   "include": [
     "src/**/*.{js,jsx}"
   ],
@@ -10,6 +13,7 @@
     "html",
     "text"
   ],
+  "all": true,
   "cache": true,
   "sourceMap": false,
   "instrument": false

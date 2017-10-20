@@ -1,49 +1,33 @@
-import ActionTypes from './ActionTypes';
-import ReadyState from './ReadyState';
+import ActionType from './constants/ActionType';
+import ReadyState from './constants/ReadyState';
 
 const defaultState = {
   readyState: ReadyState.PENDING,
 };
 
-const isSameFetchId = (state, action) =>
-  state.fetchId === action.fetchId;
-
-const requestReducer = (state, action) => ({
-  ...state,
-  fetchId: action.fetchId,
-  location: action.location,
-  readyState: ReadyState.LOADING,
-});
-
-const failureReducer = (state, action) => {
-  if (!isSameFetchId(state, action)) return state;
-  return {
-    ...state,
-    error: action.error,
-    fetchId: action.fetchId,
-    location: action.location,
-    readyState: ReadyState.FAILURE,
-  };
-};
-
-const successReducer = (state, action) => {
-  if (!isSameFetchId(state, action)) return state;
-  return {
-    ...state,
-    fetchId: action.fetchId,
-    location: action.location,
-    readyState: ReadyState.SUCCESS,
-  };
-};
-
 export default function (state = defaultState, action) {
   switch (action.type) {
-  case ActionTypes.FETCH_FAILURE:
-    return failureReducer(state, action);
-  case ActionTypes.FETCH_REQUEST:
-    return requestReducer(state, action);
-  case ActionTypes.FETCH_SUCCESS:
-    return successReducer(state, action);
+  case ActionType.LOADING:
+    return Object.assign({}, state, {
+      pathname: action.payload.pathname,
+      readyState: ReadyState.LOADING,
+    });
+  case ActionType.CANCELED:
+    return Object.assign({}, state, {
+      pathname: action.payload.pathname,
+      readyState: ReadyState.CANCELED,
+    });
+  case ActionType.FULFILLED:
+    return Object.assign({}, state, {
+      pathname: action.payload.pathname,
+      readyState: ReadyState.FULFILLED,
+    });
+  case ActionType.REJECTED:
+    return Object.assign({}, state, {
+      error: action.payload.error,
+      pathname: action.payload.pathname,
+      readyState: ReadyState.REJECTED,
+    });
   default:
     return state;
   }

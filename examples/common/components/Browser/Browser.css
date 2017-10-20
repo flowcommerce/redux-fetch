@@ -1,0 +1,73 @@
+.browser {
+  display: flex;
+  flex-flow: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 450px;
+  background-color: white;
+  box-shadow: 0px 5px 20px hsla(0, 0%, 0%, 0.75);
+  border-radius: 6px;
+}
+
+.toolbar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 0 10px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border: none;
+  border-bottom: 1px solid rgb(215, 215, 215);
+  background-color: rgb(246, 246, 246);
+}
+
+.button {
+  margin-right: 8px;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -3px;
+  color: inherit;
+  vertical-align: middle;
+}
+
+.fileCode {
+  display: block;
+  position: relative;
+  z-index: 1;
+  left: 8px;
+  top: 0;
+  color: gray;
+}
+
+.fileCodeIcon {
+  vertical-align: middle;
+}
+
+.address {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 5px;
+  margin-left: -20px;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding-left: 25px;
+  color: lightgray;
+  font: inherit;
+}
+
+.content {
+  flex: 1;
+  display: block;
+  padding: 20px;
+  overflow: auto;
+  position: relative;
+}

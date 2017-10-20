@@ -1,14 +1,18 @@
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import jsdom from 'jsdom';
 import chai from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
-import Enzyme from 'enzyme';
-import React15EnzymeAdapter from 'enzyme-adapter-react-15';
 
 // Because relying on package.json to set this environment is almost always OK, but when one user
 // just throws mocha in his terminal we don't want to punish him with data loss or any other hell.
 process.env.NODE_ENV = 'test';
+
+Enzyme.configure({
+  adapter: new Adapter(),
+});
 
 // Expose Sinon to global scope.
 global.sinon = sinon;
@@ -34,8 +38,6 @@ Object.keys(global.window).forEach((key) => {
     global[key] = global.window[key];
   }
 });
-
-Enzyme.configure({ adapter: new React15EnzymeAdapter() });
 
 // Stub console.error() to throw an error when called.
 // The intention is to catch prop type validation errors in React components.

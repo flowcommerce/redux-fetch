@@ -6,6 +6,7 @@
     "node": true
   },
   "rules": {
+    "object-curly-newline": ["error", { "consistent": true }],
     "react/require-default-props": "off",
     "react/forbid-prop-types": "off",
     "jsx-a11y/anchor-is-valid": [ "error", {

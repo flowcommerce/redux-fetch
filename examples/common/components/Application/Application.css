@@ -1,0 +1,28 @@
+:global body {
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.sidebar {
+  display: block;
+  width: 250px;
+  height: 100vh;
+  padding: 20px;
+  background: #eee;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.mainContent {
+  flex: 1;
+  display: block;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+}
