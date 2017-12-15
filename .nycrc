@@ -5,6 +5,9 @@
   "include": [
     "src/**/*.{js,jsx}"
   ],
+  "exclude": [
+    "examples/**/*"
+  ],
   "extension": [
     ".js",
     ".jsx"
