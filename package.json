@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@flowio/babel-preset-flowio": "^1.4.1",
-    "@flowio/eslint-config-flowio": "^11.0.2",
+    "@flowio/eslint-config-flowio": "^12.0.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-istanbul": "^4.1.5",
