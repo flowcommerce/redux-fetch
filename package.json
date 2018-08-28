@@ -54,7 +54,7 @@
     "@flowio/babel-preset-flowio": "^1.4.1",
     "@flowio/eslint-config-flowio": "^11.0.2",
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
+    "babel-eslint": "^9.0.0",
     "babel-plugin-istanbul": "^4.1.5",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-register": "^6.26.0",
