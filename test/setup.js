@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import Enzyme from 'enzyme';
-import React15EnzymeAdapter from 'enzyme-adapter-react-15';
+import React16EnzymeAdapter from 'enzyme-adapter-react-16';
 
 // Because relying on package.json to set this environment is almost always OK, but when one user
 // just throws mocha in his terminal we don't want to punish him with data loss or any other hell.
@@ -26,7 +26,9 @@ chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
 // Setup JSDOM
-const { window } = new jsdom.JSDOM('<!doctype html><html><body></body></html>');
+const { window } = new jsdom.JSDOM('<!doctype html><html><body></body></html>', {
+  url: 'http://localhost', // required to fix SecurityError: https://github.com/jsdom/jsdom/issues/2383
+});
 global.window = window;
 
 Object.keys(global.window).forEach((key) => {
@@ -35,7 +37,7 @@ Object.keys(global.window).forEach((key) => {
   }
 });
 
-Enzyme.configure({ adapter: new React15EnzymeAdapter() });
+Enzyme.configure({ adapter: new React16EnzymeAdapter() });
 
 // Stub console.error() to throw an error when called.
 // The intention is to catch prop type validation errors in React components.
