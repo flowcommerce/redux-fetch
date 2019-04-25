@@ -51,7 +51,7 @@
     "redux-thunk": "^2.0.0"
   },
   "devDependencies": {
-    "@flowio/babel-preset-flowio": "^1.4.1",
+    "@flowio/babel-preset-flowio": "^2.0.0",
     "@flowio/eslint-config-flowio": "^11.0.2",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
