@@ -9,8 +9,8 @@ const initialState = {
 };
 
 export default handleActions({
-  [ActionTypes.FETCH_HOME_TIMELINE_SUCCESS]: (state, action) =>
-    assign({}, state, { timeline: action.payload, error: null }),
-  [ActionTypes.FETCH_HOME_TIMELINE_FAILURE]: (state, action) =>
-    assign({}, state, { error: action.payload, timeline: [] }),
+  [ActionTypes.FETCH_HOME_TIMELINE_SUCCESS]:
+    (state, action) => assign({}, state, { timeline: action.payload, error: null }),
+  [ActionTypes.FETCH_HOME_TIMELINE_FAILURE]:
+    (state, action) => assign({}, state, { error: action.payload, timeline: [] }),
 }, initialState);

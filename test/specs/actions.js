@@ -1,5 +1,7 @@
 import React from 'react';
-import { fetchRouteData, fetchFailure, fetchRequest, fetchSuccess } from '../../src/actions';
+import {
+  fetchRouteData, fetchFailure, fetchRequest, fetchSuccess,
+} from '../../src/actions';
 import ActionTypes from '../../src/ActionTypes';
 import createMockStore from '../utilities/createMockStore';
 import createMockRouterState from '../utilities/createMockRouterState';
@@ -8,6 +10,7 @@ import uniqueId from '../../src/uniqueId';
 function createMockComponent(fetchAsyncState) {
   return class WrappedComponent extends React.Component {
     static fetchAsyncState = fetchAsyncState;
+
     render() {
       return null;
     }

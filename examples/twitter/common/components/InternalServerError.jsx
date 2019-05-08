@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Grid, Jumbotron, Row } from 'react-bootstrap';
+import {
+  Button, Col, Grid, Jumbotron, Row,
+} from 'react-bootstrap';
 
 const InternalServerError = ({ message, retry, ...otherProps }) => (
   <Grid>
