@@ -55,27 +55,29 @@ export default function configureStore(initialState) {
 Decorate your route components with `withFetch()` and provide a function that returns a promise that is settled after the application state is updated with the data required before rendering them.
 
 ```js
-import React, { Component } from 'react';
+import React from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFetch } from '@flowio/redux-fetch';
-import { fetchThings } from './app/actions';
+import { fetchOneThing, fetchTwoThings } from './app/actions';
 import { getThings } from './app/selectors';
+import { ThingComponent } from './app/components';
 
-function fetchAsyncState(dispatch /* getState, routerState */) {
-  return dispatch(fetchThings());
-}
+const fetchAsyncState = (dispatch/*, getState, routerState */) => Promise.all([
+  dispatch(fetchOneThing()),
+  dispatch(fetchTwoThings()),
+]);
 
-function mapStateToProps(state) {
-  return {
-    things: getThings(state),
-  };
-}
+const mapStateToProps = (state) => ({
+  things: getThings(state),
+});
 
-@withFetch(fetchAsyncState)
-@connect(mapStateToProps)
-export default class Container extends Component {
-  /* ... */
-}
+const enhance = compose(
+  withFetch(fetchAsyncState),
+  connect(mapStateToProps),
+);
+
+export default enhance(ThingComponent);
 ```
 
 ### Configure server-side rendering
