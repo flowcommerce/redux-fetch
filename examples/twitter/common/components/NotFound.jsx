@@ -1,5 +1,7 @@
 import React from 'react';
-import { Col, Grid, Jumbotron, Row } from 'react-bootstrap';
+import {
+  Col, Grid, Jumbotron, Row,
+} from 'react-bootstrap';
 import { Link } from 'react-router';
 
 const NotFound = () => (

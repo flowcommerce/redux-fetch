@@ -5,8 +5,7 @@ const defaultState = {
   readyState: ReadyState.PENDING,
 };
 
-const isSameFetchId = (state, action) =>
-  state.fetchId === action.fetchId;
+const isSameFetchId = (state, action) => state.fetchId === action.fetchId;
 
 const requestReducer = (state, action) => ({
   ...state,

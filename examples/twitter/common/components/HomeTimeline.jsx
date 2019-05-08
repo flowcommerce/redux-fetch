@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Col, Grid, Row } from 'react-bootstrap';
+import {
+  Alert, Col, Grid, Row,
+} from 'react-bootstrap';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFetch } from '@flowio/redux-fetch';

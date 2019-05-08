@@ -15,9 +15,8 @@ class FetchRootContainer extends Component {
   }
 
   getInitialState() {
-    return {
-      readyState: this.props.readyState,
-    };
+    const { readyState } = this.props;
+    return { readyState };
   }
 
   componentDidMount() {
@@ -30,11 +29,13 @@ class FetchRootContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const prevLocation = this.props.routerProps.location;
-    const nextLocation = nextProps.routerProps.location;
+    const { routerProps: previousRouterProps } = this.props;
+    const { readyState: nextReadyState, routerProps: nextRouterProps } = nextProps;
+    const { location: previousLocation } = previousRouterProps;
+    const { location: nextLocation } = nextRouterProps;
 
-    if (isSameLocation(prevLocation, nextLocation)) {
-      this.setState({ readyState: nextProps.readyState });
+    if (isSameLocation(previousLocation, nextLocation)) {
+      this.setState({ readyState: nextReadyState });
     } else {
       this.setState({ readyState: ReadyState.PENDING });
     }

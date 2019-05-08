@@ -20,7 +20,10 @@ const UserProfile = ({ user }) => (
           <Link to="/user/timeline">{user.name}</Link>
         </p>
         <p {...classes('screen-name')}>
-          <Link to="/user/timeline">@{user.screen_name}</Link>
+          <Link to="/user/timeline">
+@
+            {user.screen_name}
+          </Link>
         </p>
       </div>
       <div {...classes('stats')}>
