@@ -14,7 +14,8 @@
     "fix": "npm run lint -- --fix",
     "lint": "eslint --cache --ext .jsx,.js .",
     "test": "mocha ./test/specs/**/*.{js,jsx}",
-    "prepublish": "npm-run-all clean lint coverage build",
+    "prepare": "npm-run-all clean build",
+    "prepublishOnly": "npm-run-all clean lint coverage build",
     "postpublish": "greenkeeper-postpublish"
   },
   "keywords": [
