@@ -65,7 +65,7 @@
     "chai-as-promised": "^7.1.1",
     "cross-env": "^5.0.5",
     "deep-freeze": "^0.0.1",
-    "enzyme": "^3.8.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.7.1",
     "eslint": "^5.16.0",
     "eslint-plugin-import": "^2.7.0",
