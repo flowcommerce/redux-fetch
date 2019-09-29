@@ -74,7 +74,7 @@
     "greenkeeper-postpublish": "^2.0.0",
     "jsdom": "^15.0.0",
     "lodash": "^4.17.4",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.1",
     "npm-run-all": "^4.1.1",
     "nyc": "^14.1.0",
     "prop-types": "^15.6.0",
