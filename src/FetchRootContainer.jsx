@@ -28,7 +28,16 @@ class FetchRootContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate() {
+    const { readyState } = this.state;
+
+    if (readyState === ReadyState.PENDING) {
+      this.fetchRouteData();
+    }
+  }
+
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { routerProps: previousRouterProps } = this.props;
     const { readyState: nextReadyState, routerProps: nextRouterProps } = nextProps;
     const { location: previousLocation } = previousRouterProps;
@@ -38,14 +47,6 @@ class FetchRootContainer extends Component {
       this.setState({ readyState: nextReadyState });
     } else {
       this.setState({ readyState: ReadyState.PENDING });
-    }
-  }
-
-  componentDidUpdate() {
-    const { readyState } = this.state;
-
-    if (readyState === ReadyState.PENDING) {
-      this.fetchRouteData();
     }
   }
 
