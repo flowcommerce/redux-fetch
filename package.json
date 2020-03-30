@@ -72,7 +72,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "greenkeeper-postpublish": "^2.0.0",
-    "jsdom": "^15.0.0",
+    "jsdom": "^16.2.2",
     "lodash": "^4.17.4",
     "mocha": "^6.1.4",
     "npm-run-all": "^4.1.1",
