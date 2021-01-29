@@ -5,6 +5,7 @@ cache:
   directories:
     - node_modules
 script:
+  - npm run lint -- --quiet
   - npm run coverage
 branches:
   only:
