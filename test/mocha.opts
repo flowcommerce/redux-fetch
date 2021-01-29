@@ -1,6 +1,0 @@
---ui bdd
---require @babel/register
---require ./test/setup.js
---recursive
---colors
---check-leaks
