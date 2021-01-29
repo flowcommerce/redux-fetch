@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.16.0-0
+
+* `react` peer dependency version bumped to 16.x
+* `react-dom` peer dependency version bumped to 16.x
+* `react-redux` peer dependency version bumped to 7.x
+* `redux` peer dependency version bumped to 4.x
+
 ## 0.14.1
 
 * Update outdated dependencies to their latest version.
