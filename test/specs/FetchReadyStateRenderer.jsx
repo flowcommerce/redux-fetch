@@ -32,7 +32,8 @@ describe('FetchReadyStateRenderer', () => {
     const wrapper = mount(
       <FetchReadyStateRenderer
         readyState={ReadyState.LOADING}
-        renderLoading={() => <Spinner />}>
+        renderLoading={() => <Spinner />}
+      >
         <Passthrough />
       </FetchReadyStateRenderer>,
     );
@@ -41,12 +42,12 @@ describe('FetchReadyStateRenderer', () => {
     expect(wrapper.find(Spinner)).to.have.length(1);
   });
 
-
   it('should render failure component if an error is incurred', () => {
     const wrapper = mount(
       <FetchReadyStateRenderer
         readyState={ReadyState.FAILURE}
-        renderFailure={() => <Glitch />}>
+        renderFailure={() => <Glitch />}
+      >
         <Passthrough />
       </FetchReadyStateRenderer>,
     );
@@ -59,7 +60,8 @@ describe('FetchReadyStateRenderer', () => {
     const wrapper = mount(
       <FetchReadyStateRenderer
         readyState={ReadyState.SUCCESS}
-        renderSuccess={() => <Tada />}>
+        renderSuccess={() => <Tada />}
+      >
         <Passthrough />
       </FetchReadyStateRenderer>,
     );

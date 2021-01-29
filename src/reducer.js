@@ -37,13 +37,13 @@ const successReducer = (state, action) => {
 
 export default function (state = defaultState, action) {
   switch (action.type) {
-  case ActionTypes.FETCH_FAILURE:
-    return failureReducer(state, action);
-  case ActionTypes.FETCH_REQUEST:
-    return requestReducer(state, action);
-  case ActionTypes.FETCH_SUCCESS:
-    return successReducer(state, action);
-  default:
-    return state;
+    case ActionTypes.FETCH_FAILURE:
+      return failureReducer(state, action);
+    case ActionTypes.FETCH_REQUEST:
+      return requestReducer(state, action);
+    case ActionTypes.FETCH_SUCCESS:
+      return successReducer(state, action);
+    default:
+      return state;
   }
 }

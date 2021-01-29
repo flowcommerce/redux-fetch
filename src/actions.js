@@ -21,7 +21,7 @@ export const fetchSuccess = (fetchId, location) => ({
  * @return {Promise} A promise that is settled after data requirements for all
  * matched route components is either complete or fails.
 */
-export const fetchRouteData = props => (dispatch, getState) => {
+export const fetchRouteData = (props) => (dispatch, getState) => {
   const { location, components } = props;
   const fetchId = uniqueId();
 
@@ -42,11 +42,11 @@ export const fetchRouteData = props => (dispatch, getState) => {
       return accumulator;
     }, [])
     // Filter falsy components
-    .filter(component => component)
+    .filter((component) => component)
     // Filter components that haven't been decorated
-    .filter(component => component.fetchAsyncState)
+    .filter((component) => component.fetchAsyncState)
     // Fetch data requirements and store promises
-    .map(component => component.fetchAsyncState(dispatch, getState, props));
+    .map((component) => component.fetchAsyncState(dispatch, getState, props));
 
   return Promise.all(promises).then(() => {
     dispatch(fetchSuccess(fetchId, location));

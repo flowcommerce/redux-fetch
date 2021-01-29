@@ -19,7 +19,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={routerState}>
+        routerProps={routerState}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -35,7 +36,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
-        readyState={ReadyState.PENDING}>
+        readyState={ReadyState.PENDING}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -52,7 +54,8 @@ describe('FetchRootContainer', () => {
         onFetchRouteData={onFetchRouteData}
         routerProps={routerState}
         readyState={ReadyState.SUCCESS}
-        forceInitialFetch>
+        forceInitialFetch
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -68,7 +71,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.PENDING}
-        routerProps={routerState}>
+        routerProps={routerState}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -95,7 +99,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={prevRouterState}>
+        routerProps={prevRouterState}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -125,7 +130,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={prevRouterState}>
+        routerProps={prevRouterState}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -158,7 +164,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={prevRouterState}>
+        routerProps={prevRouterState}
+      >
         <Child />
       </FetchRootComponent>,
     );
@@ -193,7 +200,8 @@ describe('FetchRootContainer', () => {
       <FetchRootComponent
         onFetchRouteData={onFetchRouteData}
         readyState={ReadyState.SUCCESS}
-        routerProps={prevRouterState}>
+        routerProps={prevRouterState}
+      >
         <Child />
       </FetchRootComponent>,
     );

@@ -14,7 +14,8 @@ const Root = ({ store }) => (
     <Router
       history={syncHistoryWithStore(browserHistory, store)}
       routes={routes}
-      render={applyRouterMiddleware(useFetch())} />
+      render={applyRouterMiddleware(useFetch())}
+    />
   </Provider>
 );
 

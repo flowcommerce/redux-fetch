@@ -32,7 +32,7 @@ Application.propTypes = {
   loading: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loading: getIsLoading(state) || getIsPending(state),
 });
 

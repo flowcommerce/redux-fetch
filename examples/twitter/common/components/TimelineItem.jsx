@@ -17,7 +17,7 @@ const TimelineItem = ({ tweet }) => (
       <p>
         <strong {...classes('fullname')}>{tweet.user.name}</strong>
         <span {...classes('username')}>
-@
+          @
           {tweet.user.screen_name}
         </span>
       </p>

@@ -13,6 +13,6 @@ const defaults = {
   components: [],
 };
 
-const createMockRouterState = state => defaultsDeep(state, defaults);
+const createMockRouterState = (state) => defaultsDeep(state, defaults);
 
 export default createMockRouterState;

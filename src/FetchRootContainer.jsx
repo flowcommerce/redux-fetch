@@ -66,7 +66,8 @@ class FetchRootContainer extends Component {
         readyState={readyState}
         renderFailure={renderFailure}
         renderLoading={renderLoading}
-        renderSuccess={renderSuccess}>
+        renderSuccess={renderSuccess}
+      >
         {children}
       </FetchReadyStateRenderer>
     );
@@ -96,12 +97,12 @@ FetchRootContainer.defaultProps = {
   forceInitialFetch: false,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: getError(state),
   readyState: getReadyState(state),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch) => bindActionCreators({
   onFetchRouteData: fetchRouteData,
 }, dispatch);
 

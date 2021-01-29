@@ -21,7 +21,7 @@ const UserProfile = ({ user }) => (
         </p>
         <p {...classes('screen-name')}>
           <Link to="/user/timeline">
-@
+            @
             {user.screen_name}
           </Link>
         </p>

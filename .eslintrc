@@ -1,17 +1,19 @@
 {
   "parser": "babel-eslint",
-  "extends": "@flowio/flowio",
+  "extends": "airbnb",
   "env": {
     "browser": true,
     "node": true
   },
   "rules": {
-    "react/require-default-props": "off",
-    "react/forbid-prop-types": "off",
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to" ],
-      "aspects": [ "noHref", "invalidHref", "preferButton" ]
-    }]
+    "jsx-a11y/anchor-is-valid": ["error", {
+      "components": ["Link"],
+      "specialLink": ["to"],
+      "aspects": ["noHref", "invalidHref", "preferButton"]
+    }],
+    "max-classes-per-file": "warn",
+    "react/forbid-prop-types": "warn",
+    "react/jsx-props-no-spreading": "warn",
+    "react/require-default-props": "warn"
   }
 }
