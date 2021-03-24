@@ -256,6 +256,6 @@ This project, while far less complex, was inspired and borrows some concepts fro
 [npm-url]: https://www.npmjs.com/package/@flowio/redux-fetch
 [downloads-image]: https://img.shields.io/npm/dm/redux-fetch.svg?style=flat-square
 [downloads-url]: https://www.npmjs.com/package/@flowio/redux-fetch
-[travis-image]: https://img.shields.io/travis/flowcommerce/redux-fetch/main.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/flowcommerce/redux-fetch/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/flowcommerce/redux-fetch
 [webpack]: http://webpack.github.io
